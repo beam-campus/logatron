@@ -1,10 +1,121 @@
-<header class="flex justify-between items-center px-6 py-1 bg-ltDark">
+<header class="flex justify-between items-center px-6 py-3 bg-ltDark">
+  <!-- Left side of toolbar -->
   <div class="flex relative">
-    <a href={~p"/"}>
-      <img src="/images/lg-logo-no-bg.svg" alt="logatron logo" width="200">
-    </a>
+    
+    <div>
+      <a href={~p"/"}>
+        <img src="/images/lg-logo-no-bg.svg" alt="logatron logo" width="200">
+      </a>
+    </div>
+    <div>
+      <div class="text-white font-brand font-regular text-sm m-2 px-2">
+        17.2k Leaves feeding 7 Scapes  @ 3.9M Facts/s
+      </div>
+    </div>
   </div>
-  <div>
+
+  <!-- Right side of toolbar -->
+  <div class="relative">
+  <button class="img-down-arrow" type="button" id="user-menu-button" phx-click={LogatronWeb.Layouts.App.toggle_dropdown_menu()}>
+    <img src="/images/user-image.svg" alt="Profile Image" class="w-8 h-8 round-image-padding">
+  </button>
+  <div 
+    id="dropdown_menu" 
+    class="absolute right-0 m-2 py-2 w-48 bg-ltDark rounded-lg shadow-xl border border-white dropdown-menu-arrow " 
+    hidden="true"
+  >
+    <%= if @current_user do %>
+      <.link 
+        href={~p"/users/settings"} 
+        class="menu-item border-b border-white border-opacity-50"
+        role="menuitem"
+        tabindex="-1"
+        method="get"
+        id="user-menu-item-0"
+      >
+        Singed in as <%= @current_user.email %>
+      </.link>
+            <.link 
+        href="#"
+        class="menu-item border-b border-white border-opacity-50"
+        role="menuitem"
+        tabindex="-1"
+        method="get"
+        id="user-menu-item-1"
+      >
+        World View
+      </.link>
+
+      <.link 
+        href="#"
+        class="menu-item"
+        role="menuitem"
+        tabindex="-1"
+        method="get"
+        id="user-menu-item-1"
+      >
+        Your Scapes
+      </.link>
+      <.link 
+        href="#"
+        class="menu-item"
+        role="menuitem"
+        tabindex="-1"
+        method="get"
+        id="user-menu-item-1"
+      >
+        Your Leaf Nodes
+      </.link>
+      <.link 
+        href="#"
+        class="menu-item border-b border-white border-opacity-50"
+        role="menuitem"
+        tabindex="-1"
+        method="get"
+        id="user-menu-item-1"
+      >
+        Your Models
+      </.link>
+      <.link 
+        href={~p"/users/log_out"}
+        class="menu-item"
+        role="menuitem"
+        tabindex="-1"
+        method="delete"
+        id="user-menu-item-0"
+      >
+        Sign out
+      </.link>
+
+
+
+    <% else %>
+      
+      <.link 
+        href={~p"/users/log_in"} 
+        class="menu-item border-b border-white border-opacity-50"
+        role="menuitem"
+        tabindex="-1"
+        method="get"
+        id="user-menu-item-0"
+      >
+        Sign in
+      </.link>
+      
+      <.link 
+        href={~p"/users/register"} 
+        class="menu-item"
+        role="menuitem"
+        tabindex="-1"
+        method="get"
+        id="user-menu-item-1"
+      >
+        Register
+      </.link>
+      
+    <% end %>
+  </div>
+  <!--
       <ul class="relative z-10 flex items-center gap-4 px-4 sm:px-6 lg:px-8 justify-end">
       <%= if @current_user do %>
         <li class="text-[0.8125rem] leading-6 text-zinc-900">
@@ -46,11 +157,13 @@
         </li>
       <% end %>
     </ul>
+    -->
   </div>
 
 </header>
 
-  <body class="bg-ltDark-dark antialiased">
-    <%= @inner_content %>
-  </body>
+<main>
+<.flash_group flash={@flash} />
+  <%= @inner_content %>
+</main>
 

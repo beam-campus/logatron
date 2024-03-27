@@ -11,8 +11,6 @@ config :logatron, Logatron.Repo,
   pool_size: 10
 
 
-
-
 # For development, we disable any cache and enable
 # debugging and code reloading.
 #

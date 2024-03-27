@@ -76,6 +76,8 @@ USER nobody
 
 ENV HOME=/system
 ENV MIX_ENV="prod"
+ENV DATABASE_URL=irrelevant
+ENV SECRET_KEY_BASE=irrelevant
 
 CMD ["/system/bin/for_edge", "start"]
 

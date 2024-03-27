@@ -38,6 +38,7 @@ config :logatron_web,
 config :logatron_web, LogatronWeb.Endpoint,
   url: [host: "localhost"],
   adapter: Bandit.PhoenixAdapter,
+  server: true,
   render_errors: [
     formats: [html: LogatronWeb.ErrorHTML, json: LogatronWeb.ErrorJSON],
     layout: false
