@@ -1,3 +1,11 @@
+## IDE
+.idea/
+.vscode/
+.elixir_ls/
+.history/
+
+
+## Elixir
 /_build
 /cover
 /deps
@@ -8,3 +16,23 @@ erl_crash.dump
 *.beam
 /config/*.secret.exs
 .elixir_ls/
+
+
+## Erlang
+.eunit
+*.o
+*.beam
+*.plt
+erl_crash.dump
+.concrete/DEV_MODE
+
+# rebar 2.x
+.rebar
+rel/example_project
+ebin/*.beam
+deps
+
+# rebar 3
+.rebar3
+_build/
+_checkouts/
