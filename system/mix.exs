@@ -8,7 +8,7 @@ defmodule Logatron.Umbrella.MixProject do
       start_permanent: Mix.env() == :prod,
       deps: deps(),
       aliases: aliases(),
-      release: releases()
+      releases: releases()
     ]
   end
 

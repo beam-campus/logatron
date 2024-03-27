@@ -60,8 +60,15 @@ defmodule LogatronWeb.MixProject do
       {:contex, "~> 0.5.0"},
       {:jason, "~> 1.2"},
       {:bandit, "~> 1.2"},
-      {:heroicons, "~> 0.5.5"},
+      {:heroicons,
+      github: "tailwindlabs/heroicons",
+      tag: "v2.1.1",
+      sparse: "optimized",
+      app: false,
+      compile: false,
+      depth: 1},
       {:heroicons_liveview, "~> 0.5.0"}
+
     ]
   end
 
