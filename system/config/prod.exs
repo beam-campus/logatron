@@ -3,7 +3,7 @@ import Config
 config :logatron, Logatron.Repo,
   username: "lt_prod_user",
   password: "erl4n9_r0ck5",
-  hostname: "localhost",
+  hostname: "postgres",
   database: "logatron_prod",
   stacktrace: true,
   show_sensitive_data_on_connection_error: true,

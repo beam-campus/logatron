@@ -68,6 +68,10 @@ RUN mix phx.digest.clean --all && \
 
 RUN mix assets.deploy
 
+RUN MIX_ENV="prod" mix ecto.drop && \
+    MIX_ENV="prod" mix ecto.create && \
+    MIX_ENV="prod" mix ecto.migrate
+
 # RUN mix do deps.get, deps.compile, 
 RUN MIX_ENV="prod" mix compile && \
     MIX_ENV="prod" mix release for_web
@@ -87,6 +91,8 @@ RUN apt-get update -y && \
 
 # Set the locale
 RUN sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen && locale-gen
+
+RUN echo ${DATABASE_URL}
 
 ENV LANG en_US.UTF-8
 ENV LANGUAGE en_US:en
