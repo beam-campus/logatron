@@ -68,9 +68,9 @@ RUN mix phx.digest.clean --all && \
 
 RUN mix assets.deploy
 
-RUN MIX_ENV="prod" mix ecto.drop && \
-    MIX_ENV="prod" mix ecto.create && \
-    MIX_ENV="prod" mix ecto.migrate
+# RUN MIX_ENV="prod" mix ecto.drop && \
+#     MIX_ENV="prod" mix ecto.create && \
+#     MIX_ENV="prod" mix ecto.migrate
 
 # RUN mix do deps.get, deps.compile, 
 RUN MIX_ENV="prod" mix compile && \
