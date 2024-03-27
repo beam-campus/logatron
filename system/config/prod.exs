@@ -10,7 +10,7 @@ config :logatron, Logatron.Repo,
   pool_size: 10
 
 config :logatron_edge, LogatronEdge.Client,
-  uri: "ws://logatron.io/edge_socket/websocket",
+  uri: "wss://logatron.io/edge_socket/websocket",
   reconnect_after_msec: [200, 500, 1_000, 2_000]
 
 # Note we also include the path to a cache manifest

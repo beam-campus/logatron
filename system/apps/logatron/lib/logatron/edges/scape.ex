@@ -1,5 +1,9 @@
 defmodule Logatron.Edges.Scape do
   use Ecto.Schema
+  @moduledoc """
+  The schema for the Scape model.
+  """
+
   import Ecto.Changeset
 
   @primary_key {:id, :binary_id, autogenerate: true}
