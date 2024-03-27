@@ -20,6 +20,7 @@ config :logatron_edge, LogatronEdge.Client,
 # before starting your production server.
 config :logatron_web, LogatronWeb.Endpoint,
   url: [host: "logatron.io", port: 443],
+  server: true,
   cache_static_manifest: "priv/static/cache_manifest.json"
 
 # Configures Swoosh API Client
