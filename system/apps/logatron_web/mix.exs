@@ -23,7 +23,12 @@ defmodule LogatronWeb.MixProject do
   def application do
     [
       mod: {LogatronWeb.Application, []},
-      extra_applications: [:logger, :runtime_tools]
+      extra_applications: [
+        :logger,
+        :runtime_tools,
+        :observer,
+        :os_mon
+      ]
     ]
   end
 
@@ -37,28 +42,26 @@ defmodule LogatronWeb.MixProject do
   defp deps do
     [
       {:phoenix, "~> 1.7.11"},
-      {:phoenix_ecto, "~> 4.4"},
-      {:phoenix_html, "~> 4.0"},
-      {:phoenix_live_reload, "~> 1.2", only: :dev},
-      {:phoenix_live_view, "~> 0.20.2"},
-      {:floki, ">= 0.30.0", only: :test},
+      {:phoenix_ecto, "~> 4.5.1"},
+      {:ecto_sql, "~> 3.7"},
+      {:postgrex, ">= 0.0.0"},
+      {:floki, ">= 0.36.1"},
+      {:phoenix_html, "~> 4.1.1"},
+      {:phoenix_live_reload, "~> 1.5.2", only: :dev},
+      {:phoenix_live_view, "~> 0.20.14"},
       {:phoenix_live_dashboard, "~> 0.8.3"},
-      {:esbuild, "~> 0.8", runtime: Mix.env() == :dev},
-      {:tailwind, "~> 0.2", runtime: Mix.env() == :dev},
-      {:heroicons,
-          github: "tailwindlabs/heroicons",
-          tag: "v2.1.1",
-          sparse: "optimized",
-          app: false,
-          compile: false,
-          depth: 1
-          },
+      {:esbuild, "~> 0.8",},
+      {:tailwind, "~> 0.2"},
       {:telemetry_metrics, "~> 0.6"},
       {:telemetry_poller, "~> 1.0"},
       {:gettext, "~> 0.20"},
       {:logatron, in_umbrella: true},
+      {:plug_cowboy, "~> 2.0"},
+      {:contex, "~> 0.5.0"},
       {:jason, "~> 1.2"},
-      {:bandit, "~> 1.2"}
+      {:bandit, "~> 1.2"},
+      {:heroicons, "~> 0.5.5"},
+      {:heroicons_liveview, "~> 0.5.0"}
     ]
   end
 
