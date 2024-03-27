@@ -1,10 +1,10 @@
 import Config
 
 config :logatron, Logatron.Repo,
-  username: "logatron_prod",
+  username: "lt_prod_user",
   password: "erl4n9_r0ck5",
   hostname: "localhost",
-  database: "logatron_dev",
+  database: "logatron_prod",
   stacktrace: true,
   show_sensitive_data_on_connection_error: true,
   pool_size: 10
