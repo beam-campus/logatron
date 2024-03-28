@@ -1,6 +1,10 @@
 defmodule Logatron.Accounts.UserNotifier do
   import Swoosh.Email
 
+  @moduledoc """
+  Sends emails to users.
+  """
+
   alias Logatron.Mailer
 
   # Delivers the email using the application mailer.

@@ -46,7 +46,8 @@ module.exports = {
         }
       },
       fontFamily: {
-        brand: ["WorkSans", "sans-serif"]
+        brand: ["WorkSans", "sans-serif"],
+        // mono: ["Anonymous Pro", "monospace"]
       },
       fontWeight: {
         regular: "normal",

@@ -1,4 +1,4 @@
-defmodule Logatron.Edges.Scape do
+defmodule Logatron.Scapes.Scape do
   use Ecto.Schema
   @moduledoc """
   The schema for the Scape model.

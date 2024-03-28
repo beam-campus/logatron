@@ -10,8 +10,8 @@ defmodule LogatronWeb.UserSettingsLive do
       <:subtitle>Manage your account email address and password settings</:subtitle>
     </.header>
 
-    <div class="space-y-12 divide-y">
-      <div>
+    <div class="space-y-12 divide-y bg-ltDark">
+      <div class="bg-ltDark">
         <.simple_form
           for={@email_form}
           id="email_form"

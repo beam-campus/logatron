@@ -1,0 +1,40 @@
+<.header>
+  Listing Scapes
+  <:actions>
+    <.link patch={~p"/scapes/new"}>
+      <.button>New Scape</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.table
+  id="scapes"
+  rows={@streams.scapes}
+  row_click={fn {_id, scape} -> JS.navigate(~p"/scapes/#{scape}") end}
+>
+  <:action :let={{_id, scape}}>
+    <div class="sr-only">
+      <.link navigate={~p"/scapes/#{scape}"}>Show</.link>
+    </div>
+    <.link patch={~p"/scapes/#{scape}/edit"}>Edit</.link>
+  </:action>
+  <:action :let={{id, scape}}>
+    <.link
+      phx-click={JS.push("delete", value: %{id: scape.id}) |> hide("##{id}")}
+      data-confirm="Are you sure?"
+    >
+      Delete
+    </.link>
+  </:action>
+</.table>
+
+<.modal :if={@live_action in [:new, :edit]} id="scape-modal" show on_cancel={JS.patch(~p"/scapes")}>
+  <.live_component
+    module={LogatronWeb.ScapeLive.FormComponent}
+    id={@scape.id || :new}
+    title={@page_title}
+    action={@live_action}
+    scape={@scape}
+    patch={~p"/scapes"}
+  />
+</.modal>

@@ -1,5 +1,10 @@
 defmodule Logatron.ScapeModels.ScapeModel do
   use Ecto.Schema
+
+  @moduledoc """
+  The schema for the ScapeModel model.
+  """
+
   import Ecto.Changeset
 
   @primary_key {:id, :binary_id, autogenerate: true}
