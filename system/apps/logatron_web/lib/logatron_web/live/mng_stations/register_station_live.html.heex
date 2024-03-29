@@ -1,0 +1,16 @@
+<div class="lt-edit-gradient flex items-center justify-center">
+  <div class="block items-center justify-center">
+    <h1 class="text-white font-brand font-normal text-2xl" >
+      Register a Station
+    </h1>
+  </div>
+</div>
+<.form for={@form}>
+  <div class="justify-center px-28 w-full space-y-4 mb-10 border rounded transparent">
+    <.input  label="Station Name" name="name" field={@form[:name]}  placeholder="Name..." />
+    <.input  label="Station Description" name="description" field={@form[:description]} placeholder="Description..." />
+    <.input  label="Station Owner" name="name" field={@form[:user_email]} placeholder={@current_user.email} />
+    <.input  label="Station Architecture" name="name" field={@form[:architecture]} placeholder="e.g. Kubernetes, OTP..."   />
+  </div>
+</.form>
+

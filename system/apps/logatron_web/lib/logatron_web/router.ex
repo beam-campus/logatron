@@ -67,8 +67,10 @@ defmodule LogatronWeb.Router do
     live_session :require_authenticated_user,
       on_mount: [{LogatronWeb.UserAuth, :ensure_authenticated}] do
       live "/world/", BrowseWorldLive, :show
+      live "/mng_stations/browse", MngStations.BrowseLive, :show
       live "/users/settings", UserSettingsLive, :edit
       live "/users/settings/confirm_email/:token", UserSettingsLive, :confirm_email
+      live "/mng_stations/register", MngStations.RegisterStationLive, :new
     end
   end
 
@@ -81,6 +83,7 @@ defmodule LogatronWeb.Router do
       on_mount: [{LogatronWeb.UserAuth, :mount_current_user}] do
       live "/users/confirm/:token", UserConfirmationLive, :edit
       live "/users/confirm", UserConfirmationInstructionsLive, :new
+      live "/about", AboutLive, :show
     end
   end
 end

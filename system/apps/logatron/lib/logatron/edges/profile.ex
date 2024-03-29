@@ -1,5 +1,10 @@
 defmodule Logatron.Edges.Profile do
   use Ecto.Schema
+
+  @moduledoc """
+  A schema for the Profile model.
+  """
+
   import Ecto.Changeset
 
   @primary_key {:id, :binary_id, autogenerate: true}

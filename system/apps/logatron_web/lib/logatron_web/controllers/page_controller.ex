@@ -5,8 +5,8 @@ defmodule LogatronWeb.PageController do
 
 
   def home(conn, _params) do
-    redirect(conn, to: "/world")
+    redirect(conn, to: "/about")
   end
 
-  
+
 end

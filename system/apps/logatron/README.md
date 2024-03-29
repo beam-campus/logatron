@@ -1,3 +1,5 @@
 # Logatron
 
-**TODO: Add description**
+## Description
+
+Logatron Stream Exchange is a 

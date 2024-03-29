@@ -9,8 +9,8 @@ config :bcrypt_elixir, :log_rounds, 1
 # to provide built-in test partitioning in CI environment.
 # Run `mix help test` for more information.
 config :logatron, Logatron.Repo,
-  username: "postgres",
-  password: "postgres",
+  username: "logatron_dev",
+  password: "erlang_t",
   hostname: "localhost",
   database: "logatron_test#{System.get_env("MIX_TEST_PARTITION")}",
   pool: Ecto.Adapters.SQL.Sandbox,
@@ -24,7 +24,11 @@ config :logatron_web, LogatronWeb.Endpoint,
   server: false
 
 # Print only warnings and errors during test
-config :logger, level: :warning
+config :logger, :console,
+level: :debug,
+format: "$time[$level]\e[33;44m$metadata\e[0m>> $message\n",
+metadata: [:request_id, :initial_call, :mfa]
+
 
 # In test we don't send emails.
 config :logatron, Logatron.Mailer, adapter: Swoosh.Adapters.Test

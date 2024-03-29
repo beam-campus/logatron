@@ -19,10 +19,10 @@ module.exports = {
           DEFAULT: "#3C3B3B",
           light: "#828282"
         },
-        ltPurple: {
-          dark: "#631A61",
-          DEFAULT: "#A834A5",
-          light: "#E88FE5"
+        ltTurquoise: {
+          dark: "#004040",
+          DEFAULT: "#007575",          
+          light: "#40E0D0"
         },
         ltLavender: {
           dark: "#8C55FF",
@@ -47,7 +47,7 @@ module.exports = {
       },
       fontFamily: {
         brand: ["WorkSans", "sans-serif"],
-        // mono: ["Anonymous Pro", "monospace"]
+        mono: ["Anonymous Pro", "monospace"]
       },
       fontWeight: {
         regular: "normal",
