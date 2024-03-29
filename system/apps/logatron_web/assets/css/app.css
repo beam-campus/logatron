@@ -56,6 +56,24 @@
     height: 125px;
 }
 
+.lt-section-header {
+    font-family: 'WorkSans', sans-serif;
+    font-size: 1rem;
+    font-weight: bold;
+    color: #FAA523;    
+    text-align: center;
+    margin-top: 10px;
+}
+
+.lt-section-text {
+    font-family: 'WorkSans', monospace;
+    font-size: 1rem;
+    color: white;
+    text-align: justify;
+    margin-left: 50px;
+    margin-right: 50px;
+}
+
 
 
 .dropdown-menu-arrow::before {
