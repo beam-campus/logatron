@@ -65,11 +65,20 @@
     margin-top: 10px;
 }
 
+.lt-section-subheader {
+    font-family: 'WorkSans', sans-serif;
+    font-size: 1rem;
+    font-weight: normal;
+    color: white;    
+    text-align: center;
+    margin-top: 10px;    
+}
+
 .lt-section-text {
     font-family: 'WorkSans', monospace;
     font-size: 1rem;
     color: white;
-    text-align: justify;
+    text-align: center;
     margin-left: 50px;
     margin-right: 50px;
 }
