@@ -67,23 +67,32 @@ defmodule LogatronWeb.Router do
     live_session :require_authenticated_user,
       on_mount: [{LogatronWeb.UserAuth, :ensure_authenticated}] do
       live "/world/", BrowseWorldLive, :show
-      live "/mng_stations/browse", MngStations.BrowseLive, :show
+      live "/stations", StationLive.Index, :index
       live "/users/settings", UserSettingsLive, :edit
       live "/users/settings/confirm_email/:token", UserSettingsLive, :confirm_email
-      live "/mng_stations/register", MngStations.RegisterStationLive, :new
     end
   end
 
   scope "/", LogatronWeb do
     pipe_through [:browser]
-
     delete "/users/log_out", UserSessionController, :delete
-
     live_session :current_user,
       on_mount: [{LogatronWeb.UserAuth, :mount_current_user}] do
       live "/users/confirm/:token", UserConfirmationLive, :edit
       live "/users/confirm", UserConfirmationInstructionsLive, :new
       live "/about", AboutLive, :show
+
+      live "/stations", StationLive.Index, :index
+      live "/stations/new", StationLive.Index, :new
+      live "/stations/edit/:id", StationLive.Index, :edit
+
+      live "/devices", DeviceLive.Index, :index
+      live "/devices/:id/edit", DeviceLive.Index, :edit
+      live "/devices/:id/show/edit", DeviceLive.Show, :edit
+      live "/devices/new", DeviceLive.Index, :new
+
+
+
     end
   end
 end

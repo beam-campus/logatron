@@ -1,7 +1,7 @@
-defmodule LogatronWeb.ScapeLive.Show do
+defmodule LogatronWeb.StationLive.Show do
   use LogatronWeb, :live_view
 
-  alias Logatron.Scapes
+  alias Logatron.Stations
 
   @impl true
   def mount(_params, _session, socket) do
@@ -13,9 +13,9 @@ defmodule LogatronWeb.ScapeLive.Show do
     {:noreply,
      socket
      |> assign(:page_title, page_title(socket.assigns.live_action))
-     |> assign(:scape, Scapes.get_scape!(id))}
+     |> assign(:station, Stations.get_station!(id))}
   end
 
-  defp page_title(:show), do: "Show Scape"
-  defp page_title(:edit), do: "Edit Scape"
+  defp page_title(:show), do: "Show Station"
+  defp page_title(:edit), do: "Edit Station"
 end
