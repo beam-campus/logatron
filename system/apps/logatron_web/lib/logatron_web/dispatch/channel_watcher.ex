@@ -1,4 +1,4 @@
-defmodule LogatronWeb.ChannelWatcher do
+defmodule LogatronWeb.Dispatch.ChannelWatcher do
   use GenServer
 
   @moduledoc """

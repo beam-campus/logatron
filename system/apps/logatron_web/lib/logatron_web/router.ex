@@ -91,6 +91,8 @@ defmodule LogatronWeb.Router do
       live "/devices/:id/show/edit", DeviceLive.Show, :edit
       live "/devices/new", DeviceLive.Index, :new
 
+      live "/view_scapes", ViewScapesLive.Index, :index
+
 
 
     end

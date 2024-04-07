@@ -1,6 +1,10 @@
 defmodule LogatronWeb.UserAuth do
   use LogatronWeb, :verified_routes
 
+  @moduledoc """
+  This module provides functions to log in and log out users.
+  """
+
   import Plug.Conn
   import Phoenix.Controller
 

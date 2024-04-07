@@ -11,7 +11,7 @@
 ```mermaid
 erDiagram 
 
-    Landscape ||--|{ Region : "at least 1"
+    Scape ||--|{ Region : "at least 1"
     Region ||--|{ Farm : "at least 1"
     Farm ||--|{ Herd : "at least 1"
     Herd ||--|{ Life : "at least 1"

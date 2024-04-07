@@ -1,22 +1,22 @@
-defmodule LogatronEdge.Landscape.SystemTest do
+defmodule LogatronEdge.Scape.SystemTest do
   @moduledoc """
-  This module tests the LogatronEdge.Landscape.System module.
+  This module tests the LogatronEdge.Scape.System module.
   """
   use ExUnit.Case
 
   require Logger
 
-  @test_landscape_params %{
+  @test_scape_params %{
     id: "farm_scape",
     nbr_of_regions: 5,
     min_area: 30_000,
     min_people: 10_000_000
   }
 
-  @tag :test_landscape_system
-  doctest LogatronEdge.Landscape.System
+  @tag :test_scape_system
+  doctest LogatronEdge.Scape.System
 
-  describe "\n[~> Setup the Landscape.System test environment <~]\n" do
+  describe "\n[~> Setup the Scape.System test environment <~]\n" do
     setup %{} do
       case res = Logatron.Countries.Cache.start_link([]) do
         {:ok, cache} ->
@@ -27,10 +27,9 @@ defmodule LogatronEdge.Landscape.SystemTest do
       end
     end
 
-
-    @tag :test_landscape_system
-    test "\n[== Test that we can start the LogatronEdge.Landscape.System ==]" do
-      res = LogatronEdge.Landscape.System.start_link(@test_landscape_params)
+    @tag :test_scape_system
+    test "\n[== Test that we can start the LogatronEdge.Scape.System ==]" do
+      res = LogatronEdge.Scape.System.start_link(@test_scape_params)
 
       case res do
         {:ok, _} ->
@@ -40,18 +39,18 @@ defmodule LogatronEdge.Landscape.SystemTest do
           assert true
       end
 
-      Logger.debug("LogatronEdge.Landscape.System.start_link/1 returned => #{inspect(res)}")
+      Logger.debug("LogatronEdge.Scape.System.start_link/1 returned => #{inspect(res)}")
     end
 
-    @tag :test_landscape_system
-    test "that the LogatronEdge.Landscape.System module exists" do
-      assert is_list(LogatronEdge.Landscape.System.module_info())
+    @tag :test_scape_system
+    test "that the LogatronEdge.Scape.System module exists" do
+      assert is_list(LogatronEdge.Scape.System.module_info())
     end
 
-    @tag :test_landscape_system
-    test "that we can start the Landscape.System for a particular landscape" do
+    @tag :test_scape_system
+    test "that we can start the Scape.System for a particular scape" do
       res =
-        LogatronEdge.Landscape.System.start_link(@test_landscape_params)
+        LogatronEdge.Scape.System.start_link(@test_scape_params)
 
       inspect(res)
     end

@@ -1,15 +1,15 @@
-defmodule LogatronEdge.Landscape.ChannelTest do
+defmodule LogatronEdge.ChannelTest do
   use ExUnit.Case
 
+  @moduledoc """
+  Tests for the LogatronEdge.Channel module.
+  """
 
   @tag :ignore_test
-  doctest LogatronEdge.Landscape.Channel
+  doctest LogatronEdge.Channel
 
   @tag :ignore_test
-  test "that the LogatronEdge.Landscape.Channel module exists" do
-    assert is_list(LogatronEdge.Landscape.Channel.module_info())
+  test "that the LogatronEdge.Channel module exists" do
+    assert is_list(LogatronEdge.Channel.module_info())
   end
-
-
-
 end

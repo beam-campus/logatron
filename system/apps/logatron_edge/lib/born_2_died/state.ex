@@ -28,6 +28,9 @@ defmodule Logatron.Born2Died.State do
   embedded_schema do
     field(:id, :string)
     field(:edge_id, :string)
+    field(:scape_id, :string)
+    field(:region_id, :string)
+    field(:farm_id, :string)
     field(:field_id, :string)
     field(:ticks, :integer)
     field(:status, :integer)

@@ -12,7 +12,6 @@ defmodule Logatron.Stations.Station do
     field :location_id, :string
     field :gateway, :string
     field :nature, :string
-
     timestamps()
   end
 

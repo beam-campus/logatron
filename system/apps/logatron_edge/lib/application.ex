@@ -6,7 +6,11 @@ defmodule LogatronEdge.Application do
   """
   use Application
 
+  require Logger
+
+
   @default_edge_id Logatron.Core.constants()[:edge_id]
+
 
   def edge_id,
     do: @default_edge_id
@@ -14,12 +18,18 @@ defmodule LogatronEdge.Application do
   @impl Application
   def start(_type, _args) do
 
-    landscape_init = LogatronEdge.Landscape.InitParams.europe()
+    edge_init = LogatronEdge.InitParams.from_environment()
+
+    Logger.info("\n\n\n Starting Logatron Edge with edge_init: #{inspect(edge_init)} \n\n\n")
+
+    scape_init = LogatronEdge.Scape.InitParams.europe(edge_init.id)
+
     children = [
       {Finch, name: Logatron.Finch},
-      {LogatronEdge.Client, landscape_init},
+      {LogatronEdge.Client, edge_init},
       {Countries.Cache, name: Logatron.Countries},
-      {LogatronEdge.Landscape.System, landscape_init}
+      {LogatronEdge.Channel, scape_init},
+      {LogatronEdge.Scape.System, scape_init}
     ]
 
     Supervisor.start_link(children,

@@ -7,8 +7,15 @@ defmodule Logatron.Schema.Edge do
 
   import Ecto.Changeset
 
-  alias Logatron.Schema.Edge
-  alias Logatron.Schema.Id
+  alias Logatron.Schema.{Edge, Id}
+
+  @all_fields [
+    :id,
+    :ip_address,
+    :whois
+  ]
+
+  @required_fields [:id]
 
   def id_prefix, do: "edge"
 
@@ -33,10 +40,8 @@ defmodule Logatron.Schema.Edge do
   def changeset(edge, args)
       when is_map(args) do
     edge
-    |> cast(args, [:id])
-    |> validate_required([
-      :id
-    ])
+    |> cast(args, @all_fields)
+    |> validate_required(@required_fields)
 
   end
 

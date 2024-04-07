@@ -7,16 +7,16 @@ defmodule Logatron.Schema.Region do
   alias Logatron.Schema.Id
 
   @moduledoc """
-  Logatron.Schema.Region contains the schema for Regions that make up a Landscape
+  Logatron.Schema.Region contains the schema for Regions that make up a Scape
   A Region is a grouping of Farms
   """
 
   @primary_key false
   embedded_schema do
-    field :id, :string
-    field :name, :string
-    field :description, :string
-    embeds_many :farms, Logatron.Schema.Farm
+    field(:id, :string)
+    field(:name, :string)
+    field(:description, :string)
+    embeds_many(:farms, Logatron.Schema.Farm)
   end
 
   defp id_prefix, do: "region"

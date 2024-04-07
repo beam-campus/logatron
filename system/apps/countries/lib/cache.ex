@@ -43,6 +43,8 @@ defmodule Countries.Cache do
         {:countries_of_regions, list_of_regions, min_area, min_population}
       )
 
+
+
   ######## CALLBACKS ##########
   @impl true
   def init(_url) do
@@ -77,7 +79,15 @@ defmodule Countries.Cache do
           c["region"] in list_of_regions
       end)
       |> Stream.map(
-        &%{region: &1["region"], name: &1["name"]["common"], subregion: &1["subregion"]}
+        &%{
+          region: &1["region"],
+          name: &1["name"]["common"],
+          subregion: &1["subregion"],
+          area: &1["area"],
+          population: &1["population"],
+          latlng: &1["latlng"],
+          flag_svg: &1["flags"]["svg"]
+        }
       )
       |> Enum.sort()
 
@@ -151,9 +161,10 @@ defmodule Countries.Cache do
 
   ######### PLUMBING ##########
   def start_link(state),
-  do:
-    GenServer.start_link(__MODULE__, state, name: __MODULE__)
+    do: GenServer.start_link(__MODULE__, state, name: __MODULE__)
 
+  def stop(),
+    do: GenServer.stop(__MODULE__)
 
   def start() do
     case res = start_link([]) do

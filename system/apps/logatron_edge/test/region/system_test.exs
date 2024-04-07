@@ -2,7 +2,7 @@ defmodule Logatron.Region.SystemTest do
   use ExUnit.Case
 
 
-  @test_landscape
+  @test_scape
 
   @tag :ignore_test
   doctest Logatron.Region.System
@@ -17,7 +17,7 @@ defmodule Logatron.Region.SystemTest do
 
   @tag :ignore_test
   test "that we can start a Logatron.Region.System" do
-    landscape = @test_landscape
+    scape = @test_scape
     res =  Logatron.Region.System.start_link(nil,nil)
     case res do
       {:ok, pid} ->

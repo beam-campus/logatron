@@ -4,13 +4,17 @@ defmodule LogatronWeb.EdgeChannel do
   @moduledoc """
   The EdgeChannel is used to broadcast messages to all clients
   """
-
   require Logger
   require Phoenix.PubSub
-  require LogatronEdge.Facts
+  require LogatronCore.Facts
 
-  alias LogatronWeb.EdgeHandler
-  alias LogatronWeb.EdgePresence
+  alias LogatronWeb.Dispatch.{
+    EdgePresence,
+    EdgeHandler,
+    ScapeHandler,
+    RegionHandler
+  }
+
   alias LogatronCore.Facts
 
   @fact_born "fact:born"
@@ -19,26 +23,37 @@ defmodule LogatronWeb.EdgeChannel do
   @hope_ping "ping"
   @hope_join_edge "join_edge"
   @edge_attached_v1 Facts.edge_attached_v1()
-  @pubsub_attached_v1 Facts.edge_attached_v1()
 
-  @attach_landscape_v1 "attach_landscape:v1"
+  # @scape_attached_v1 Facts.scape_attached_v1()
 
+  @initializing_scape_v1 Facts.initializing_scape_v1()
+  @scape_initialized_v1 Facts.scape_initialized_v1()
 
+  @initializing_region_v1 Facts.initializing_region_v1()
+  @region_initialized_v1 Facts.region_initialized_v1()
+
+  # @attach_scape_v1 "attach_scape:v1"
+
+  @presence_changed_v1 Facts.presence_changed_v1()
 
   ################ CALLBACKS ################
   @impl true
-  def join("edge:lobby", landscape_init, socket),
-    do: EdgeHandler.handle_join("edge:lobby", landscape_init, socket)
-
+  def join("edge:lobby", edge_init, socket),
+    do: EdgeHandler.handle_join("edge:lobby", edge_init, socket)
 
   @impl true
   def handle_info(:after_join, socket) do
+
+    Logger.info(":after_join #{inspect(socket)}")
+
     {:ok, _} =
       EdgePresence.track(socket, "edge_1", %{
         online_at: inspect(System.system_time(:second))
       })
 
-    push(socket, "presence_state", EdgePresence.list(socket))
+    broadcast(socket, @presence_changed_v1, EdgePresence.list(socket))
+
+
     {:noreply, socket}
   end
 
@@ -48,22 +63,7 @@ defmodule LogatronWeb.EdgeChannel do
     {:reply, {:ok, payload}, socket}
   end
 
-  @impl true
-  def handle_in(@edge_attached_v1, landscape_init, socket) do
-    Logger.debug(
-      "EdgeChannel.handle_in: #{@edge_attached_v1}. Publishing #{inspect(landscape_init)} to #{@pubsub_attached_v1}"
-    )
-
-    Phoenix.PubSub.broadcast!(
-      Logatron.PubSub,
-      @pubsub_attached_v1,
-      {@pubsub_attached_v1, landscape_init}
-    )
-
-    {:reply, {:ok, landscape_init}, socket}
-  end
-
-  # Channels can be used in a request/response fashion
+    # Channels can be used in a request/response fashion
   # by sending replies to requests from the client
   @impl true
   def handle_in(@hope_ping, payload, socket) do
@@ -103,9 +103,41 @@ defmodule LogatronWeb.EdgeChannel do
     {:noreply, socket}
   end
 
+  # @impl true
+  # def handle_in(@attach_scape_v1, scape_init, socket),
+  #   do: LogatronWeb.ScapeHandler.attach_scape_v1(scape_init, socket)
+
   @impl true
-  def handle_in(@attach_landscape_v1, landscape_init, socket),
-    do: LogatronWeb.LandscapeHandler.attach_landscape_v1(landscape_init, socket)
+  def handle_in(@edge_attached_v1, edge_init, socket) do
+    Logger.info("#{@edge_attached_v1} #{inspect(edge_init)}")
+    EdgeHandler.pub_edge_attached(edge_init, socket)
+    {:reply, {:ok, edge_init}, socket}
+  end
+
+
+  @impl true
+  def handle_in(@initializing_scape_v1, payload, socket) do
+    Logger.debug("EdgeChannel.handle_in: #{@initializing_scape_v1} #{inspect(payload)}")
+    ScapeHandler.pub_initializing_scape_v1(payload, socket)
+  end
+
+  @impl true
+  def handle_in(@scape_initialized_v1, payload, socket) do
+    Logger.debug("EdgeChannel.handle_in: #{@scape_initialized_v1} #{inspect(payload)}")
+    ScapeHandler.pub_scape_initialized_v1(payload, socket)
+  end
+
+  @impl true
+  def handle_in(@initializing_region_v1, payload, socket) do
+    Logger.debug("EdgeChannel.handle_in: #{@initializing_region_v1} #{inspect(payload)}")
+    RegionHandler.pub_initializing_region_v1(payload, socket)
+  end
+
+  @impl true
+  def handle_in(@region_initialized_v1, payload, socket) do
+    Logger.debug("EdgeChannel.handle_in: #{@region_initialized_v1} #{inspect(payload)}")
+    RegionHandler.pub_region_initialized_v1(payload, socket)
+  end
 
   ################ INTERNALS ################
   defp to_topic(edge_id),

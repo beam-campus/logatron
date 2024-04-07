@@ -1,4 +1,4 @@
-defmodule LogatronWeb.EdgePresence do
+defmodule LogatronWeb.Dispatch.EdgePresence do
   use Phoenix.Presence,
   otp_app: :Logatron_web,
   pubsub_server: Logatron.PubSub

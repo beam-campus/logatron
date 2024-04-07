@@ -1,186 +1,201 @@
-<header class="flex justify-between items-center px-6 py-3 bg-ltDark">
-  <!-- Left side of toolbar -->
-  <div class="flex relative">
-    
-    <div>
-      <a href={~p"/"}>
-        <img src="/images/lg-logo-no-bg.svg" alt="logatron logo" width="200">
-      </a>
-    </div>
-    <div>
-      <div class="text-white font-brand font-regular text-sm m-2 px-2">
-        17.2k Leaves feeding 7 Scapes  @ 3.9M Facts/s
+<div class="flex flex-col h-screen">
+
+  <%!-- HEADER   --%>
+
+  <header class="fixed top-0 left-0 right-0 flex justify-between items-center px-6 py-3 bg-ltDark">
+    <!-- Left side of toolbar -->
+    <div class="flex relative">     
+      
+      <div>
+        <a href={~p"/"}>
+          <img src="/images/lg-logo-no-bg.svg" alt="logatron logo" width="200">
+        </a>
       </div>
     </div>
-  </div>
 
-  <!-- Right side of toolbar -->
-  <div class="relative">
-    <%= if @current_user do %>  
-      <button 
-        class="img-down-arrow-user"
-        type="button" 
-        id="user_menu_button" 
-        phx-click={LogatronWeb.Layouts.App.toggle_dropdown_menu()}>
-        <img src="/images/user-image.svg" alt="Profile Image" class="w-8 h-8 round-image-padding-user">
-      </button>
-    <% else %>
-      <button 
-        class="img-down-arrow"
-        type="button" 
-        id="user_menu_button" 
-        phx-click={LogatronWeb.Layouts.App.toggle_dropdown_menu()}>
-        <img src="/images/user-image.svg" alt="Profile Image" class="w-8 h-8 round-image-padding">
-      </button>
-    <% end %>
-    <div 
-      id="dropdown_menu" 
-      phx-click-away={LogatronWeb.Layouts.App.toggle_dropdown_menu()}
-      class="dropdown-menu-arrow absolute right-0 m-2 py-2 w-48 bg-ltDark rounded-lg shadow-xl border border-white" 
-      hidden="true"
-    >
-      <%= if @current_user do %>
-        <.link 
-          href={~p"/users/settings"} 
-          class="menu-item border-b border-white border-opacity-50"
-          role="menuitem"
-          tabindex="-1"
-          method="get"
-          id="user-menu-item-0"
-        >
-          Singed in as <%= @current_user.email %>
-        </.link>
-        <.link 
-          href="/world"
-          class="menu-item border-b border-white border-opacity-50"
-          role="menuitem"
-          tabindex="-1"
-          method="get"
-          id="user-menu-item-1"
-        >
-          Streams Exchange
-        </.link>
-
-        <.link 
-          href="#"
-          class="menu-item"
-          role="menuitem"
-          tabindex="-1"
-          method="get"
-          id="user-menu-item-2"
-        >
-          Your Scapes
-        </.link>
-                <.link 
-          href="/devices"
-          class="menu-item"
-          role="menuitem"
-          tabindex="-1"
-          method="get"
-          id="user-menu-item-3"
-        >
-          Your Devices
-        </.link>
-        <.link 
-          href="/stations"
-          class="menu-item"
-          role="menuitem"
-          tabindex="-1"
-          method="get"
-          id="user-menu-item-3"
-        >
-          Your Stations
-        </.link>
-        <.link 
-          href="#"
-          class="menu-item border-b border-white border-opacity-50"
-          role="menuitem"
-          tabindex="-1"
-          method="get"
-          id="user-menu-item-4"
-        >
-          Your Models
-        </.link>
-        <.link 
-          href={~p"/users/log_out"}
-          class="menu-item"
-          role="menuitem"
-          tabindex="-1"
-          method="delete"
-          id="user-menu-item-5"
-        >
-          Sign out
-        </.link>
-
-
-
+    <!-- Right side of toolbar -->
+    <div class="relative">
+      <%= if @current_user do %>  
+        <button 
+          class="img-down-arrow-user"
+          type="button" 
+          id="user_menu_button" 
+          phx-click={LogatronWeb.Layouts.App.toggle_dropdown_menu()}>
+          <img src="/images/user-image.svg" alt="Profile Image" class="w-8 h-8 round-image-padding-user">
+        </button>
       <% else %>
-        <.link 
-          href="/world"
-          class="menu-item border-b border-white border-opacity-50"
-          role="menuitem"
-          tabindex="-1"
-          method="get"
-          id="user-menu-item-1"
-        >
-          Streams Exchange
-        </.link>
-
-        
-        <.link 
-          href={~p"/users/log_in"} 
-          class="menu-item border-b border-white border-opacity-50"
-          role="menuitem"
-          tabindex="-1"
-          method="get"
-          id="user-menu-item-100"
-        >
-          Sign in
-        </.link>
-        
-        <.link 
-          href={~p"/users/register"} 
-          class="menu-item"
-          role="menuitem"
-          tabindex="-1"
-          method="get"
-          id="user-menu-item-101"
-        >
-          Register
-        </.link>
-        
+        <button 
+          class="img-down-arrow"
+          type="button" 
+          id="user_menu_button" 
+          phx-click={LogatronWeb.Layouts.App.toggle_dropdown_menu()}>
+          <img src="/images/user-image.svg" alt="Profile Image" class="w-8 h-8 round-image-padding">
+        </button>
       <% end %>
-    </div>  
-  </div>
+      <div 
+        id="dropdown_menu" 
+        phx-click-away={LogatronWeb.Layouts.App.toggle_dropdown_menu()}
+        class="dropdown-menu-arrow absolute right-0 m-2 py-2 w-48 bg-ltDark rounded-lg shadow-xl border border-white" 
+        hidden="true"
+      >
+        <%= if @current_user do %>
+          <.link 
+            href={~p"/users/settings"} 
+            class="menu-item border-b border-white border-opacity-50"
+            role="menuitem"
+            tabindex="-1"
+            method="get"
+            id="user-menu-item-0"
+          >
+            Singed in as <%= @current_user.email %>
+          </.link>
 
-</header>
+          <.link 
+            href="/world"
+            class="menu-item border-b border-white border-opacity-50"
+            role="menuitem"
+            tabindex="-1"
+            method="get"
+            id="user-menu-item-1"
+          >
+            Streams Exchange
+          </.link>
 
-<main>
-<.flash_group flash={@flash} />
-  <%= @inner_content %>
-</main>
+          <.link 
+            href="/view_scapes"
+            class="menu-item"
+            role="menuitem"
+            tabindex="-1"
+            method="get"
+            id="user-menu-item-2"
+          >
+            Your Scapes
+          </.link>
+          
+          <.link 
+            href="/devices"
+            class="menu-item"
+            role="menuitem"
+            tabindex="-1"
+            method="get"
+            id="user-menu-item-3"
+          >
+            Your Devices
+          </.link>
+          <.link 
+            href="/stations"
+            class="menu-item"
+            role="menuitem"
+            tabindex="-1"
+            method="get"
+            id="user-menu-item-3"
+          >
+            Your Stations
+          </.link>
+          <.link 
+            href="#"
+            class="menu-item border-b border-white border-opacity-50"
+            role="menuitem"
+            tabindex="-1"
+            method="get"
+            id="user-menu-item-4"
+          >
+            Your Models
+          </.link>
+          <.link 
+            href={~p"/users/log_out"}
+            class="menu-item"
+            role="menuitem"
+            tabindex="-1"
+            method="delete"
+            id="user-menu-item-5"
+          >
+            Sign out
+          </.link>
 
-<footer class="h-[120px] w-full flex justify-center text-white px-16 py-20">
-  <div class="w-full px-10">
-    <div class="border-t-[1px] border-gray-700 w-full">
-      <div class="flex items-center space-x-2 py-6">
-        <img src="/images/logo-img-only.png" alt="Logatron Logo image-only" class="h-7 w-7" />
-        <p class="text-white font-brand font-regular text-sm">
-          © 2024 by <a href="https://discomco.pl" class="hover:underline">DisComCo</a>
-        </p>
-        <div class="text-ltOrange px-4 font-brand font-regular text-xs space-x-2">
-          <a href={~p"/"} class="text-ltOrange-light hover:underline">
-            Terms
-          </a>
-          <a href={~p"/"} class="text-ltOrange-light hover:underline">
-            Privacy
-          </a>
-          <a href={~p"/about"} class="text-ltOrange-light hover:underline">
-            About
-          </a>
-        </div>
+
+
+        <% else %>
+          <.link 
+            href="/world"
+            class="menu-item border-b border-white border-opacity-50"
+            role="menuitem"
+            tabindex="-1"
+            method="get"
+            id="user-menu-item-1"
+          >
+            Streams Exchange
+          </.link>
+
+          
+          <.link 
+            href={~p"/users/log_in"} 
+            class="menu-item border-b border-white border-opacity-50"
+            role="menuitem"
+            tabindex="-1"
+            method="get"
+            id="user-menu-item-100"
+          >
+            Sign in
+          </.link>
+          
+          <.link 
+            href={~p"/users/register"} 
+            class="menu-item"
+            role="menuitem"
+            tabindex="-1"
+            method="get"
+            id="user-menu-item-101"
+          >
+            Register
+          </.link>
+          
+        <% end %>
+      </div>  
+    </div>
+
+  </header>
+
+
+<%!-- MAIN CONTENT --%>
+
+
+  <main class="flex-grow overflow-auto pt-12">
+    <.flash_group flash={@flash} />
+      <%= @inner_content %>
+  </main>
+
+
+
+<%!-- FOOTER --%>
+
+
+<%!-- <footer class="h-[120px] w-full flex justify-center text-white px-16 py-20"> --%>
+  <footer  class="fixed bottom-0 left-0 right-0">
+
+    <div class="w-full px-10">
+      <div class="border-t-[1px] border-gray-700 w-full">
+          <div class="flex items-center space-x-2 py-6">
+              <img src="/images/logo-img-only.png" alt="Logatron Logo image-only" class="h-7 w-7" />
+              <p class="text-white font-brand font-regular text-sm">
+                © 2024 by <a href="https://discomco.pl" class="hover:underline">DisComCo</a>
+              </p>
+              <div class="text-ltOrange px-4 font-brand font-regular text-xs space-x-2">
+                  <a href={~p"/"} class="text-ltOrange-light hover:underline">
+                    Terms
+                  </a>
+                  <a href={~p"/"} class="text-ltOrange-light hover:underline">
+                    Privacy
+                  </a>
+                  <a href={~p"/about"} class="text-ltOrange-light hover:underline">
+                    About
+                  </a>
+              </div>
+          </div>
       </div>
     </div>
-  </div>
-</footer>
 
+  </footer>
+
+
+</div>

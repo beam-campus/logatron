@@ -1,6 +1,10 @@
 defmodule Logatron.Schema.Vitals do
   use Ecto.Schema
 
+  @moduledoc """
+  Logatron.Schema.Vitals contains the Ecto schema for the vitals.
+  """
+
   import Logatron.Limits
 
   @primary_key false

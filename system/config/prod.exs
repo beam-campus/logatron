@@ -1,10 +1,11 @@
 import Config
 
+
 config :logatron, Logatron.Repo,
-  username: "lt_prod_user",
-  password: "erl4n9_r0ck5",
+  username: System.get_env("POSTGRES_USER"),
+  password: System.get_env("POSTGRES_PASSWORD"),
   hostname: "postgres",
-  database: "logatron_prod",
+  database: System.get_env("LOGATRON_DB"),
   stacktrace: true,
   show_sensitive_data_on_connection_error: true,
   pool_size: 10

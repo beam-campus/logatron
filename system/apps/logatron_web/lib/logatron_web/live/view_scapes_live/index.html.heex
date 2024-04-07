@@ -1,0 +1,76 @@
+<div class="flex flex-col w-screen justify-left font-mono py-1">
+
+  <div class="lt-view-gradient flex flex-col items-center justify-center">
+    <div>
+      <h1 class="text-white font-brand font-normal text-2xl">
+        Scapes Overview
+      </h1>
+    </div>
+    <div class="text-white font-brand font-regular text-sm m-1 px-2">
+      <%= 
+        scapes_count = Enum.count(@scapes)
+        regions_count = Enum.count(@regions)
+        farms_count = Enum.count(@farms)
+        animals_count = Enum.count(@animals)
+        edges_count = Enum.count(@edges)
+        if edges_count > 0 do  
+      %>
+        <%= edges_count %> edge(s) connected
+      <% else %>
+        awaiting edge connections...
+      <% end %> 
+    </div>
+  </div>
+
+  <div class="flex flex-col w-screen justify-left font-mono px-10 py-4">
+    <div class="w-full text-ltTurquoise-light">
+      <%= for scape <- @scapes do %>
+        <div class="py-1">
+          <div class="flex flex-row gap-3 px-4 w-full">
+            <h2><%= scape.name %></h2>
+            <p>sourced by 
+            <%= 
+              Enum.count(@scapes
+              |> Enum.uniq(fn s -> s.id == scape.id end))
+            %>
+            </p>
+          </div>
+          <div>
+            <%= for region <- @regions |> Enum.filter(fn region -> region.scape_id==scape.id end) do %>
+              <div class="flex flex-row gap-3 px-4 w-screen">
+                <h3><%= region.name %></h3>
+                <p><%= region.edge_id %></p>
+                <p><%= region.scape_id %></p>
+              </div>
+              <div class="flex flex-col px-4">
+                  <%= for farm <- @farms do %>
+                    <div class="flex flex-row gap-3 px-4 w-screen">
+                      <h3><%= farm.name %></h3>
+                      <p><%= farm.description %></p>
+                      <p>(<%= farm.latitude %>, <%= farm.longitude %>)</p>
+                    </div>
+                    <div class="flex flex-col px-4 w-screen">
+                      <%= for animal <- farm.animals do %>
+                      <div class="grid grid-cols-6 w-screen px-4">
+                          <p class="w-30 text-ltOlive-light"><%= animal.name %></p>
+                          <p class="w-20"><%= animal.gender %></p>
+                          <p class="w-20"><%= animal.age %>yo</p>
+                          <p class="w-20"><%= animal.weight %>kg</p>
+                          <p class="w-20">h: <%= animal.health %>%</p>
+                          <p class="w-20">(<%= animal.position.x %>, <%= animal.position.y %>)</p>
+                        </div>
+                      <% end %>
+                    </div>
+                  <% end %>
+              </div>
+
+
+            <% end %>
+          </div>  
+        </div>
+      <% end %>
+
+    </div>
+  </div>
+
+</div>

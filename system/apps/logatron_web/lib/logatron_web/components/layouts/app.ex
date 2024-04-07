@@ -1,4 +1,5 @@
 defmodule LogatronWeb.Layouts.App do
+
   @moduledoc """
   This layout is used for the main layout of the application.
   """
@@ -19,4 +20,5 @@ defmodule LogatronWeb.Layouts.App do
       }
     )
   end
+
 end

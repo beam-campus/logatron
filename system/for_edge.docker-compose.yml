@@ -1,0 +1,20 @@
+version: "3.5"
+
+
+networks:
+  
+  edge_net:
+    driver: bridge
+    name: edge_net
+
+
+services:
+
+  logatron_edge:
+    image: logatron_edge
+    container_name: logatron_edge
+    networks:
+      - edge_net
+    environment:
+      - LOGATRON_EDGE_API_KEY=5000
+      - LOGATRON_EDGE_HOST=

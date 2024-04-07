@@ -12,9 +12,9 @@ defmodule LogatronWeb.Application do
       # Start a worker by calling: LogatronWeb.Worker.start_link(arg)
       # {LogatronWeb.Worker, arg},
       # Start to serve requests, typically the last entry
-      LogatronWeb.EdgePresence,
+      LogatronWeb.Dispatch.EdgePresence,
       LogatronWeb.Endpoint,
-      {LogatronWeb.ChannelWatcher, "edge:lobby"}
+      {LogatronWeb.Dispatch.ChannelWatcher, "edge:lobby"}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

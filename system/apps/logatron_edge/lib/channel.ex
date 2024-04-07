@@ -1,0 +1,138 @@
+defmodule LogatronEdge.Channel do
+  use GenServer, restart: :transient
+
+  @moduledoc """
+  LogatronEdge.Channel is a GenServer that manages a channel to a scape,
+  """
+
+  alias LogatronEdge.Client
+  alias LogatronCore.Facts
+
+  require Logger
+
+  # @attach_scape_v1 "attach_scape:v1"
+
+  @initializing_scape_v1 Facts.initializing_scape_v1()
+  @scape_initialized_v1 Facts.scape_initialized_v1()
+
+  @initializing_region_v1 LogatronCore.Facts.initializing_region_v1()
+  @region_initialized_v1 LogatronCore.Facts.region_initialized_v1()
+
+  ############ API ##########
+  # def attach_scape(scape_init),
+  #   do:
+  #     GenServer.cast(
+  #       via(scape_init.id),
+  #       {:attach_scape, scape_init}
+  #     )
+
+  def initializing_scape(scape_init),
+    do:
+      GenServer.cast(
+        via(scape_init.id),
+        {:initializing_scape, scape_init}
+      )
+
+  def scape_initialized(scape_init),
+    do:
+      GenServer.cast(
+        via(scape_init.id),
+        {:scape_initialized, scape_init}
+      )
+
+  def initializing_region(region_init),
+    do:
+      GenServer.cast(
+        via(region_init.scape_id),
+        {:initializing_region, region_init}
+      )
+
+  def region_initialized(region_init),
+    do:
+      GenServer.cast(
+        via(region_init.scape_id),
+        {:region_initialized, region_init}
+      )
+
+  ########### CALLBACKS ################
+
+  @impl true
+  def handle_cast({:initializing_region, region_init}, %{edge_id: edge_id} = state) do
+    Logger.debug(
+      " :initializing_region ~> \n STATE: #{inspect(state)} \n\n #{region_init.scape_id}.#{region_init.id} \n\n"
+    )
+
+    Client.publish(
+      edge_id,
+      @initializing_region_v1,
+      %{region_init: region_init}
+    )
+
+    {:noreply, state}
+  end
+
+  @impl true
+  def handle_cast({:region_initialized, region_init}, %{edge_id: edge_id} = state) do
+    Logger.debug(
+      " :region_initialized ~> \n STATE: #{inspect(state)} \n\n #{region_init.scape_id}.#{region_init.id} \n\n"
+    )
+
+    Client.publish(
+      edge_id,
+      @region_initialized_v1,
+      %{region_init: region_init}
+    )
+
+    {:noreply, state}
+  end
+
+  # @impl true
+  # def handle_cast({:attach_scape, scape_init}, _state) do
+  #   Logger.debug(" :attach_scape ~> #{scape_init.id}")
+  #   Client.publish(scape_init.edge_id, @attach_scape_v1, scape_init)
+  #   {:noreply, scape_init}
+  # end
+
+  @impl true
+  def handle_cast({:initializing_scape, scape_init}, state) do
+    Logger.debug(" STATE ~> #{inspect(state)}")
+    %{edge_id: edge_id} = state
+    Logger.debug(" :initializing_scape ~> #{scape_init.id}")
+    Client.publish(edge_id, @initializing_scape_v1, scape_init)
+    {:noreply, state}
+  end
+
+  @impl true
+  def handle_cast({:scape_initialized, scape_init}, %{edge_id: edge_id} = state) do
+    Logger.debug(" :scape_initialized ~> #{scape_init.id}")
+    Client.publish(edge_id, @scape_initialized_v1, scape_init)
+    {:noreply, state}
+  end
+
+  @impl true
+  def init(scape_init) do
+    {:ok, scape_init}
+  end
+
+  ############### PLUMBING ##############
+  def child_spec(scape_init),
+    do: %{
+      id: via(scape_init.id),
+      start: {__MODULE__, :start_link, [scape_init]},
+      type: :worker
+    }
+
+  def to_name(key) when is_bitstring(key),
+    do: "logatron_edge.scape.channel.#{key}"
+
+  def via(key),
+    do: Logatron.Registry.via_tuple({:channel, to_name(key)})
+
+  def start_link(scape_init),
+    do:
+      GenServer.start_link(
+        __MODULE__,
+        scape_init,
+        name: via(scape_init.id)
+      )
+end
