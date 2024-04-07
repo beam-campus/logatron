@@ -80,6 +80,14 @@ defmodule Logatron.Schema.Farm do
     "Turquoise"
   ]
 
+  @all_fields [
+    :id,
+    :name,
+    :nbr_of_robots,
+    :nbr_of_lives
+  ]
+
+  @derive {Jason.Encoder, only: @all_fields}
   @primary_key false
   embedded_schema do
     field(:id, :string)

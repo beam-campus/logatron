@@ -13,10 +13,9 @@ defmodule LogatronEdge.Scape.Builder do
 
   ########## API #######################
   def init_scape(scape_init) do
+    selection = String.split(scape_init.select_from, ",")
 
-    Channel.initializing_scape(scape_init)
-
-    Cache.countries_of_regions(scape_init.select_from, scape_init.min_area, scape_init.min_people)
+    Cache.countries_of_regions(selection, scape_init.min_area, scape_init.min_people)
     |> Enum.take_random(scape_init.nbr_of_countries)
     |> Enum.each(fn country ->
       region_id =
@@ -26,8 +25,6 @@ defmodule LogatronEdge.Scape.Builder do
       region_init = Logatron.Region.InitParams.random(scape_init.edge_id, scape_init.id, region_id, country.name)
       LogatronEdge.Scape.Regions.start_region(region_init)
     end)
-
-    Channel.scape_initialized(scape_init)
 
     Logger.debug(
       "\n\n\t#{Colors.red_on_black()}Scape [#{scape_init.id}] has been initialized #{Colors.reset()}\n\n"

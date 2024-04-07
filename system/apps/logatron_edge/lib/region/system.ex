@@ -1,24 +1,31 @@
 defmodule Logatron.Region.System do
   use GenServer
+
   @moduledoc """
   Logatron.Region.System is the topmost supervisor for a Region.
   """
   require Logger
+  alias LogatronEdge.Channel
 
   ############## API ###################
 
   ############## CALLBACKS #############
   @impl GenServer
   def init(%{id: region_id} = region_init) do
+    Channel.initializing_region(region_init)
+
     children = [
       {Logatron.Region.Farms, region_init},
       {Logatron.Region.Builder, region_init}
     ]
+
     Supervisor.start_link(
       children,
       name: via_sup(region_id),
       strategy: :one_for_one
     )
+
+    Channel.region_initialized(region_init)
     {:ok, region_init}
   end
 

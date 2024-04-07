@@ -12,7 +12,8 @@ defmodule LogatronWeb.EdgeChannel do
     EdgePresence,
     EdgeHandler,
     ScapeHandler,
-    RegionHandler
+    RegionHandler,
+    FarmHandler
   }
 
   alias LogatronCore.Facts
@@ -31,6 +32,9 @@ defmodule LogatronWeb.EdgeChannel do
 
   @initializing_region_v1 Facts.initializing_region_v1()
   @region_initialized_v1 Facts.region_initialized_v1()
+
+  @initializing_farm_v1 Facts.initializing_farm_v1()
+  @farm_initialized_v1 Facts.farm_initialized_v1()
 
   # @attach_scape_v1 "attach_scape:v1"
 
@@ -138,6 +142,19 @@ defmodule LogatronWeb.EdgeChannel do
     Logger.debug("EdgeChannel.handle_in: #{@region_initialized_v1} #{inspect(payload)}")
     RegionHandler.pub_region_initialized_v1(payload, socket)
   end
+
+  @impl true
+  def handle_in(@initializing_farm_v1, payload, socket) do
+    Logger.debug("EdgeChannel.handle_in: #{@initializing_farm_v1} #{inspect(payload)}")
+    FarmHandler.pub_initializing_farm_v1(payload, socket)
+  end
+
+  @impl true
+  def handle_in(@farm_initialized_v1, payload, socket) do
+    Logger.debug("EdgeChannel.handle_in: #{@farm_initialized_v1} #{inspect(payload)}")
+    FarmHandler.pub_farm_initialized_v1(payload, socket)
+  end
+
 
   ################ INTERNALS ################
   defp to_topic(edge_id),

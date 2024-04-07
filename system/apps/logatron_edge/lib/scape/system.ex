@@ -6,6 +6,8 @@ defmodule LogatronEdge.Scape.System do
 
   import Logger
 
+  alias LogatronEdge.Channel
+
   ################# INTERFACE #############
   def start_europe do
     case start_link(LogatronEdge.Scape.InitParams.europe()) do
@@ -74,7 +76,7 @@ defmodule LogatronEdge.Scape.System do
   def init(%{id: scape_id} = scape_init) do
     Process.flag(:trap_exit, true)
 
-    LogatronEdge.Channel.initializing_scape(scape_init)
+    Channel.initializing_scape(scape_init)
 
     children = [
       {LogatronEdge.Scape.Regions, scape_init},
@@ -87,11 +89,9 @@ defmodule LogatronEdge.Scape.System do
       name: via_sup(scape_id)
     )
 
-    # LogatronEdge.Channel.attach_scape(scape_init)
-
-    LogatronEdge.Channel.scape_initialized(scape_init)
-
     LogatronEdge.Scape.Builder.init_scape(scape_init)
+
+    Channel.scape_initialized(scape_init)
 
     {:ok, scape_init}
   end

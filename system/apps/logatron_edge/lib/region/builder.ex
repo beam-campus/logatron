@@ -19,12 +19,12 @@ defmodule Logatron.Region.Builder do
   ############# INTERNALS ############
   defp do_build(region_init) do
     Enum.to_list(1..region_init.nbr_of_farms)
-    |> Enum.map(&do_random_mng_farm_init/1)
+    |> Enum.map(fn _ -> do_random_mng_farm_init(region_init) end)
     |> Enum.each(&Logatron.Region.Farms.start_farm(region_init.id, &1))
   end
 
-  defp do_random_mng_farm_init(_i),
-    do: Logatron.MngFarm.InitParams.random(Logatron.Schema.Farm.random())
+  defp do_random_mng_farm_init(region_init),
+    do: Logatron.MngFarm.InitParams.random(region_init, Logatron.Schema.Farm.random())
 
   ################# PLUMBING ################
   def to_name(key),

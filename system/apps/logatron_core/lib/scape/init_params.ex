@@ -15,7 +15,8 @@ defmodule LogatronEdge.Scape.InitParams do
     :edge_id,
     :nbr_of_countries,
     :min_area,
-    :min_people
+    :min_people,
+    :select_from
   ]
 
   @required_fields [
@@ -37,14 +38,13 @@ defmodule LogatronEdge.Scape.InitParams do
     field(:nbr_of_countries, :integer)
     field(:min_area, :integer)
     field(:min_people, :integer)
-    embeds_many(:select_from, :string)
+    field(:select_from, :string)
   end
 
   def changeset(scape, args)
       when is_map(args) do
     scape
     |> cast(args, @all_fields)
-    |> cast_embed(:select_from)
     |> validate_required(@required_fields)
   end
 
@@ -59,7 +59,7 @@ defmodule LogatronEdge.Scape.InitParams do
       nbr_of_countries: Logatron.Limits.max_regions(),
       min_area: 30_000,
       min_people: 10_000_000,
-      select_from: ["Europe"]
+      select_from: "Europe"
     }
 
   def asia(edge_id),
@@ -70,14 +70,10 @@ defmodule LogatronEdge.Scape.InitParams do
       nbr_of_countries: Logatron.Limits.max_regions(),
       min_area: 50_000,
       min_people: 40_000_000,
-      select_from: ["Asia"]
+      select_from: "Asia"
     }
 
   def from_environment(edge_id) do
-    select_from =
-      System.get_env("LOGATRON_SELECT_FROM")
-      |> String.split(",")
-
     %InitParams{
       id: System.get_env("LOGATRON_SCAPE_ID"),
       name: System.get_env("LOGATRON_SCAPE_NAME"),
@@ -85,7 +81,7 @@ defmodule LogatronEdge.Scape.InitParams do
       nbr_of_countries: System.get_env("LOGATRON_NBR_OF_COUNTRIES"),
       min_area: System.get_env("LOGATRON_MIN_AREA"),
       min_people: System.get_env("LOGATRON_MIN_PEOPLE"),
-      select_from: select_from
+      select_from: System.get_env("LOGATRON_SELECT_FROM")
     }
   end
 
@@ -124,7 +120,7 @@ defmodule LogatronEdge.Scape.InitParams do
       nbr_of_countries: Logatron.Limits.max_regions(),
       min_area: 30_000,
       min_people: 10_000_000,
-      select_from: ["Europe"]
+      select_from: "Europe"
     }
   end
 

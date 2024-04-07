@@ -7,20 +7,14 @@ defmodule LogatronEdge.Scape.Regions do
 
   require Logger
 
-  alias LogatronEdge.Channel
-
   ################ API ########################
   def start_region(region_init) do
     Logger.debug(" REGION ~> #{region_init.scape_id}.#{region_init.id} - #{region_init.nbr_of_farms} farms")
-
-    Channel.initializing_region(region_init)
 
     DynamicSupervisor.start_child(
       via_sup(region_init.scape_id),
       {Logatron.Region.System, region_init}
     )
-
-    Channel.region_initialized(region_init)
   end
 
   @doc """

@@ -18,6 +18,9 @@ defmodule LogatronEdge.Channel do
   @initializing_region_v1 LogatronCore.Facts.initializing_region_v1()
   @region_initialized_v1 LogatronCore.Facts.region_initialized_v1()
 
+  @initializing_farm_v1 LogatronCore.Facts.initializing_farm_v1()
+  @farm_initialized_v1 LogatronCore.Facts.farm_initialized_v1()
+
   ############ API ##########
   # def attach_scape(scape_init),
   #   do:
@@ -54,7 +57,55 @@ defmodule LogatronEdge.Channel do
         {:region_initialized, region_init}
       )
 
+  def initializing_farm(farm_init),
+    do:
+      GenServer.cast(
+        via(farm_init.scape_id),
+        {:initializing_farm, farm_init}
+      )
+
+  def farm_initialized(farm_init),
+    do:
+      GenServer.cast(
+        via(farm_init.scape_id),
+        {:farm_initialized, farm_init}
+      )
+
   ########### CALLBACKS ################
+
+  @impl true
+  def handle_cast({:initializing_farm, farm_init}, state) do
+    %{edge_id: edge_id} = state
+
+    Logger.debug(
+      " :initializing_farm ~> \n STATE: #{inspect(state)} \n\n #{farm_init.scape_id}.#{farm_init.id} \n\n"
+    )
+
+    Client.publish(
+      edge_id,
+      @initializing_farm_v1,
+      %{farm_init: farm_init}
+    )
+
+    {:noreply, state}
+  end
+
+  @impl true
+  def handle_cast({:farm_initialized, farm_init}, state) do
+    %{edge_id: edge_id} = state
+
+    Logger.debug(
+      " :farm_initialized ~> \n STATE: #{inspect(state)} \n\n #{farm_init.scape_id}.#{farm_init.id} \n\n"
+    )
+
+    Client.publish(
+      edge_id,
+      @farm_initialized_v1,
+      %{farm_init: farm_init}
+    )
+
+    {:noreply, state}
+  end
 
   @impl true
   def handle_cast({:initializing_region, region_init}, %{edge_id: edge_id} = state) do
@@ -86,26 +137,29 @@ defmodule LogatronEdge.Channel do
     {:noreply, state}
   end
 
-  # @impl true
-  # def handle_cast({:attach_scape, scape_init}, _state) do
-  #   Logger.debug(" :attach_scape ~> #{scape_init.id}")
-  #   Client.publish(scape_init.edge_id, @attach_scape_v1, scape_init)
-  #   {:noreply, scape_init}
-  # end
-
   @impl true
   def handle_cast({:initializing_scape, scape_init}, state) do
-    Logger.debug(" STATE ~> #{inspect(state)}")
     %{edge_id: edge_id} = state
-    Logger.debug(" :initializing_scape ~> #{scape_init.id}")
-    Client.publish(edge_id, @initializing_scape_v1, scape_init)
+
+    Client.publish(
+      edge_id,
+      @initializing_scape_v1,
+      %{scape_init: scape_init}
+    )
+
     {:noreply, state}
   end
 
   @impl true
-  def handle_cast({:scape_initialized, scape_init}, %{edge_id: edge_id} = state) do
-    Logger.debug(" :scape_initialized ~> #{scape_init.id}")
-    Client.publish(edge_id, @scape_initialized_v1, scape_init)
+  def handle_cast({:scape_initialized, scape_init}, state) do
+    %{edge_id: edge_id} = state
+
+    Client.publish(
+      edge_id,
+      @scape_initialized_v1,
+      %{scape_init: scape_init}
+    )
+
     {:noreply, state}
   end
 

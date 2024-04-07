@@ -24,33 +24,30 @@
 
   <div class="flex flex-col w-screen justify-left font-mono px-10 py-4">
     <div class="w-full text-ltTurquoise-light">
-      <%= for scape <- @scapes do %>
+      <%= for scape <- @scapes |> Enum.uniq_by(& &1.id) do %>
         <div class="py-1">
-          <div class="flex flex-row gap-3 px-4 w-full">
-            <h2><%= scape.name %></h2>
+          <div class="flex flex-row gap-3 px-4 w-full text-ltOlive">
+            <h2>SCAPE: <%= scape.name %></h2>
             <p>sourced by 
             <%= 
               Enum.count(@scapes
-              |> Enum.uniq(fn s -> s.id == scape.id end))
+              |> Enum.uniq_by(& &1.edge_id))
             %>
             </p>
           </div>
           <div>
             <%= for region <- @regions |> Enum.filter(fn region -> region.scape_id==scape.id end) do %>
-              <div class="flex flex-row gap-3 px-4 w-screen">
-                <h3><%= region.name %></h3>
-                <p><%= region.edge_id %></p>
-                <p><%= region.scape_id %></p>
+              <div class="flex flex-row gap-3 px-4 w-screen text-ltOrange-light">
+                <h3>REGION: <%= region.name %></h3>
+                <p>(<%= region.scape_id %>)</p>
               </div>
               <div class="flex flex-col px-4">
-                  <%= for farm <- @farms do %>
+                  <%= for farm <- @farms |> Enum.filter(fn farm -> farm.region_id == region.id end) do %>
                     <div class="flex flex-row gap-3 px-4 w-screen">
-                      <h3><%= farm.name %></h3>
-                      <p><%= farm.description %></p>
-                      <p>(<%= farm.latitude %>, <%= farm.longitude %>)</p>
+                      <h3>FARM: <%= farm.farm.name %></h3>
                     </div>
                     <div class="flex flex-col px-4 w-screen">
-                      <%= for animal <- farm.animals do %>
+                      <%= for animal <- @animals do %>
                       <div class="grid grid-cols-6 w-screen px-4">
                           <p class="w-30 text-ltOlive-light"><%= animal.name %></p>
                           <p class="w-20"><%= animal.gender %></p>
