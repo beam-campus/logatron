@@ -15,9 +15,9 @@
         edges_count = Enum.count(@edges)
         if edges_count > 0 do  
       %>
-        <%= edges_count %> edge(s) connected
+        <%= edges_count %> agent(s) connected
       <% else %>
-        awaiting edge connections...
+        awaiting agents...
       <% end %> 
     </div>
   </div>
@@ -32,7 +32,7 @@
             <%= 
               Enum.count(@scapes
               |> Enum.uniq_by(& &1.edge_id))
-            %>
+            %> agent(s)
             </p>
           </div>
           <div>
