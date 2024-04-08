@@ -60,7 +60,7 @@ defmodule LogatronEdge.InitParams do
   def from_environment do
     {:ok, chost} = :inet.gethostname()
     edge_id = Logatron.Schema.Edge.random_id() <> "_#{to_string(chost)}"
-    if_addr =
+
     api_key =
       case System.get_env("LOGATRON_EDGE_API_KEY") do
         nil -> "no-api-key"

@@ -21,6 +21,9 @@ defmodule LogatronEdge.Channel do
   @initializing_farm_v1 LogatronCore.Facts.initializing_farm_v1()
   @farm_initialized_v1 LogatronCore.Facts.farm_initialized_v1()
 
+  @initializing_animal_v1 LogatronCore.Facts.initializing_animal_v1()
+  @animal_initialized_v1 LogatronCore.Facts.animal_initialized_v1()
+
   ############ API ##########
   # def attach_scape(scape_init),
   #   do:
@@ -71,7 +74,55 @@ defmodule LogatronEdge.Channel do
         {:farm_initialized, farm_init}
       )
 
+  def emit_initializing_animal(animal_init),
+    do:
+      GenServer.cast(
+        via(animal_init.scape_id),
+        {:initializing_animal, animal_init}
+      )
+
+  def emit_animal_initialized(animal_init),
+    do:
+      GenServer.cast(
+        via(animal_init.scape_id),
+        {:animal_initialized, animal_init}
+      )
+
   ########### CALLBACKS ################
+
+  @impl true
+  def handle_cast({:initializing_animal, animal_init}, state) do
+    %{edge_id: edge_id} = state
+
+    Logger.debug(
+      " :initializing_animal ~> \n STATE: #{inspect(state)} \n\n #{animal_init.scape_id}.#{animal_init.id} \n\n"
+    )
+
+    Client.publish(
+      edge_id,
+      @initializing_animal_v1,
+      %{animal_init: animal_init}
+    )
+
+    {:noreply, state}
+  end
+
+  @impl true
+  def handle_cast({:animal_initialized, animal_init}, state) do
+    %{edge_id: edge_id} = state
+
+    Logger.debug(
+      " :animal_initialized ~> \n STATE: #{inspect(state)} \n\n #{animal_init.scape_id}.#{animal_init.id} \n\n"
+    )
+
+    Client.publish(
+      edge_id,
+      @animal_initialized_v1,
+      %{animal_init: animal_init}
+    )
+
+    {:noreply, state}
+  end
 
   @impl true
   def handle_cast({:initializing_farm, farm_init}, state) do

@@ -4,7 +4,6 @@ defmodule Logatron.Scapes.Server do
   @moduledoc """
   Logatron.Scapes.Server contains the GenServer for the Server.
   """
-  alias Logatron.Scapes.Scape
 
   def update_scape_status(scape_id, status),
     do:
@@ -24,9 +23,8 @@ defmodule Logatron.Scapes.Server do
   end
 
   @impl true
-  def terminate(reason, state) do
-    Logatron.Scapes.Handover.save(state)
-    {:ok, state}
+  def terminate(_reason, state) do
+    {:ok, Logatron.Scapes.Handover.save(state)}
   end
 
   ###################  PLUMBING  ###################

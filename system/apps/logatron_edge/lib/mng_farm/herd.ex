@@ -40,7 +40,12 @@ defmodule Logatron.MngFarm.Herd do
     Logger.info("Starting Born2Died for life: #{life.id}")
     DynamicSupervisor.start_child(
       via_sup(mng_farm_init.id),
-      {Logatron.Born2Died.System, Logatron.Born2Died.State.from_life(life)}
+      {Logatron.Born2Died.System, Logatron.Born2Died.State.from_life(
+        life,
+        mng_farm_init.edge_id,
+        mng_farm_init.scape_id,
+        mng_farm_init.region_id,
+        mng_farm_init.id)}
     )
   end
 

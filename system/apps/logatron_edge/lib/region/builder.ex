@@ -24,7 +24,7 @@ defmodule Logatron.Region.Builder do
   end
 
   defp do_random_mng_farm_init(region_init),
-    do: Logatron.MngFarm.InitParams.random(region_init, Logatron.Schema.Farm.random())
+    do: Logatron.MngFarm.InitParams.from_farm(Logatron.Schema.Farm.random(), region_init)
 
   ################# PLUMBING ################
   def to_name(key),

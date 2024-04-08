@@ -14,18 +14,17 @@ defmodule Logatron.MngFarm.System do
 
     Channel.initializing_farm(mng_farm_init)
 
-    # children =
-    #   [
-    #     # {Logatron.MngFarm.Channel, mng_farm_init},
-    #     {Logatron.MngFarm.Herd, mng_farm_init},
-    #     {Logatron.MngFarm.HerdBuilder, mng_farm_init}
-    #   ]
+    children =
+      [
+        {Logatron.MngFarm.Herd, mng_farm_init},
+        {Logatron.MngFarm.HerdBuilder, mng_farm_init}
+      ]
 
-    # Supervisor.start_link(
-    #   children,
-    #   name: via_sup(mng_farm_init.id),
-    #   strategy: :one_for_one
-    # )
+    Supervisor.start_link(
+      children,
+      name: via_sup(mng_farm_init.id),
+      strategy: :one_for_one
+    )
 
     Channel.farm_initialized(mng_farm_init)
 

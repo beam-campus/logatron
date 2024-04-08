@@ -23,18 +23,18 @@ defmodule LogatronWeb.Dispatch.EdgeHandler do
     {:ok, socket}
   end
 
-  def pub_edge_attached(edge_init_env, socket) do
-    {:ok, edge_init} = LogatronEdge.InitParams.from_map(edge_init_env["edge_init"])
+  def pub_edge_attached(payload, _socket) do
+    {:ok, edge_init} = LogatronEdge.InitParams.from_map(payload["edge_init"])
 
     PubSub.broadcast!(
       Logatron.PubSub,
       @edge_attached_v1,
-      {@edge_attached_v1, edge_init}
-    )
+      {@edge_attached_v1, edge_init}    )
+
   end
 
-  def pub_edge_detached(edge_init_env, socket) do
-    {:ok, edge_init} = LogatronEdge.InitParams.from_map(edge_init_env["edge_init"])
+  def pub_edge_detached(payload, _socket) do
+    {:ok, edge_init} = LogatronEdge.InitParams.from_map(payload["edge_init"])
 
     PubSub.broadcast!(
       Logatron.PubSub,

@@ -9,10 +9,21 @@ defmodule Logatron.Scapes.Handover do
 
   ###################  API  ###################
   def get(scape_id),
-    do: Agent.get(via(scape_id), & &1)
+    do:
+      Agent.get(
+        via(scape_id),
+        & &1
+      )
 
-  def save(scape),
-    do: Agent.update(via(scape.id), & &1, fn _ -> scape end)
+  def save(scape) do
+    Agent.update(
+      via(scape.id),
+      & &1,
+      scape
+    )
+
+    scape
+  end
 
   ################### PLUMBING ###################
   def start_link(scape_init) do
@@ -21,7 +32,7 @@ defmodule Logatron.Scapes.Handover do
         %Scape{
           id: scape_init.id,
           name: scape_init.name,
-          status: "unknown",
+          status: "unknown"
         }
       end,
       name: via(scape_init.id)

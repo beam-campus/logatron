@@ -1,12 +1,11 @@
 defmodule LogatronEdge.Client do
   use Slipstream
-
-  require Logger
-
   @moduledoc """
   LogatronEdge.Client is the client-side of the LogatronEdge.Socket server.
   It is part of the main application supervision tree.
   """
+  require Logger
+
   alias LogatronCore.Facts
 
   @edge_lobby "edge:lobby"
@@ -63,11 +62,6 @@ defmodule LogatronEdge.Client do
     {:noreply, socket}
   end
 
-  @impl Slipstream
-  def handle_info(msg, socket) do
-    Logger.debug("Edge.Client received: #{inspect(msg)}")
-    {:noreply, socket}
-  end
 
   @impl Slipstream
   def handle_info({:after_join, _}, socket) do
@@ -80,6 +74,13 @@ defmodule LogatronEdge.Client do
     Logger.debug("Edge.Client received: [#{@presence_changed_v1}] \n #{inspect(presence_list)}")
     {:noreply, socket}
   end
+
+  @impl Slipstream
+  def handle_info(msg, socket) do
+    Logger.debug("Edge.Client received: #{inspect(msg)}")
+    {:noreply, socket}
+  end
+
 
 
   ############ PLUMBING ################

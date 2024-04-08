@@ -41,8 +41,8 @@ defmodule Logatron.MngFarm.InitParams do
   embedded_schema do
     field(:id, :string)
     field(:edge_id, :string)
-    field(:region_id, :string)
     field(:scape_id, :string)
+    field(:region_id, :string)
     field(:nbr_of_lives, :integer)
     embeds_one(:farm, Farm)
   end
@@ -53,7 +53,7 @@ defmodule Logatron.MngFarm.InitParams do
       nbr_of_lives: 10
     }
 
-  def random(region_init, farm),
+  def from_farm(farm, region_init),
     do: %Logatron.MngFarm.InitParams{
       id: Id.new(@id_prefix) |> Id.as_string(),
       edge_id: region_init.edge_id,

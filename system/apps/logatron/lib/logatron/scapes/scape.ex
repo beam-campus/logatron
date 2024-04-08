@@ -8,7 +8,7 @@ defmodule Logatron.Scapes.Scape do
 
   require Logger
 
-  alias ElixirSense.Plugins.Ecto
+  
   alias Logatron.Scapes.Scape
 
   @cast_fields [

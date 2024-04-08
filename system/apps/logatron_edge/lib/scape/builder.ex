@@ -3,13 +3,10 @@ defmodule LogatronEdge.Scape.Builder do
   @moduledoc """
   LogatronEdge.Scape.Worker is a GenServer that manages the state of a Scape.
   """
-
-  alias Countries.Cache
-  alias LogatronEdge.Channel
-
-
   require Logger
   require Countries.Cache
+
+  alias Countries.Cache
 
   ########## API #######################
   def init_scape(scape_init) do

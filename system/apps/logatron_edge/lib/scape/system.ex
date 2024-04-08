@@ -9,8 +9,8 @@ defmodule LogatronEdge.Scape.System do
   alias LogatronEdge.Channel
 
   ################# INTERFACE #############
-  def start_europe do
-    case start_link(LogatronEdge.Scape.InitParams.europe()) do
+  def start_europe(edge_id) do
+    case start_link(LogatronEdge.Scape.InitParams.europe(edge_id)) do
       {:ok, pid} ->
         {:ok, pid}
 
@@ -19,8 +19,8 @@ defmodule LogatronEdge.Scape.System do
     end
   end
 
-  def start_asia do
-    case start_link(LogatronEdge.Scape.InitParams.asia()) do
+  def start_asia(edge_id) do
+    case start_link(LogatronEdge.Scape.InitParams.asia(edge_id)) do
       {:ok, pid} ->
         {:ok, pid}
 

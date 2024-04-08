@@ -31,10 +31,11 @@ defmodule Logatron.Born2Died.Worker do
       )
 
   def get_state(life_id),
-    do: GenServer.call(via(life_id), {:get_state})
-
-  def move(life_id, delta_x, delta_y),
-    do: GenServer.cast(via(life_id), {:move, delta_x, delta_y})
+    do:
+      GenServer.call(
+        via(life_id),
+        {:get_state}
+      )
 
   ################# CALLBACKS #####################
   @impl GenServer
@@ -153,7 +154,8 @@ defmodule Logatron.Born2Died.Worker do
   end
 
   defp do_move(state, delta_x, delta_y) do
-    s1 = " \n MOVING [#{String.slice(state.life.name, 0, 29)}\tFROM: (#{state.pos.x}, #{state.pos.y}) TO: (#{state.pos.x + delta_x}, #{state.pos.y + delta_y})]"
+    s1 =
+      " \n MOVING [#{String.slice(state.life.name, 0, 29)}\tFROM: (#{state.pos.x}, #{state.pos.y}) TO: (#{state.pos.x + delta_x}, #{state.pos.y + delta_y})]"
 
     new_state =
       Map.put(state, :pos, do_change_pos(state.pos, delta_x, delta_y))
@@ -162,11 +164,12 @@ defmodule Logatron.Born2Died.Worker do
     new_state
   end
 
-  defp do_change_pos(pos, delta_x, delta_y)  when is_map(pos) do
+  defp do_change_pos(pos, delta_x, delta_y) when is_map(pos) do
     new_pos =
       pos
       |> Map.put(:x, pos.x + delta_x)
       |> Map.put(:y, pos.y + delta_y)
+
     new_pos
   end
 

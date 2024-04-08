@@ -7,6 +7,7 @@ defmodule Logatron.Born2Died.System do
   """
 
   require Logger
+  alias LogatronEdge.Channel
 
   ######### API #####################
   # def live(life_id),
@@ -36,6 +37,8 @@ defmodule Logatron.Born2Died.System do
   def init(state) do
     # Process.flag(:trap_exit, true)
 
+    Channel.emit_initializing_animal(state)
+
     children =
       [
         # {Logatron.Born2Died.Aggregate, state, log: :false},
@@ -48,6 +51,8 @@ defmodule Logatron.Born2Died.System do
       name: via_sup(state.life.id),
       strategy: :one_for_one
     )
+
+    Channel.emit_animal_initialized(state)
 
     {:ok, state}
   end

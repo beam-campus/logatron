@@ -17,6 +17,16 @@ defmodule Logatron.Schema.Life do
     "female"
   ]
 
+  @all_fields [
+    :id,
+    :name,
+    :gender,
+    :birth_date,
+    :father_id,
+    :mother_id
+  ]
+
+  @derive {Jason.Encoder, only: @all_fields}
   @primary_key false
   embedded_schema do
     field :id, :string

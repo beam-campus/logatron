@@ -36,25 +36,28 @@
             </p>
           </div>
           <div>
-            <%= for region <- @regions |> Enum.filter(fn region -> region.scape_id==scape.id end) do %>
+            <%= for region <- @regions |> Enum.filter(fn region -> region.scape_id==scape.id end) |> Enum.uniq_by(& &1.id) do %>
               <div class="flex flex-row gap-3 px-4 w-screen text-ltOrange-light">
                 <h3>REGION: <%= region.name %></h3>
                 <p>(<%= region.scape_id %>)</p>
               </div>
               <div class="flex flex-col px-4">
-                  <%= for farm <- @farms |> Enum.filter(fn farm -> farm.region_id == region.id end) do %>
+                  <%= for farm <- @farms 
+                                  |> Enum.filter(fn farm -> farm.region_id == region.id end) 
+                                  |> Enum.uniq_by(& &1.id) do 
+                  %>
                     <div class="flex flex-row gap-3 px-4 w-screen">
                       <h3>FARM: <%= farm.farm.name %></h3>
                     </div>
-                    <div class="flex flex-col px-4 w-screen">
-                      <%= for animal <- @animals do %>
-                      <div class="grid grid-cols-6 w-screen px-4">
-                          <p class="w-30 text-ltOlive-light"><%= animal.name %></p>
-                          <p class="w-20"><%= animal.gender %></p>
-                          <p class="w-20"><%= animal.age %>yo</p>
-                          <p class="w-20"><%= animal.weight %>kg</p>
-                          <p class="w-20">h: <%= animal.health %>%</p>
-                          <p class="w-20">(<%= animal.position.x %>, <%= animal.position.y %>)</p>
+                    <div class="flex flex-col px-1 w-screen">
+                      <%= for animal <- @animals |> Enum.filter(fn animal -> animal.farm_id == farm.id end) do %>
+                      <div class="grid grid-cols-6 w-screen px-4 text-white text-sm">
+                          <p class="w-50 text-ltOlive-light"><%= animal.life.name %></p>
+                          <p class="w-5"><%= animal.life.gender %></p>
+                          <p class="w-10"><%= animal.vitals.age %>yo</p>
+                          <p class="w-20"><%= animal.vitals.weight %>kg</p>
+                          <p class="w-20">h: <%= animal.vitals.health %>%</p>
+                          <p class="w-20">(<%= animal.pos.x %>, <%= animal.pos.y %>)</p>
                         </div>
                       <% end %>
                     </div>

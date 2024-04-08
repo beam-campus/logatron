@@ -13,7 +13,8 @@ defmodule LogatronWeb.EdgeChannel do
     EdgeHandler,
     ScapeHandler,
     RegionHandler,
-    FarmHandler
+    FarmHandler,
+    AnimalHandler
   }
 
   alias LogatronCore.Facts
@@ -36,6 +37,9 @@ defmodule LogatronWeb.EdgeChannel do
   @initializing_farm_v1 Facts.initializing_farm_v1()
   @farm_initialized_v1 Facts.farm_initialized_v1()
 
+  @initializing_animal_v1 Facts.initializing_animal_v1()
+  @animal_initialized_v1 Facts.animal_initialized_v1()
+
   # @attach_scape_v1 "attach_scape:v1"
 
   @presence_changed_v1 Facts.presence_changed_v1()
@@ -47,7 +51,6 @@ defmodule LogatronWeb.EdgeChannel do
 
   @impl true
   def handle_info(:after_join, socket) do
-
     Logger.info(":after_join #{inspect(socket)}")
 
     {:ok, _} =
@@ -56,7 +59,6 @@ defmodule LogatronWeb.EdgeChannel do
       })
 
     broadcast(socket, @presence_changed_v1, EdgePresence.list(socket))
-
 
     {:noreply, socket}
   end
@@ -67,7 +69,7 @@ defmodule LogatronWeb.EdgeChannel do
     {:reply, {:ok, payload}, socket}
   end
 
-    # Channels can be used in a request/response fashion
+  # Channels can be used in a request/response fashion
   # by sending replies to requests from the client
   @impl true
   def handle_in(@hope_ping, payload, socket) do
@@ -112,12 +114,11 @@ defmodule LogatronWeb.EdgeChannel do
   #   do: LogatronWeb.ScapeHandler.attach_scape_v1(scape_init, socket)
 
   @impl true
-  def handle_in(@edge_attached_v1, edge_init, socket) do
-    Logger.info("#{@edge_attached_v1} #{inspect(edge_init)}")
-    EdgeHandler.pub_edge_attached(edge_init, socket)
-    {:reply, {:ok, edge_init}, socket}
+  def handle_in(@edge_attached_v1, payload, socket) do
+    Logger.info("#{@edge_attached_v1} #{inspect(payload)}")
+    EdgeHandler.pub_edge_attached(payload, socket)
+    {:reply, {:ok, payload}, socket}
   end
-
 
   @impl true
   def handle_in(@initializing_scape_v1, payload, socket) do
@@ -155,6 +156,17 @@ defmodule LogatronWeb.EdgeChannel do
     FarmHandler.pub_farm_initialized_v1(payload, socket)
   end
 
+  @impl true
+  def handle_in(@initializing_animal_v1, payload, socket) do
+    Logger.debug("EdgeChannel.handle_in: #{@initializing_animal_v1} #{inspect(payload)}")
+    AnimalHandler.pub_initializing_animal_v1(payload, socket)
+  end
+
+  @impl true
+  def handle_in(@animal_initialized_v1, payload, socket) do
+    Logger.debug("EdgeChannel.handle_in: #{@animal_initialized_v1} #{inspect(payload)}")
+    AnimalHandler.pub_animal_initialized_v1(payload, socket)
+  end
 
   ################ INTERNALS ################
   defp to_topic(edge_id),

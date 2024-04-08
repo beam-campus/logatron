@@ -5,6 +5,15 @@ defmodule Logatron.Schema.Vector do
   Logatron.Schema.Vector is the module that contains the vector schema
   """
 
+  import Ecto.Changeset
+
+  @all_fields [
+    :x,
+    :y,
+    :z
+  ]
+
+  @derive {Jason.Encoder, only: @all_fields}
   @primary_key false
   embedded_schema do
     field :x, :integer
@@ -27,5 +36,13 @@ defmodule Logatron.Schema.Vector do
     z = :rand.uniform(max_z)
     new(x, y, z)
   end
+
+  def changeset(vector, attr) do
+    vector
+    |> cast(attr, @all_fields)
+    |> validate_required(@all_fields)
+  end
+
+
 
 end

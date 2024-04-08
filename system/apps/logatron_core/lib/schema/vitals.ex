@@ -6,7 +6,18 @@ defmodule Logatron.Schema.Vitals do
   """
 
   import Logatron.Limits
+  import Ecto.Changeset
 
+  @all_fields [
+    :age,
+    :weight,
+    :energy,
+    :is_pregnant,
+    :heath,
+    :health
+  ]
+
+  @derive {Jason.Encoder, only: @all_fields}
   @primary_key false
   embedded_schema do
     field :age, :integer
@@ -26,6 +37,12 @@ defmodule Logatron.Schema.Vitals do
       health: random_100(),
       is_pregnant: false
     }
+  end
+
+  def changeset(vitals, attr) do
+    vitals
+    |> cast(attr, @all_fields)
+    |> validate_required(@all_fields)
   end
 
 

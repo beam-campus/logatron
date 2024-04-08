@@ -19,7 +19,7 @@ defmodule LogatronWeb.ViewScapesLive.Index do
   @edge_attached_v1 LogatronCore.Facts.edge_attached_v1()
   @edge_detached_v1 LogatronCore.Facts.edge_detached_v1()
 
-  @scape_attached_v1 LogatronCore.Facts.scape_attached_v1()
+  # @scape_attached_v1 LogatronCore.Facts.scape_attached_v1()
 
   @initializing_scape_v1 LogatronCore.Facts.initializing_scape_v1()
   @scape_initialized_v1 LogatronCore.Facts.scape_initialized_v1()
@@ -67,34 +67,44 @@ defmodule LogatronWeb.ViewScapesLive.Index do
   def handle_info({@initializing_scape_v1, scape_init}, socket),
     do: {:noreply, try_add_scape(socket, scape_init)}
 
-  # def handle_info({@scape_initialized_v1, scape_init}, socket),
-  #   do: {:noreply, assign(socket, scapes: [scape_init | socket.assigns.scapes])}
+  def handle_info({@scape_initialized_v1, scape_init}, socket),
+    do: {:noreply, assign(socket, scapes: [scape_init | socket.assigns.scapes])}
 
   @impl true
   def handle_info({@initializing_region_v1, region_init}, socket),
     do: {:noreply, try_add_region(socket, region_init)}
 
-  # @impl true
-  # def handle_info({@region_initialized_v1, region_init}, socket),
-  #   do: {:noreply, assign(socket, regions: [region_init | socket.assigns.regions])}
+  @impl true
+  def handle_info({@region_initialized_v1, region_init}, socket),
+    do: {:noreply, assign(socket, regions: [region_init | socket.assigns.regions])}
 
   @impl true
   def handle_info({@initializing_farm_v1, farm_init}, socket),
     do: {:noreply,  try_add_farm(socket, farm_init)}
 
-  # @impl true
-  # def handle_info({@farm_initialized_v1, farm_init}, socket),
-  #   do: {:noreply, assign(socket, farms: [farm_init | socket.assigns.farms])}
+  @impl true
+  def handle_info({@farm_initialized_v1, farm_init}, socket),
+    do: {:noreply, assign(socket, farms: [farm_init | socket.assigns.farms])}
 
   @impl true
   def handle_info({@initializing_animal_v1, animal_init}, socket),
+    do: {:noreply, try_add_animal(socket, animal_init)}
+
+  @impl true
+  def handle_info({@animal_initialized_v1, animal_init}, socket),
     do: {:noreply, assign(socket, animals: [animal_init | socket.assigns.animals])}
 
-  # @impl true
-  # def handle_info({@animal_initialized_v1, animal_init}, socket),
-  #   do: {:noreply, assign(socket, animals: [animal_init | socket.assigns.animals])}
-
   ################ INTERNALS ###################
+
+
+  defp try_add_animal(socket, animal_init) do
+    socket
+    |> assign(
+      action_animal: animal_init.id,
+      animals: [animal_init | socket.assigns.animals]
+    )
+  end
+
 
   defp try_add_farm(socket, farm_init) do
     socket
