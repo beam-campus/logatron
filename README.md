@@ -1,11 +1,9 @@
-# AGREX - Farm Simulator
+# LOGATRON - Streams Exchange
 
 ## ABSTRACT
 
-This project sprouts from the idea to build a performance- and load testing tool  
+This project sprouted from the idea to build a performance- and load testing tool  
 that allows to spin up a number of virtual farms.
-Each farm is an actor that generates a stream of events that are forwarded to ETL pipelines for further processing.  
-Next, we'll leverage ES/CQRS to store the events in `EventStoreDB` and project into some DB, constructing views that support lighting-fast queries, using the excellent `commanded`  library. Visualization and User interaction will be done using Phoenix/LiveView.
 
 
 ### Some of the libraries used
@@ -24,7 +22,7 @@ So let's get those hands dirty and make it work...and then **make it BEAUTIFUL!*
 
 ## OUTLINE
 
-- [AGREX - Farm Simulator](#agrex---farm-simulator)
+- [LOGATRON - Streams Exchange](#logatron---streams-exchange)
   - [ABSTRACT](#abstract)
     - [Some of the libraries used](#some-of-the-libraries-used)
   - [DISCLAIMER](#disclaimer)

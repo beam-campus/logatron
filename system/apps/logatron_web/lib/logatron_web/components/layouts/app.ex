@@ -21,4 +21,23 @@ defmodule LogatronWeb.Layouts.App do
     )
   end
 
+  def toggle_scapes_menu do
+    JS.toggle(
+      to: "#scapes_menu",
+      in: {
+        "transition ease-out duration-300",
+        "transform opacity-0 translate-y-[-10%]",
+        "transform opacity-100 translate-y-0"
+      },
+      out: {
+        "transition ease-in duration-300",
+        "transform opacity-100 translate-y-0",
+        "transform opacity-0 translate-y-[-10%]"
+      }
+    )
+  end
+
+
+
+
 end

@@ -1,0 +1,41 @@
+<div class="flex flex-col w-screen h-full justify-left font-mono py-1">
+  <div class="lt-view-gradient flex flex-col items-center justify-center">
+    <div>
+      <h1 class="text-white font-brand font-normal text-2xl">
+        Connected Agents
+      </h1>
+    </div>
+    <div class="text-white font-brand font-regular text-sm m-1 px-2">
+      <%= edges_count = Enum.count(@edges)
+        if edges_count > 0 do %>
+        <%= edges_count %> agent(s) connected
+      <% else %>
+        awaiting agents...
+      <% end %>
+    </div>
+  </div>
+
+  <div class="px-4">
+
+      <div class="flex flex-col w-full text-sm text-white gap-2" >
+     
+        <%= for edge <- @edges do %>
+        <%  
+           edge_ids = String.split(edge.id, "-")
+           display_edge_id =  Enum.at(edge_ids, 0)  <> "-...-" <> Enum.at(edge_ids, Enum.count(edge_ids)-1)
+        %>
+            <div class="flex flex-row w-full py-0">
+            <div class="w-1/2"> <%= display_edge_id  %> </div>
+            <div class="w-1/4"> <%= edge.continent %>  </div>
+            <div class="w-1/4"> <%= edge.country %>  </div>
+            <div class="w-1/4"> <%= edge.city %>  </div>
+            <div class="w-1/4"> <%= edge.ip_address %> </div>
+            <div class="w-1/4"> <%= edge.is_container %> </div>
+
+        </div>
+      <% end %>
+
+    </div>
+  
+  </div>
+</div>

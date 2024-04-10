@@ -1,5 +1,4 @@
-<div class="flex flex-col w-screen justify-left font-mono py-1">
-
+<div class="flex flex-col w-screen h-full justify-left font-mono py-1">
   <div class="lt-view-gradient flex flex-col items-center justify-center">
     <div>
       <h1 class="text-white font-brand font-normal text-2xl">
@@ -7,70 +6,22 @@
       </h1>
     </div>
     <div class="text-white font-brand font-regular text-sm m-1 px-2">
-      <%= 
-        scapes_count = Enum.count(@scapes)
+      <%= scapes_count = Enum.count(@scapes)
         regions_count = Enum.count(@regions)
         farms_count = Enum.count(@farms)
         animals_count = Enum.count(@animals)
         edges_count = Enum.count(@edges)
-        if edges_count > 0 do  
-      %>
+        if edges_count > 0 do %>
         <%= edges_count %> agent(s) connected
       <% else %>
         awaiting agents...
-      <% end %> 
-    </div>
-  </div>
-
-  <div class="flex flex-col w-screen justify-left font-mono px-10 py-4">
-    <div class="w-full text-ltTurquoise-light">
-      <%= for scape <- @scapes |> Enum.uniq_by(& &1.id) do %>
-        <div class="py-1">
-          <div class="flex flex-row gap-3 px-4 w-full text-ltOlive">
-            <h2>SCAPE: <%= scape.name %></h2>
-            <p>sourced by 
-            <%= 
-              Enum.count(@scapes
-              |> Enum.uniq_by(& &1.edge_id))
-            %> agent(s)
-            </p>
-          </div>
-          <div>
-            <%= for region <- @regions |> Enum.filter(fn region -> region.scape_id==scape.id end) |> Enum.uniq_by(& &1.id) do %>
-              <div class="flex flex-row gap-3 px-4 w-screen text-ltOrange-light">
-                <h3>REGION: <%= region.name %></h3>
-                <p>(<%= region.scape_id %>)</p>
-              </div>
-              <div class="flex flex-col px-4">
-                  <%= for farm <- @farms 
-                                  |> Enum.filter(fn farm -> farm.region_id == region.id end) 
-                                  |> Enum.uniq_by(& &1.id) do 
-                  %>
-                    <div class="flex flex-row gap-3 px-4 w-screen">
-                      <h3>FARM: <%= farm.farm.name %></h3>
-                    </div>
-                    <div class="flex flex-col px-1 w-screen">
-                      <%= for animal <- @animals |> Enum.filter(fn animal -> animal.farm_id == farm.id end) do %>
-                      <div class="grid grid-cols-6 w-screen px-4 text-white text-sm">
-                          <p class="w-50 text-ltOlive-light"><%= animal.life.name %></p>
-                          <p class="w-5"><%= animal.life.gender %></p>
-                          <p class="w-10"><%= animal.vitals.age %>yo</p>
-                          <p class="w-20"><%= animal.vitals.weight %>kg</p>
-                          <p class="w-20">h: <%= animal.vitals.health %>%</p>
-                          <p class="w-20">(<%= animal.pos.x %>, <%= animal.pos.y %>)</p>
-                        </div>
-                      <% end %>
-                    </div>
-                  <% end %>
-              </div>
-
-
-            <% end %>
-          </div>  
-        </div>
       <% end %>
-
     </div>
   </div>
-
+  <.live_component module={LogatronWeb.ViewScapesLive.BreadCrumbsBar} id={@current_user.id} />
+  <.live_component
+    module={LogatronWeb.ViewScapesLive.ScapesGrid}
+    id={@current_user.id <> "_scapes_grid"}
+    scapes={@scapes}
+  />
 </div>

@@ -18,7 +18,9 @@ defmodule LogatronEdge.Application do
   @impl Application
   def start(_type, _args) do
 
-    edge_init = LogatronEdge.InitParams.from_environment()
+    # {:ok, info} = Apis.IpInfoCache.refresh()
+
+    edge_init = LogatronEdge.InitParams.enriched()
 
     Logger.info("\n\n\n Starting Logatron Edge with edge_init: #{inspect(edge_init)} \n\n\n")
 

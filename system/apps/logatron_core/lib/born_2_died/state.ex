@@ -69,7 +69,7 @@ defmodule Logatron.Born2Died.State do
     field(:farm_id, :string)
     field(:field_id, :string)
     field(:ticks, :integer)
-    field(:status, :integer)
+    field(:status, :string)
     embeds_one(:life, Life)
     embeds_one(:pos, Vector)
     embeds_one(:vitals, Vitals)
@@ -86,6 +86,7 @@ defmodule Logatron.Born2Died.State do
       life: life,
       pos: Vector.random(max_x, max_y, 1),
       vitals: Vitals.random(),
+      status: "unknown",
       ticks: 0,
       status: 0
     }
@@ -103,7 +104,7 @@ defmodule Logatron.Born2Died.State do
       pos: Vector.random(1_000, 1_000, 1),
       vitals: Vitals.random(),
       ticks: 0,
-      status: 0
+      status: "unknown"
     }
   end
 
@@ -119,7 +120,7 @@ defmodule Logatron.Born2Died.State do
       pos: Vector.random(1_000, 1_000, 1),
       vitals: Vitals.random(),
       ticks: 0,
-      status: 0
+      status: "unknown"
     }
   end
 

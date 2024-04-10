@@ -1,9 +1,9 @@
-defmodule Countries.MixProject do
+defmodule Apis.MixProject do
   use Mix.Project
 
   def project do
     [
-      app: :countries,
+      app: :apis,
       version: "0.1.0",
       build_path: "../../_build",
       config_path: "../../config/config.exs",
@@ -13,11 +13,11 @@ defmodule Countries.MixProject do
       start_permanent: Mix.env() == :prod,
       deps: deps(),
       # ExDoc
-      name: "Countries Library",
-      source_url: "https://github.com/beam-campus/logatron/system/apps/countries",
+      name: "APIs Library",
+      source_url: "https://github.com/beam-campus/logatron/system/apps/apis",
       homepage_url: "https://discomco.pl",
       docs: [
-        main: "Countries Library",
+        main: "APIs Library",
         extras: ["README.md"]
       ]
 

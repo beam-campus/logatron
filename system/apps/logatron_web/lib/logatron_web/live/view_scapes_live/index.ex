@@ -33,6 +33,7 @@ defmodule LogatronWeb.ViewScapesLive.Index do
   @initializing_animal_v1 LogatronCore.Facts.initializing_animal_v1()
   @animal_initialized_v1 LogatronCore.Facts.animal_initialized_v1()
 
+
   @impl true
   def mount(_params, _session, socket) do
     case connected?(socket) do

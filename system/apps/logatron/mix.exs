@@ -45,6 +45,7 @@ defmodule Logatron.MixProject do
       {:swoosh, "~> 1.5"},
       {:finch, "~> 0.13"},
       {:logatron_core, in_umbrella: true},
+      {:ets, "~> 0.9.0"},
     ]
   end
 
