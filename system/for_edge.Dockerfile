@@ -10,7 +10,7 @@ ARG RUNNER_IMAGE="debian:${DEBIAN_VERSION}"
 FROM ${BUILDER_IMAGE} AS builder
 
 ARG CORE_APP=logatron_core
-ARG COUNTRIES_APP=countries
+ARG APIS_APP=apis
 ARG EDGE_APP=logatron_edge
 
 RUN apt-get update -y && \
@@ -33,7 +33,7 @@ ENV OTPROOT=/usr/lib/erlang
 ENV ERL_LIBS=/usr/lib/erlang/lib
 
 # copy umbrella apps
-COPY apps/${COUNTRIES_APP} apps/${COUNTRIES_APP}/
+COPY apps/${APIS_APP} apps/${APIS_APP}/
 COPY apps/${CORE_APP} apps/${CORE_APP}/
 COPY apps/${EDGE_APP} apps/${EDGE_APP}/
 
