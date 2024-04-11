@@ -1,3 +1,6 @@
+# Credits: Special thanks to @cmo and @al2o3cr for the help on this one.
+
+
 defmodule Logatron.Edges.Cache do
   use GenServer
 
