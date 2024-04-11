@@ -1,116 +1,112 @@
 defmodule Logatron.Edges.Cache do
+  use GenServer
+
   @moduledoc """
   The Cache module is used to store and retrieve data from the Edges ETS cache.
   """
 
-  # alias ETS.KeyValueSet
-
   require Logger
 
-  def count() do
-    if edges_table_exists?() do
-      :ets.info(:edges, :size)
-    else
-      0
-    end
+  def count(),
+    do:
+      GenServer.call(
+        __MODULE__,
+        :count
+      )
+
+  def delete_by_id(id),
+    do:
+      GenServer.call(
+        __MODULE__,
+        {:delete_by_id, id}
+      )
+
+  def save(edge_init),
+    do:
+      GenServer.cast(
+        __MODULE__,
+        {:save, edge_init}
+      )
+
+  def get_all(),
+    do:
+      GenServer.call(
+        __MODULE__,
+        :get_all
+      )
+
+  def get_by_id(id),
+    do:
+      GenServer.call(
+        __MODULE__,
+        {:get_by_id, id}
+      )
+
+  def delete_all(),
+    do:
+      GenServer.cast(
+        __MODULE__,
+        :delete_all
+      )
+
+  ############## CALLBACKS #########
+  @impl GenServer
+  def handle_call(:count, _from, state),
+    do: {:reply, :ets.info(:edges, :size), state}
+
+  @impl GenServer
+  def handle_call(:get_all, _from, state),
+    do:
+      {:reply,
+       :ets.tab2list(:edges)
+       |> Enum.map(&elem(&1, 1)), state}
+
+  @impl GenServer
+  def handle_call({:delete_by_id, id}, _from, state),
+    do: {:reply, :ets.delete(:edges, id), state}
+
+  @impl GenServer
+  def handle_call({:get_by_id, id}, _from, state),
+    do:
+      {:reply,
+       :ets.lookup(:edges, id)
+       |> Enum.map(&elem(&1, 1)), state}
+
+  @impl GenServer
+  def handle_cast({:save, edge_init}, state) do
+    res = :ets.insert(:edges, {edge_init.id, edge_init})
+    Logger.error("Tried to Save: \n\n #{inspect(edge_init)}, \n\n result= #{inspect(res)}")
+    {:noreply, state}
   end
 
-  def edges_table_exists?() do
-    case :ets.all()
-         |> Enum.find(fn table -> table == :edges end) do
-      nil -> false
-      _ -> true
-    end
+  @impl GenServer
+  def handle_cast(:delete_all, state)  do
+    res = :ets.delete_all_objects(:edges)
+    Logger.error("Tried to Delete All: \n\n result= #{inspect(res)}")
+    {:noreply, state}
   end
 
-  def create_table() do
-    res =
-      case edges_table_exists?() do
-        true ->
-          :ok
-
-        false ->
-          :ets.new(
-            :edges,
-            [
-              :named_table,
-              :set,
-              :public
-            ]
-          )
-
-          :ok
-      end
-
-    res
+  @impl GenServer
+  def init(_args) do
+    :ets.new(:edges, [:named_table, :set, :public])
+    {:ok, []}
   end
 
-  def save(edge_init) do
-    :ok = create_table()
-    edge_kv = {edge_init.id, edge_init}
+  ########### PLUMBING ##########
 
-    case :ets.lookup(:edges, edge_kv) do
-      [] ->
-        :ets.insert_new(:edges, edge_kv)
+  def child_spec(),
+    do: %{
+      id: __MODULE__,
+      start: {__MODULE__, :start_link, []},
+      type: :worker,
+      restart: :permanent
+    }
 
-      _ ->
-        :ets.insert(:edges, edge_kv)
-    end
-
-    :ok
-  end
-
-  def get_raw() do
-    if edges_table_exists?() do
-      :ets.tab2list(:edges)
-    else
-      []
-    end
-  end
-
-  def get_all() do
-    if edges_table_exists?() do
-      :ets.tab2list(:edges)
-      |> Enum.map(&elem(&1, 1))
-    else
-      []
-    end
-  end
-
-  def get_by_id(id) do
-    if edges_table_exists?() do
-      :ets.lookup(:edges, id)
-      |> Enum.map(&elem(&1, 1))
-    else
-      []
-    end
-  end
-
-  def delete_by_id(id) do
-    if edges_table_exists?() do
-      Logger.error("\n\n\n\n Deleting edge with id: #{id} \n\n\n\n")
-      :ets.delete(:edges, id)
-    end
-  end
-
-  def get_raw_by_id(edge_id) do
-    if edges_table_exists?() do
-      :ets.tab2list(:edges)
-      |> Enum.filter(fn {_, edge} -> edge.edge_id == edge_id end)
-    else
-      []
-    end
-  end
-
-  def delete_raw_by_id(edge_id) do
-    if edges_table_exists?() do
-      res = get_raw_by_id(edge_id)
-      :ets.delete(:edges, res)
-    end
-  end
-
-  def delete_all() do
-    # :ets.delete_all_objects(:edges)
-    KeyValueSet.delete(:edges)
-  end
+  def start_link(_args),
+    do:
+      GenServer.start_link(
+        __MODULE__,
+        nil,
+        name: __MODULE__
+      )
 end
