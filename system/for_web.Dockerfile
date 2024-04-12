@@ -11,6 +11,7 @@ FROM ${BUILDER_IMAGE} AS builder
 ARG CORE_APP=logatron_core
 ARG SVC_APP=logatron
 ARG WEB_APP=logatron_web
+ARG APIS_APP=apis
 
 RUN apt-get update -y && \
     apt-get install -y build-essential git npm esbuild  && \
@@ -35,6 +36,7 @@ ENV ERL_LIBS=/usr/lib/erlang/lib
 COPY apps/${SVC_APP} apps/${SVC_APP}/
 COPY apps/${CORE_APP} apps/${CORE_APP}/
 COPY apps/${WEB_APP} apps/${WEB_APP}/
+COPY apps/${APIS_APP} apps/${APIS_APP}/
 
 
 
