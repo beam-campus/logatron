@@ -19,18 +19,28 @@
 
       <div class="flex flex-col w-full text-sm text-white gap-2" >
      
-        <%= for edge <- @edges do %>
-        <%  
-           edge_ids = String.split(edge.id, "-")
-           display_edge_id =  Enum.at(edge_ids, 0)  <> "-...-" <> Enum.at(edge_ids, Enum.count(edge_ids)-1)
-        %>
+        <%= for edge <- @edges |> Enum.sort_by(&(&1.continent), :asc) do %>
+            <%
+            td = DateTime.diff(@now, DateTime.from_naive!(edge.connected_since, "Etc/UTC"), :second)           
+            %>
             <div class="flex flex-row w-full py-0">
-            <div class="w-1/2"> <%= display_edge_id  %> </div>
-            <div class="w-1/4"> <%= edge.continent %>  </div>
-            <div class="w-1/4"> <%= edge.country %>  </div>
-            <div class="w-1/4"> <%= edge.city %>  </div>
-            <div class="w-1/4"> <%= edge.ip_address %> </div>
-            <div class="w-1/4"> <%= edge.is_container %> </div>
+            <%= if edge.is_container do %>
+              <img class="px-2 w-[30px]" src="/images/docker-mark-blue.svg" alt="logatron logo" />
+            <% else %>
+              <img class="px-2 w-[30px]" src="/images/root.svg" alt="logatron logo" />
+            <% end %>
+            <%!-- <div class="w-1/2"> <%= display_edge_id  %> </div> --%>
+            <div class="w-1/4"> <%= edge.ip_address %> </div>            
+            <div class="w-1/4"> <%= edge.city %>, <%= edge.country %>  </div>            
+            <div class="w-1/4 px-2"> <%= edge.continent %>  </div>
+            <div class="w-1/4"> since <%= edge.connected_since %>  </div>
+
+
+
+            
+            
+
+            
 
         </div>
       <% end %>

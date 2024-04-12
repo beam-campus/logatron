@@ -44,7 +44,12 @@ defmodule Apis.MixProject do
       {:credo, "~> 1.6", only: [:dev, :test], runtime: false},
       {:ex_doc, "~> 0.27", only: [:dev], runtime: false},
       {:req, "~> 0.4.5"},
-      {:typed_struct, "~> 0.3.0"}
+      {:typed_struct, "~> 0.3.0"},
+      {:hackney, "~> 1.9"},
+      {:dialyze, "~> 0.2.0", only: [:dev]},
+      {:dialyxir, "~> 1.0", only: [:dev], runtime: false},
+      {:mnemonic_slugs, "~> 0.0.3"},
+      {:cachex, "~> 3.6"}
     ]
   end
 end

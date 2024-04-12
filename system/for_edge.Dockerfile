@@ -42,25 +42,50 @@ COPY mix.exs mix.lock ./
 # install mix dependencies
 RUN MIX_ENV="prod" mix do deps.get --only "prod", deps.compile
 # build assets
- COPY apps/${EDGE_APP} ./apps/${EDGE_APP}
+COPY apps/${EDGE_APP} ./apps/${EDGE_APP}
 
 RUN MIX_ENV="prod" mix compile && \
     MIX_ENV="prod" mix release for_edge
 
+################ NORDVPN_IMAGE ################
+
+FROM ${RUNNER_IMAGE} as nordvpn
+
+RUN apt-get update && \
+    apt-get install -y wget iputils-ping curl && \
+    wget -O /tmp/nordrepo.deb https://repo.nordvpn.com/deb/nordvpn/debian/pool/main/nordvpn-release_1.0.0_all.deb && \
+    apt-get install -y /tmp/nordrepo.deb && \
+    apt-get update && \
+    apt-get install -y nordvpn=3.17.1 && \
+    apt-get remove -y wget nordvpn-release && \
+    rm /tmp/nordrepo.deb && \
+    apt-get clean
+
+# ENTRYPOINT /etc/init.d/nordvpn start && sleep 5 && /bin/bash -c "$@"
+# CMD systemctl enable --now nordvpnd
+
+
+
 
 ########### RUNTIME ###############
 # prepare release image
-FROM ${RUNNER_IMAGE} AS for_web
+# FROM nordvpn as for_edge
+FROM ${RUNNER_IMAGE} AS for_edge
 
 ARG CORE_APP=logatron_core
 ARG EDGE_APP=logatron_edge
+ARG APIS_APP=apis
 
 RUN apt-get update -y && \
-    apt-get install -y libstdc++6 openssl libncurses5 locales ca-certificates  && \
+    apt-get install -y libstdc++6 openssl libncurses5 locales ca-certificates curl systemd && \
     apt-get clean && rm -f /var/lib/apt/lists/*_* 
+
+
 
 # Set the locale
 RUN sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen && locale-gen
+
+
 
 ENV LANG en_US.UTF-8
 ENV LANGUAGE en_US:en
@@ -72,12 +97,36 @@ RUN chown nobody /system
 
 COPY --from=builder --chown=nobody /build_space/_build/prod/rel/for_edge .
 
+COPY run-edge.sh .
+
+RUN chmod +x run-edge.sh
+
+# RUN which nordvpn
+
+# RUN mkdir /run/nordvpn
+
+# # RUN mkdir /var/log/nordvpn
+
+# RUN chown nobody /etc/init.d/nordvpn
+
+# RUN chown nobody /run/nordvpn
+
+# RUN chown nobody /var/log/nordvpn
+
+# RUN usermod -aG nordvpn nobody
+
 USER nobody
+
 
 ENV HOME=/system
 ENV MIX_ENV="prod"
 ENV DATABASE_URL=irrelevant
 ENV SECRET_KEY_BASE=irrelevant
 
-CMD ["/system/bin/for_edge", "start"]
+# ENTRYPOINT [ "/bin/bash", "-c", "/etc/init.d/nordvpn start && sleep 20 && ./run-edge.sh" ]
+
+
+# CMD ["/system/bin/for_edge", "start"]
+
+CMD ["./run-edge.sh"]
 

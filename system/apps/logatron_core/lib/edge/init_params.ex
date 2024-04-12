@@ -146,7 +146,7 @@ defmodule LogatronEdge.InitParams do
     }
   end
 
-  def from_environment(info) when is_map(info) do
+  def from_environment(ip_info) when is_map(ip_info) do
     {:ok, chost} = :inet.gethostname()
     edge_id = "#{to_string(chost)}-" <> Logatron.Schema.Edge.random_id()
 
@@ -160,35 +160,37 @@ defmodule LogatronEdge.InitParams do
       id: edge_id,
       api_key: api_key,
       is_container: AppUtils.running_in_container?(),
-      ip_address: info["query"],
-      continent: info["continent"],
-      continent_code: info["continentCode"],
-      country: info["country"],
-      country_code: info["countryCode"],
-      region: info["region"],
-      region_name: info["regionName"],
-      city: info["city"],
-      zip: info["zip"],
-      lat: info["lat"],
-      lon: info["lon"],
-      timezone: info["timezone"],
-      offset: info["offset"],
-      currency: info["currency"],
-      isp: info["isp"],
-      org: info["org"],
-      as: info["as"],
-      asname: info["asname"],
-      reverse: info["reverse"],
-      mobile: info["mobile"],
-      proxy: info["proxy"],
-      hosting: info["hosting"],
+      ip_address: ip_info["query"],
+      continent: ip_info["continent"],
+      continent_code: ip_info["continentCode"],
+      country: ip_info["country"],
+      country_code: ip_info["countryCode"],
+      region: ip_info["region"],
+      region_name: ip_info["regionName"],
+      city: ip_info["city"],
+      zip: ip_info["zip"],
+      lat: ip_info["lat"],
+      lon: ip_info["lon"],
+      timezone: ip_info["timezone"],
+      offset: ip_info["offset"],
+      currency: ip_info["currency"],
+      isp: ip_info["isp"],
+      org: ip_info["org"],
+      as: ip_info["as"],
+      asname: ip_info["asname"],
+      reverse: ip_info["reverse"],
+      mobile: ip_info["mobile"],
+      proxy: ip_info["proxy"],
+      hosting: ip_info["hosting"],
       connected_since: DateTime.utc_now()
     }
   end
 
   def enriched() do
-    {:ok, info} = Apis.IpInfoCache.refresh()
-    from_environment(info)
+    {:ok, ip_info} = Apis.IpInfoCache.refresh()
+    
+
+    from_environment(ip_info)
   end
 
 
