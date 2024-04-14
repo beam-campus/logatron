@@ -152,7 +152,6 @@ defmodule LogatronWeb.ViewScapesLive.Index do
     |> put_flash(:success, "Region added")
   end
 
-
   defp try_add_edge(socket, edge_init) do
     socket
     |> assign(
@@ -168,7 +167,10 @@ defmodule LogatronWeb.ViewScapesLive.Index do
       edges:
         socket.assigns.edges
         |> Enum.filter(fn map -> map.id != edge_init.id end),
-        scapes: :scapes |> Cachex.stream! |> Enum.map(& &1)
+      scapes:
+        :scapes
+        |> Cachex.stream!()
+        |> Enum.map(& &1)
     )
     |> put_flash(:warning, "Edge removed")
   end

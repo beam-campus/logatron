@@ -5,20 +5,15 @@ defmodule LogatronWeb.ViewScapesLive.ScapesGrid do
   The live component for the scapes grid.
   """
 
-  alias Phoenix.PubSub
-
-  alias Logatron.Scapes.{
-    Scape,
-    Region,
-    Farm,
-    Animal
-  }
-
   def get_scapes_summary() do
     :scapes
     |> Cachex.stream!
     |> Stream.map(fn {:entry, _, _, _, scape} -> scape end)
-    |> Enum.reduce(%{}, fn scape, acc -> Map.update(acc, scape.name, 1, & &1 + 1) end)
+    |> Enum.reduce(%{}, fn scape, acc -> Map.update(acc, %{name: scape.name, id: scape.id}, 1, & &1 + 1) end)
+    |> Map.to_list()
+    |> Enum.sort()
+    |> Enum.map(fn {%{id: id, name: name}, count} -> {id, %{name: name, count: count}} end)
+
   end
 
 

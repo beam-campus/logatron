@@ -10,6 +10,7 @@
         </a>
       </div>
     </div>
+    
     <!-- Right side of toolbar -->
     <div class="relative">
       <%= if @current_user do %>
@@ -45,17 +46,16 @@
         class="dropdown-menu-arrow absolute right-0 m-2 py-2 w-48 bg-ltDark rounded-lg shadow-xl border border-white"
         hidden="true"
       >
-            <.link
-              href="/about"
-              class="menu-item border-b border-white border-opacity-50"
-              role="menuitem"
-              tabindex="-1"
-              method="get"
-              id="user-menu-item-1"
-            >
-              About us...
-            </.link>
-
+        <.link
+          href="/about"
+          class="menu-item border-b border-white border-opacity-50"
+          role="menuitem"
+          tabindex="-1"
+          method="get"
+          id="user-menu-item-1"
+        >
+          About us...
+        </.link>
 
         <%= if @current_user do %>
           <.link
@@ -68,30 +68,16 @@
           >
             Singed in as <%= @current_user.email %>
           </.link>
-
-          <%!-- <.link
-            href="/world"
-            class="menu-item border-b border-white border-opacity-50"
+          <.link
+            href="/edges_live"
+            class="menu-item"
             role="menuitem"
             tabindex="-1"
             method="get"
             id="user-menu-item-1"
           >
-            Streams Exchange
-          </.link> --%>
-
-            <.link
-              href="/edges_live"
-              class="menu-item"
-              role="menuitem"
-              tabindex="-1"
-              method="get"
-              id="user-menu-item-1"
-            >
-              View Agents
-            </.link>
-
-
+            Connected Agents
+          </.link>
           <.link
             href="/view_scapes"
             class="menu-item border-b border-white border-opacity-50"
@@ -103,36 +89,6 @@
             View Fact Streams
           </.link>
 
-          <%!-- <.link
-            href="/devices"
-            class="menu-item"
-            role="menuitem"
-            tabindex="-1"
-            method="get"
-            id="user-menu-item-3"
-          >
-            Your Devices
-          </.link>
-          <.link
-            href="/stations"
-            class="menu-item"
-            role="menuitem"
-            tabindex="-1"
-            method="get"
-            id="user-menu-item-3"
-          >
-            Your Stations
-          </.link>
-          <.link
-            href="#"
-            class="menu-item border-b border-white border-opacity-50"
-            role="menuitem"
-            tabindex="-1"
-            method="get"
-            id="user-menu-item-4"
-          >
-            Your Models
-          </.link> --%>
           <.link
             href={~p"/users/log_out"}
             class="menu-item"
@@ -144,6 +100,27 @@
             Sign out
           </.link>
         <% else %>
+          <.link
+            href="/edges_live"
+            class="menu-item"
+            role="menuitem"
+            tabindex="-1"
+            method="get"
+            id="user-menu-item-1"
+          >
+            Connected Agents
+          </.link>
+          <.link
+            href="/view_scapes"
+            class="menu-item border-b border-white border-opacity-50"
+            role="menuitem"
+            tabindex="-1"
+            method="get"
+            id="user-menu-item-2"
+          >
+            View Fact Streams
+          </.link>
+
           <.link
             href={~p"/users/log_in"}
             class="menu-item border-b border-white border-opacity-50"
