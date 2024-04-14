@@ -59,7 +59,7 @@ defmodule Logatron.MngFarm.InitParams do
       edge_id: region_init.edge_id,
       region_id: region_init.id,
       scape_id: region_init.scape_id,
-      nbr_of_lives: Logatron.Limits.random_nbr_lives(),
+      nbr_of_lives: Logatron.Limits.init_nbr_lives(),
       farm: farm
     }
 

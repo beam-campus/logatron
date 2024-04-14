@@ -41,7 +41,6 @@ defmodule LogatronWeb.ViewScapesLive.Index do
         Logger.info("Connected")
         PubSub.subscribe(Logatron.PubSub, @edge_attached_v1)
         PubSub.subscribe(Logatron.PubSub, @edge_detached_v1)
-        # Phoenix.PubSub.subscribe(Logatron.PubSub, @scape_attached_v1)
         PubSub.subscribe(Logatron.PubSub, @initializing_scape_v1)
         PubSub.subscribe(Logatron.PubSub, @initializing_region_v1)
         PubSub.subscribe(Logatron.PubSub, @initializing_farm_v1)

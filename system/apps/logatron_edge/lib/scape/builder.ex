@@ -10,7 +10,9 @@ defmodule LogatronEdge.Scape.Builder do
 
   ########## API #######################
   def init_scape(scape_init) do
-    selection = String.split(scape_init.select_from, ",")
+    selection =
+      String.split(scape_init.select_from, ",")
+      |> Enum.map(&String.trim/1)
 
     Cache.countries_of_regions(selection, scape_init.min_area, scape_init.min_people)
     |> Enum.take_random(scape_init.nbr_of_countries)

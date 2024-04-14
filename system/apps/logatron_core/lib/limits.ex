@@ -5,23 +5,38 @@ defmodule Logatron.Limits do
   Agrex.Limits is the module that contains the limits for the Life Subsystem
   """
 
-  @max_age 5
-
   @defaults [
-    ticks_per_year: 20
+    ticks_per_year: 20,
+    min_area: 30_000,
+    min_people: 10_000_000,
+    min_lives: 2,
+    min_age: 1,
+    max_age: 25,
+    max_countries: 3,
+    max_farms: 5,
+    max_lives: 5,
+    min_weight: 50,
+    max_weight: 750,
+    max_robots: 3,
+    min_robots: 2,
+    select_from: "Europe, North America, Asia, Africa, South America, Oceania"
   ]
 
-  def max_regions, do: 1
-  def max_farms, do: 2
-  def max_lives, do: 5
-  def min_lives, do: 2
-  def max_robots, do: 3
-  def min_robots, do: 2
-  def max_age, do: @max_age
-  def min_age, do: 1
-  def min_weight, do: 50
-  def max_weight, do: 750
+  def min_area, do: @defaults[:min_area]
+  def min_people, do: @defaults[:min_people]
+  def min_lives, do: @defaults[:min_lives]
+  def min_age, do: @defaults[:min_age]
+  def max_age, do: @defaults[:max_age]
+  def max_countries, do: @defaults[:max_countries]
+  def max_farms, do: @defaults[:max_farms]
+  def max_lives, do: System.get_env(EnvVars.logatron_edge_max_animals) || @defaults[:max_lives]
+  def min_weight, do: @defaults[:min_weight]
+  def max_weight, do: @defaults[:max_weight]
+  def max_robots, do: @defaults[:max_robots]
+  def min_robots, do: @defaults[:min_robots]
   def ticks_per_year, do: @defaults[:ticks_per_year]
+
+  def select_from, do: @defaults[:select_from]
 
   def random_age do
     ma = :rand.uniform(min_age())
@@ -40,7 +55,9 @@ defmodule Logatron.Limits do
     res
   end
 
-  def random_nbr_lives do
+  def max_nbr_lives() do
+
+
     ml = :rand.uniform(min_lives())
     res = abs(:rand.uniform(max_lives()) - ml)
 

@@ -24,7 +24,7 @@ defmodule LogatronEdge.Application do
 
     Logger.info("\n\n\n Starting Logatron Edge with edge_init: #{inspect(edge_init)} \n\n\n")
 
-    scape_init = LogatronEdge.Scape.InitParams.default(edge_init.id)
+    scape_init = LogatronEdge.Scape.InitParams.from_environment(edge_init.id)
 
     children = [
       {Finch, name: Logatron.Finch},

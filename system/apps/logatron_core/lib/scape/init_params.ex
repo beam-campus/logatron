@@ -9,6 +9,13 @@ defmodule LogatronEdge.Scape.InitParams do
 
   alias LogatronEdge.Scape.InitParams
 
+  @env_scape_id EnvVars.logatron_edge_scape_id()
+  @env_scape_name EnvVars.logatron_edge_scape_name()
+  @env_scape_select_from EnvVars.logatron_edge_scape_select_from()
+  @env_scape_nbr_of_countries EnvVars.logatron_edge_scape_nbr_of_countries()
+  @env_scape_min_area EnvVars.logatron_edge_scape_min_area()
+  @env_scape_min_people EnvVars.logatron_edge_scape_min_people()
+
   @all_fields [
     :id,
     :name,
@@ -56,7 +63,7 @@ defmodule LogatronEdge.Scape.InitParams do
       id: "europe",
       name: "Europe",
       edge_id: edge_id,
-      nbr_of_countries: Logatron.Limits.max_regions(),
+      nbr_of_countries: Logatron.Limits.max_countries(),
       min_area: 30_000,
       min_people: 10_000_000,
       select_from: "Europe"
@@ -67,7 +74,7 @@ defmodule LogatronEdge.Scape.InitParams do
       id: "asia",
       name: "Asia",
       edge_id: edge_id,
-      nbr_of_countries: Logatron.Limits.max_regions(),
+      nbr_of_countries: Logatron.Limits.max_countries(),
       min_area: 50_000,
       min_people: 40_000_000,
       select_from: "Asia"
@@ -75,13 +82,14 @@ defmodule LogatronEdge.Scape.InitParams do
 
   def from_environment(edge_id) do
     %InitParams{
-      id: System.get_env("LOGATRON_SCAPE_ID"),
-      name: System.get_env("LOGATRON_SCAPE_NAME"),
+      id: System.get_env(@env_scape_id) || "dairy-logs-1",
+      name: System.get_env(@env_scape_name) || "DairyLogs",
       edge_id: edge_id,
-      nbr_of_countries: System.get_env("LOGATRON_NBR_OF_COUNTRIES"),
-      min_area: System.get_env("LOGATRON_MIN_AREA"),
-      min_people: System.get_env("LOGATRON_MIN_PEOPLE"),
-      select_from: System.get_env("LOGATRON_SELECT_FROM")
+      nbr_of_countries:
+        System.get_env(@env_scape_nbr_of_countries) || Logatron.Limits.max_countries(),
+      min_area: System.get_env(@env_scape_min_area) || Logatron.Limits.min_area(),
+      min_people: System.get_env(@env_scape_min_people) || Logatron.Limits.min_people(),
+      select_from: System.get_env(@env_scape_select_from) || Logatron.Limits.select_from()
     }
   end
 
@@ -117,7 +125,7 @@ defmodule LogatronEdge.Scape.InitParams do
       id: Logatron.Schema.Scape.random_id(),
       name: MnemonicSlugs.generate_slug(2),
       edge_id: edge_id,
-      nbr_of_countries: Logatron.Limits.max_regions(),
+      nbr_of_countries: Logatron.Limits.max_countries(),
       min_area: 30_000,
       min_people: 10_000_000,
       select_from: "Europe"

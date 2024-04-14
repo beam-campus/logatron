@@ -18,7 +18,10 @@
       <% end %>
     </div>
   </div>
-  <.live_component module={LogatronWeb.ViewScapesLive.BreadCrumbsBar} id={@current_user.id} />
+  <.live_component 
+    module={LogatronWeb.ViewScapesLive.BreadCrumbsBar} 
+    id={@current_user.id <> "_scapes_breadcrumbs"} 
+  />
   <.live_component
     module={LogatronWeb.ViewScapesLive.ScapesGrid}
     id={@current_user.id <> "_scapes_grid"}
