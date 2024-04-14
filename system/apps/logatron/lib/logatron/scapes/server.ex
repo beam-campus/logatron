@@ -12,6 +12,8 @@ defmodule Logatron.Scapes.Server do
         {:update_scape_status, status}
       )
 
+
+
   #################### CALLBACKS  ##################
   @impl true
   def handle_cast({:update_scape_status, status}, state),

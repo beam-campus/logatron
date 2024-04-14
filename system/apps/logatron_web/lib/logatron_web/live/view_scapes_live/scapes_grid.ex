@@ -14,6 +14,14 @@ defmodule LogatronWeb.ViewScapesLive.ScapesGrid do
     Animal
   }
 
+  def get_scapes_summary() do
+    :scapes
+    |> Cachex.stream!
+    |> Stream.map(fn {:entry, _, _, _, scape} -> scape end)
+    |> Enum.reduce(%{}, fn scape, acc -> Map.update(acc, scape.name, 1, & &1 + 1) end)
+  end
+
+
   @impl true
   def update(assigns, socket) do
     {:ok,
@@ -21,21 +29,5 @@ defmodule LogatronWeb.ViewScapesLive.ScapesGrid do
      |> assign(assigns)}
   end
 
-  @impl true
-  def render(assigns) do
-    ~H"""
-    <div class="h-full border rounded m-5 px-4 py-3 text-white">
-      <h1 class="text-2xl font-bold">Scapes</h1>
-      <div class="grid grid-cols-1 gap-4">
-        <%= for {:entry, _,_,_, scape} <- @scapes do %>
-          <div class="border rounded p-3">
-            <h2 class="text-xl font-bold">NAME: <%= scape.name %></h2>
-            <p>fed by agent: <%= scape.edge_id %></p>
-            <p>selects from: <%= scape.select_from %></p>
-          </div>
-        <% end %>
-      </div>
-    </div>
-    """
-  end
+
 end

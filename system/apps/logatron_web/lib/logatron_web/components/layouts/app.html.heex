@@ -46,16 +46,6 @@
         hidden="true"
       >
             <.link
-              href="/edges_live"
-              class="menu-item border-b border-white border-opacity-50"
-              role="menuitem"
-              tabindex="-1"
-              method="get"
-              id="user-menu-item-1"
-            >
-              View Agents(s)
-            </.link>
-            <.link
               href="/about"
               class="menu-item border-b border-white border-opacity-50"
               role="menuitem"
@@ -79,7 +69,7 @@
             Singed in as <%= @current_user.email %>
           </.link>
 
-          <.link
+          <%!-- <.link
             href="/world"
             class="menu-item border-b border-white border-opacity-50"
             role="menuitem"
@@ -88,20 +78,32 @@
             id="user-menu-item-1"
           >
             Streams Exchange
-          </.link>
+          </.link> --%>
+
+            <.link
+              href="/edges_live"
+              class="menu-item"
+              role="menuitem"
+              tabindex="-1"
+              method="get"
+              id="user-menu-item-1"
+            >
+              View Agents
+            </.link>
+
 
           <.link
             href="/view_scapes"
-            class="menu-item"
+            class="menu-item border-b border-white border-opacity-50"
             role="menuitem"
             tabindex="-1"
             method="get"
             id="user-menu-item-2"
           >
-            Your Scapes
+            View Fact Streams
           </.link>
 
-          <.link
+          <%!-- <.link
             href="/devices"
             class="menu-item"
             role="menuitem"
@@ -130,7 +132,7 @@
             id="user-menu-item-4"
           >
             Your Models
-          </.link>
+          </.link> --%>
           <.link
             href={~p"/users/log_out"}
             class="menu-item"
