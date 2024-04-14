@@ -81,15 +81,8 @@ defmodule LogatronEdge.Scape.InitParams do
     }
 
   def from_environment(edge_id) do
-
-
-
     %InitParams{
-      id:
-        System.get_env(
-          @env_scape_id,
-          "dairy-logs"
-        ),
+      id: System.get_env(@env_scape_id, "dairy-logs"),
       name: System.get_env(@env_scape_name, "DairyLogs"),
       edge_id: edge_id,
       nbr_of_countries: Logatron.Limits.max_countries(),
