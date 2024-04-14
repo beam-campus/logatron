@@ -22,21 +22,51 @@ defmodule Logatron.Limits do
     select_from: "Europe, North America, Asia, Africa, South America, Oceania"
   ]
 
-  def min_area, do: @defaults[:min_area]
-  def min_people, do: @defaults[:min_people]
+  def min_area,
+    do:
+      System.get_env(EnvVars.logatron_edge_scape_min_area()) ||
+        @defaults[:min_area]
+
+  def min_people,
+    do:
+      System.get_env(EnvVars.logatron_edge_scape_min_people()) ||
+        @defaults[:min_people]
+
   def min_lives, do: @defaults[:min_lives]
   def min_age, do: @defaults[:min_age]
   def max_age, do: @defaults[:max_age]
-  def max_countries, do: @defaults[:max_countries]
-  def max_farms, do: @defaults[:max_farms]
-  def max_lives, do: System.get_env(EnvVars.logatron_edge_max_animals) || @defaults[:max_lives]
+
+  def max_countries,
+    do:
+      EnvVars.get_env_var_as_integer(
+        EnvVars.logatron_edge_scape_nbr_of_countries(),
+        @defaults[:max_countries]
+      )
+
+  def max_farms,
+    do:
+      EnvVars.get_env_var_as_integer(
+        EnvVars.logatron_edge_max_farms(),
+        @defaults[:max_farms]
+      )
+
+  def max_lives,
+    do:
+      EnvVars.get_env_var_as_integer(
+        EnvVars.logatron_edge_max_animals(),
+        @defaults[:max_lives]
+      )
+
   def min_weight, do: @defaults[:min_weight]
   def max_weight, do: @defaults[:max_weight]
   def max_robots, do: @defaults[:max_robots]
   def min_robots, do: @defaults[:min_robots]
   def ticks_per_year, do: @defaults[:ticks_per_year]
 
-  def select_from, do: @defaults[:select_from]
+  def select_from,
+    do:
+      System.get_env(EnvVars.logatron_edge_scape_select_from()) ||
+        @defaults[:select_from]
 
   def random_age do
     ma = :rand.uniform(min_age())
@@ -56,8 +86,6 @@ defmodule Logatron.Limits do
   end
 
   def max_nbr_lives() do
-
-
     ml = :rand.uniform(min_lives())
     res = abs(:rand.uniform(max_lives()) - ml)
 

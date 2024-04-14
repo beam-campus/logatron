@@ -11,6 +11,7 @@ defmodule LogatronEdge.InitParams do
 
   @all_fields [
     :id,
+    :scape_id,
     :api_key,
     :is_container,
     :ip_address,
@@ -41,6 +42,7 @@ defmodule LogatronEdge.InitParams do
 
   @required_fields [
     :id,
+    :scape_id,
     :api_key,
     :is_container,
     :connected_since
@@ -50,6 +52,7 @@ defmodule LogatronEdge.InitParams do
   @primary_key false
   embedded_schema do
     field(:id, :string)
+    field(:scape_id, :string)
     field(:api_key, :string)
     field(:is_container, :boolean, default: false)
     field(:ip_address, :string)
@@ -116,9 +119,16 @@ defmodule LogatronEdge.InitParams do
         key -> key
       end
 
+    scape_id =
+      case System.get_env("LOGATRON_SCAPE_ID") do
+        nil -> "no-scape-id"
+        id -> id
+      end
+
     %InitParams{
       id: edge_id,
       api_key: api_key,
+      scape_id: scape_id,
       is_container: AppUtils.running_in_container?(),
       ip_address: "unknown",
       continent: "unknown",
@@ -150,14 +160,12 @@ defmodule LogatronEdge.InitParams do
     {:ok, chost} = :inet.gethostname()
     edge_id = "#{to_string(chost)}-" <> Logatron.Schema.Edge.random_id()
 
-    api_key =
-      case System.get_env("LOGATRON_EDGE_API_KEY") do
-        nil -> "no-api-key"
-        key -> key
-      end
+    api_key = System.get_env(EnvVars.logatron_edge_api_key(), "no-api-key")
+    scape_id = System.get_env(EnvVars.logatron_edge_scape_id(), "dairy-logs")
 
     %InitParams{
       id: edge_id,
+      scape_id: scape_id,
       api_key: api_key,
       is_container: AppUtils.running_in_container?(),
       ip_address: ip_info["query"],
@@ -188,10 +196,7 @@ defmodule LogatronEdge.InitParams do
 
   def enriched() do
     {:ok, ip_info} = Apis.IpInfoCache.refresh()
-    
 
     from_environment(ip_info)
   end
-
-
 end

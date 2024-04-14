@@ -81,15 +81,21 @@ defmodule LogatronEdge.Scape.InitParams do
     }
 
   def from_environment(edge_id) do
+
+
+
     %InitParams{
-      id: System.get_env(@env_scape_id) || "dairy-logs-1",
-      name: System.get_env(@env_scape_name) || "DairyLogs",
+      id:
+        System.get_env(
+          @env_scape_id,
+          "dairy-logs"
+        ),
+      name: System.get_env(@env_scape_name, "DairyLogs"),
       edge_id: edge_id,
-      nbr_of_countries:
-        System.get_env(@env_scape_nbr_of_countries) || Logatron.Limits.max_countries(),
-      min_area: System.get_env(@env_scape_min_area) || Logatron.Limits.min_area(),
-      min_people: System.get_env(@env_scape_min_people) || Logatron.Limits.min_people(),
-      select_from: System.get_env(@env_scape_select_from) || Logatron.Limits.select_from()
+      nbr_of_countries: Logatron.Limits.max_countries(),
+      min_area: Logatron.Limits.min_area(),
+      min_people: Logatron.Limits.min_people(),
+      select_from: Logatron.Limits.select_from()
     }
   end
 

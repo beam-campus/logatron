@@ -27,7 +27,7 @@ defmodule LogatronEdge.MixProject do
   def application do
     [
       mod: {LogatronEdge.Application, []},
-      extra_applications: [:logger, :runtime_tools, :observer, :eex]
+      extra_applications: [:logger, :runtime_tools, :observer, :eex, :wx]
     ]
   end
 

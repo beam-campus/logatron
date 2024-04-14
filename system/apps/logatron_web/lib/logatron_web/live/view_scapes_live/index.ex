@@ -23,6 +23,7 @@ defmodule LogatronWeb.ViewScapesLive.Index do
 
   @initializing_scape_v1 LogatronCore.Facts.initializing_scape_v1()
   @scape_initialized_v1 LogatronCore.Facts.scape_initialized_v1()
+  @scape_detached_v1 LogatronCore.Facts.scape_detached_v1()
 
   @initializing_region_v1 LogatronCore.Facts.initializing_region_v1()
   @region_initialized_v1 LogatronCore.Facts.region_initialized_v1()
@@ -33,7 +34,6 @@ defmodule LogatronWeb.ViewScapesLive.Index do
   @initializing_animal_v1 LogatronCore.Facts.initializing_animal_v1()
   @animal_initialized_v1 LogatronCore.Facts.animal_initialized_v1()
 
-
   @impl true
   def mount(_params, _session, socket) do
     case connected?(socket) do
@@ -41,17 +41,30 @@ defmodule LogatronWeb.ViewScapesLive.Index do
         Logger.info("Connected")
         PubSub.subscribe(Logatron.PubSub, @edge_attached_v1)
         PubSub.subscribe(Logatron.PubSub, @edge_detached_v1)
+
         PubSub.subscribe(Logatron.PubSub, @initializing_scape_v1)
+        PubSub.subscribe(Logatron.PubSub, @scape_initialized_v1)
+        PubSub.subscribe(Logatron.PubSub, @scape_detached_v1)
+
         PubSub.subscribe(Logatron.PubSub, @initializing_region_v1)
         PubSub.subscribe(Logatron.PubSub, @initializing_farm_v1)
         PubSub.subscribe(Logatron.PubSub, @initializing_animal_v1)
 
-      # Phoenix.PubSub.subscribe(Logatron.PubSub, @scape_initialized_v1)
       false ->
         Logger.info("Not connected")
     end
 
-    {:ok, assign(socket, scapes: [], edges: [], regions: [], farms: [], animals: [])}
+    {:ok,
+     socket
+     |> assign(
+       scapes:
+         Cachex.stream!(:scapes)
+         |> Enum.map(& &1),
+       edges: [],
+       regions: [],
+       farms: [],
+       animals: []
+     )}
   end
 
   ########## CALLBACKS ##########
@@ -65,10 +78,27 @@ defmodule LogatronWeb.ViewScapesLive.Index do
 
   @impl true
   def handle_info({@initializing_scape_v1, scape_init}, socket),
-    do: {:noreply, try_add_scape(socket, scape_init)}
+    do:
+      {:noreply,
+       socket
+       |> assign(
+         scapes:
+           Cachex.stream!(:scapes)
+           |> Enum.map(& &1)
+       )}
 
   def handle_info({@scape_initialized_v1, scape_init}, socket),
     do: {:noreply, assign(socket, scapes: [scape_init | socket.assigns.scapes])}
+
+  def handle_info({@scape_detached_v1, scape_init}, socket),
+    do:
+      {:noreply,
+       socket
+       |> assign(
+         scapes:
+           Cachex.stream!(:scapes)
+           |> Enum.map(& &1)
+       )}
 
   @impl true
   def handle_info({@initializing_region_v1, region_init}, socket),
@@ -80,7 +110,7 @@ defmodule LogatronWeb.ViewScapesLive.Index do
 
   @impl true
   def handle_info({@initializing_farm_v1, farm_init}, socket),
-    do: {:noreply,  try_add_farm(socket, farm_init)}
+    do: {:noreply, try_add_farm(socket, farm_init)}
 
   @impl true
   def handle_info({@farm_initialized_v1, farm_init}, socket),
@@ -96,7 +126,6 @@ defmodule LogatronWeb.ViewScapesLive.Index do
 
   ################ INTERNALS ###################
 
-
   defp try_add_animal(socket, animal_init) do
     socket
     |> assign(
@@ -104,7 +133,6 @@ defmodule LogatronWeb.ViewScapesLive.Index do
       animals: [animal_init | socket.assigns.animals]
     )
   end
-
 
   defp try_add_farm(socket, farm_init) do
     socket
@@ -124,13 +152,6 @@ defmodule LogatronWeb.ViewScapesLive.Index do
     |> put_flash(:success, "Region added")
   end
 
-  defp try_add_scape(socket, scape_init) do
-    socket
-    |> assign(
-      action_scape: scape_init.id,
-      scapes: [scape_init | socket.assigns.scapes]
-    )
-  end
 
   defp try_add_edge(socket, edge_init) do
     socket
@@ -146,7 +167,8 @@ defmodule LogatronWeb.ViewScapesLive.Index do
       action_edge: edge_init.id,
       edges:
         socket.assigns.edges
-        |> Enum.filter(fn map -> map.id != edge_init.id end)
+        |> Enum.filter(fn map -> map.id != edge_init.id end),
+        scapes: :scapes |> Cachex.stream! |> Enum.map(& &1)
     )
     |> put_flash(:warning, "Edge removed")
   end

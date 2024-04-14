@@ -8,26 +8,6 @@ defmodule LogatronEdge.Scape.System do
 
   alias LogatronEdge.Channel
 
-  ################# INTERFACE #############
-  def start_europe(edge_id) do
-    case start_link(LogatronEdge.Scape.InitParams.europe(edge_id)) do
-      {:ok, pid} ->
-        {:ok, pid}
-
-      {:error, {:already_started, pid}} ->
-        {:ok, pid}
-    end
-  end
-
-  def start_asia(edge_id) do
-    case start_link(LogatronEdge.Scape.InitParams.asia(edge_id)) do
-      {:ok, pid} ->
-        {:ok, pid}
-
-      {:error, {:already_started, pid}} ->
-        {:ok, pid}
-    end
-  end
 
   def start_region_system(scape_id, region_init) do
     Logger.debug("for [#{scape_id}] with region_init #{inspect(region_init)}")
@@ -50,13 +30,26 @@ defmodule LogatronEdge.Scape.System do
     end
   end
 
-  ######## CALLBACKS ############
-  @impl GenServer
-  def handle_info({:EXIT, from_pid, reason}, state) do
-    Logger.error(
-      "#{Colors.red_on_black()}EXIT received from #{inspect(from_pid)} reason: #{inspect(reason)}#{Colors.reset()}"
-    )
 
+
+  ####### CALLBACKS ############
+  # @impl GenServer
+  # def handle_info({:EXIT, from_pid, reason}, state) do
+  #   Logger.error(
+  #     "#{Colors.red_on_black()}EXIT received from #{inspect(from_pid)} reason: #{inspect(reason)}#{Colors.reset()}"
+  #   )
+
+  #   Channel.scape_detached(state)
+
+  #   {:noreply, state}
+  # end
+
+
+  @impl GenServer
+  def handle_info(msg,  state) do
+    Logger.error(
+      "#{Colors.red_on_black()}received: [#{msg}]"
+    )
     {:noreply, state}
   end
 
@@ -73,8 +66,19 @@ defmodule LogatronEdge.Scape.System do
   end
 
   @impl GenServer
+  def terminate(reason, scape_init) do
+
+    Logger.error(
+      "#{Colors.red_on_black()}Terminating Scape.System with reason: #{inspect(reason)}#{Colors.reset()}"
+    )
+
+    Channel.scape_detached(scape_init)
+    {:ok, scape_init}
+  end
+
+  @impl GenServer
   def init(%{id: scape_id} = scape_init) do
-    Process.flag(:trap_exit, true)
+    # Process.flag(:trap_exit, true)
 
     Channel.initializing_scape(scape_init)
 
@@ -111,7 +115,7 @@ defmodule LogatronEdge.Scape.System do
       id: via(scape_id),
       start: {__MODULE__, :start_link, [scape_init]},
       type: :supervisor,
-      restart: :permanent,
+      restart: :transient,
       shutdown: 500
     }
 

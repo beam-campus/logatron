@@ -10,6 +10,10 @@ defmodule LogatronEdge.Scape.Builder do
 
   ########## API #######################
   def init_scape(scape_init) do
+
+    Logger.error(
+      "\n\n\t#{Colors.red_on_black()}Initializing Scape [#{scape_init.id}] \n\n\n scape_init= #{inspect(scape_init)} #{Colors.reset()}\n\n")
+
     selection =
       String.split(scape_init.select_from, ",")
       |> Enum.map(&String.trim/1)

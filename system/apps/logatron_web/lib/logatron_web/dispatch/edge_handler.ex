@@ -27,8 +27,6 @@ defmodule LogatronWeb.Dispatch.EdgeHandler do
   def pub_edge_attached(payload, _socket) do
     {:ok, edge_init} = LogatronEdge.InitParams.from_map(payload["edge_init"])
 
-
-
     Logatron.Edges.Cache.save(edge_init)
 
     PubSub.broadcast!(
@@ -42,6 +40,7 @@ defmodule LogatronWeb.Dispatch.EdgeHandler do
     {:ok, edge_init} = LogatronEdge.InitParams.from_map(payload["edge_init"])
 
     Logatron.Edges.Cache.delete_by_id(edge_init.id)
+    :scapes |> Cachex.del!({edge_init.id, edge_init.scape_id})
 
     PubSub.broadcast!(
       Logatron.PubSub,

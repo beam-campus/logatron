@@ -38,9 +38,12 @@ defmodule LogatronEdge.Application do
       strategy: :one_for_one,
       name: __MODULE__
     )
+    # stop(scape_init)
   end
 
-  def stop() do
+  @impl Application
+  def stop(scape_init) do
+    LogatronEdge.Scape.System.terminate(:normal, scape_init)
     Supervisor.stop(__MODULE__)
   end
 end

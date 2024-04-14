@@ -14,6 +14,7 @@ defmodule LogatronEdge.Channel do
 
   @initializing_scape_v1 Facts.initializing_scape_v1()
   @scape_initialized_v1 Facts.scape_initialized_v1()
+  @scape_detached_v1 Facts.scape_detached_v1()
 
   @initializing_region_v1 LogatronCore.Facts.initializing_region_v1()
   @region_initialized_v1 LogatronCore.Facts.region_initialized_v1()
@@ -44,6 +45,13 @@ defmodule LogatronEdge.Channel do
       GenServer.cast(
         via(scape_init.id),
         {:scape_initialized, scape_init}
+      )
+
+  def scape_detached(scape_init),
+    do:
+      GenServer.cast(
+        via(scape_init.id),
+        {:scape_detached, scape_init}
       )
 
   def initializing_region(region_init),
@@ -89,6 +97,20 @@ defmodule LogatronEdge.Channel do
       )
 
   ########### CALLBACKS ################
+
+  @impl true
+  def handle_cast({:scape_detached, scape_init}, state) do
+    Logger.debug(
+      " :scape_detached ~> \n STATE: #{inspect(state)} \n\n #{scape_init.id} \n\n"
+    )
+    Client.publish(
+      scape_init.edge_id,
+      @scape_detached_v1,
+      %{scape_init: scape_init}
+    )
+
+    {:noreply, state}
+  end
 
   @impl true
   def handle_cast({:initializing_animal, animal_init}, state) do

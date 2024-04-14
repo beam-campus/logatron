@@ -30,6 +30,7 @@ defmodule LogatronWeb.EdgeChannel do
 
   @initializing_scape_v1 Facts.initializing_scape_v1()
   @scape_initialized_v1 Facts.scape_initialized_v1()
+  @scape_detached_v1 Facts.scape_detached_v1()
 
   @initializing_region_v1 Facts.initializing_region_v1()
   @region_initialized_v1 Facts.region_initialized_v1()
@@ -130,6 +131,12 @@ defmodule LogatronWeb.EdgeChannel do
   def handle_in(@scape_initialized_v1, payload, socket) do
     Logger.debug("EdgeChannel.handle_in: #{@scape_initialized_v1} #{inspect(payload)}")
     ScapeHandler.pub_scape_initialized_v1(payload, socket)
+  end
+
+  @impl true
+  def handle_in(@scape_detached_v1, payload, socket) do
+    Logger.debug("EdgeChannel.handle_in: #{@scape_detached_v1} #{inspect(payload)}")
+    ScapeHandler.pub_scape_detached_v1(payload, socket)
   end
 
   @impl true

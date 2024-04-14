@@ -10,6 +10,7 @@ defmodule Logatron.Application do
     children = [
       Logatron.Repo,
       Logatron.Edges.Cache,
+      {Cachex, name: :scapes},
       {DNSCluster, query: Application.get_env(:logatron, :dns_cluster_query) || :ignore},
       {Phoenix.PubSub, name: Logatron.PubSub},
       # Start the Finch HTTP client for sending emails

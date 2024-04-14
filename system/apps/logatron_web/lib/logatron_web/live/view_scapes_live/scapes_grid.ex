@@ -26,11 +26,12 @@ defmodule LogatronWeb.ViewScapesLive.ScapesGrid do
     ~H"""
     <div class="h-full border rounded m-5 px-4 py-3 text-white">
       <h1 class="text-2xl font-bold">Scapes</h1>
-      <div class="grid grid-cols-3 gap-4">
-        <%= for scape <- @scapes do %>
+      <div class="grid grid-cols-1 gap-4">
+        <%= for {:entry, _,_,_, scape} <- @scapes do %>
           <div class="border rounded p-3">
-            <h2 class="text-xl font-bold"><%= scape.name %></h2>
-            <p><%= scape.select_from %></p>
+            <h2 class="text-xl font-bold">NAME: <%= scape.name %></h2>
+            <p>fed by agent: <%= scape.edge_id %></p>
+            <p>selects from: <%= scape.select_from %></p>
           </div>
         <% end %>
       </div>

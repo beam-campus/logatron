@@ -18,13 +18,16 @@ defmodule LogatronCore.Facts do
   def scape_initialized_v1,
     do: "scape_initialized_v1"
 
+  def scape_detached_v1,
+    do: "scape_detached_v1"
+
   def initializing_region_v1,
     do: "initializing_region_v1"
 
   def region_initialized_v1,
     do: "region_initialized_v1"
 
-    def initializing_farm_v1,
+  def initializing_farm_v1,
     do: "initializing_farm_v1"
 
   def farm_initialized_v1,
@@ -35,8 +38,6 @@ defmodule LogatronCore.Facts do
 
   def animal_initialized_v1,
     do: "animal_initialized_v1"
-
-    
 
   def presence_changed_v1,
     do: "presence_changed_v1"
