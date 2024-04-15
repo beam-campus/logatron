@@ -18,6 +18,7 @@ defmodule LogatronEdge.Channel do
 
   @initializing_region_v1 LogatronCore.Facts.initializing_region_v1()
   @region_initialized_v1 LogatronCore.Facts.region_initialized_v1()
+  @region_detached_v1 LogatronCore.Facts.region_detached_v1()
 
   @initializing_farm_v1 LogatronCore.Facts.initializing_farm_v1()
   @farm_initialized_v1 LogatronCore.Facts.farm_initialized_v1()

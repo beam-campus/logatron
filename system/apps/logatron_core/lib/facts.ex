@@ -27,6 +27,9 @@ defmodule LogatronCore.Facts do
   def region_initialized_v1,
     do: "region_initialized_v1"
 
+  def region_detached_v1,
+    do: "region_detached_v1"
+
   def initializing_farm_v1,
     do: "initializing_farm_v1"
 

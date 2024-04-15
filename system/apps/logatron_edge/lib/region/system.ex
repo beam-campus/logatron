@@ -29,6 +29,13 @@ defmodule Logatron.Region.System do
     {:ok, region_init}
   end
 
+  @impl GenServer
+  def terminate(_reason, region_init) do
+    Logger.info("Terminating Region System #{to_name(region_init.id)}")
+    Channel.region_detached(region_init)
+    {:ok, region_init}
+  end
+
   ########### INTERNALS ############
 
   ############ PLUMBING ############
