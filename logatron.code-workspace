@@ -1,10 +1,10 @@
 {
 	"folders": [
 		{
-			"path": "."
+			"path": "../logatron_deploy"
 		},
 		{
-			"path": "../logatron_deploy"
+			"path": "."
 		},
 		{
 			"path": "../compose-dev-stack"
