@@ -1,5 +1,6 @@
 defmodule LogatronEdge.Scape.Builder do
   use GenServer
+
   @moduledoc """
   LogatronEdge.Scape.Worker is a GenServer that manages the state of a Scape.
   """
@@ -10,9 +11,9 @@ defmodule LogatronEdge.Scape.Builder do
 
   ########## API #######################
   def init_scape(scape_init) do
-
     Logger.error(
-      "\n\n\t#{Colors.red_on_black()}Initializing Scape [#{scape_init.id}] \n\n\n scape_init= #{inspect(scape_init)} #{Colors.reset()}\n\n")
+      "\n\n\t#{Colors.red_on_black()}Initializing Scape [#{scape_init.id}] \n\n\n scape_init= #{inspect(scape_init)} #{Colors.reset()}\n\n"
+    )
 
     selection =
       String.split(scape_init.select_from, ",")
@@ -25,7 +26,17 @@ defmodule LogatronEdge.Scape.Builder do
         country.name
         |> String.replace(" ", "_")
         |> String.downcase()
-      region_init = Logatron.Region.InitParams.random(scape_init.edge_id, scape_init.id, region_id, country.name)
+
+      region_init =
+        Logatron.Region.InitParams.random(
+          scape_init.edge_id,
+          scape_init.id,
+          region_id,
+          country.name,
+          country.region,
+          country.subregion
+        )
+
       LogatronEdge.Scape.Regions.start_region(region_init)
     end)
 

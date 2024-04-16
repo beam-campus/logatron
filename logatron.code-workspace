@@ -5,9 +5,13 @@
 		},
 		{
 			"path": "."
-		},
-		{
-			"path": "../compose-dev-stack"
 		}
-	]
+	],
+	"settings": {
+		"elixirLS.trace.server": "verbose",
+		"elixirLS.projectDir": "system",
+		"cSpell.words": [
+			"Logatron"
+		]
+	}
 }

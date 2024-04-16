@@ -69,6 +69,13 @@ defmodule LogatronEdge.Channel do
         {:region_initialized, region_init}
       )
 
+  def region_detached(region_init),
+    do:
+      GenServer.cast(
+        via(region_init.scape_id),
+        {:region_detached, region_init}
+      )
+
   def initializing_farm(farm_init),
     do:
       GenServer.cast(
@@ -101,9 +108,8 @@ defmodule LogatronEdge.Channel do
 
   @impl true
   def handle_cast({:scape_detached, scape_init}, state) do
-    Logger.debug(
-      " :scape_detached ~> \n STATE: #{inspect(state)} \n\n #{scape_init.id} \n\n"
-    )
+    Logger.debug(" :scape_detached ~> \n STATE: #{inspect(state)} \n\n #{scape_init.id} \n\n")
+
     Client.publish(
       scape_init.edge_id,
       @scape_detached_v1,
@@ -205,6 +211,21 @@ defmodule LogatronEdge.Channel do
     Client.publish(
       edge_id,
       @region_initialized_v1,
+      %{region_init: region_init}
+    )
+
+    {:noreply, state}
+  end
+
+  @impl true
+  def handle_cast({:region_detached, region_init}, state) do
+    Logger.debug(
+      " :region_detached ~> \n STATE: #{inspect(state)} \n\n #{region_init.scape_id}.#{region_init.id} \n\n"
+    )
+
+    Client.publish(
+      region_init.edge_id,
+      @region_detached_v1,
       %{region_init: region_init}
     )
 

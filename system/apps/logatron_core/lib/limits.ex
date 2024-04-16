@@ -19,7 +19,8 @@ defmodule Logatron.Limits do
     max_weight: 750,
     max_robots: 3,
     min_robots: 2,
-    select_from: "Europe, North America, Asia, Africa, South America, Oceania"
+    select_from: "Europe, North America, Asia, Africa, South America, Oceania",
+    init_nbr_of_lives: 5
   ]
 
   def min_area,
@@ -32,7 +33,12 @@ defmodule Logatron.Limits do
       System.get_env(EnvVars.logatron_edge_scape_min_people()) ||
         @defaults[:min_people]
 
-  def min_lives, do: @defaults[:min_lives]
+  def init_nbr_of_lives,
+    do: @defaults[:init_nbr_of_lives]
+
+  def min_lives,
+    do: @defaults[:min_lives]
+
   def min_age, do: @defaults[:min_age]
   def max_age, do: @defaults[:max_age]
 

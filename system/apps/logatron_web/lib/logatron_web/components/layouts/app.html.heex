@@ -1,9 +1,9 @@
 <div class="flex flex-col h-screen">
   <%!-- HEADER   --%>
 
-  <header class="fixed top-0 left-0 right-0 flex justify-between items-center px-6 py-3 bg-ltDark">
+  <header class="fixed top-0 left-0 right-0 flex items-center justify-between px-6 py-3 bg-ltDark">
     <!-- Left side of toolbar -->
-    <div class="flex relative">
+    <div class="relative flex">
       <div>
         <a href={~p"/"}>
           <img src="/images/lg-logo-no-bg.svg" alt="logatron logo" width="200" />
@@ -43,12 +43,12 @@
       <div
         id="dropdown_menu"
         phx-click-away={LogatronWeb.Layouts.App.toggle_dropdown_menu()}
-        class="dropdown-menu-arrow absolute right-0 m-2 py-2 w-48 bg-ltDark rounded-lg shadow-xl border border-white"
+        class="absolute right-0 w-48 py-2 m-2 border border-white rounded-lg shadow-xl dropdown-menu-arrow bg-ltDark"
         hidden="true"
       >
         <.link
           href="/about"
-          class="menu-item border-b border-white border-opacity-50"
+          class="border-b border-white border-opacity-50 menu-item"
           role="menuitem"
           tabindex="-1"
           method="get"
@@ -60,7 +60,7 @@
         <%= if @current_user do %>
           <.link
             href={~p"/users/settings"}
-            class="menu-item border-b border-white border-opacity-50"
+            class="border-b border-white border-opacity-50 menu-item"
             role="menuitem"
             tabindex="-1"
             method="get"
@@ -76,18 +76,31 @@
             method="get"
             id="user-menu-item-1"
           >
-            Connected Agents
+            View Producers
           </.link>
+          
           <.link
             href="/view_scapes"
-            class="menu-item border-b border-white border-opacity-50"
+            class="border-b border-white border-opacity-50 menu-item"
             role="menuitem"
             tabindex="-1"
             method="get"
             id="user-menu-item-2"
           >
-            View Fact Streams
+            View Consumers
           </.link>
+
+          <.link
+            href="/view_regions"
+            class="border-b border-white border-opacity-50 menu-item"
+            role="menuitem"
+            tabindex="-1"
+            method="get"
+            id="user-menu-item-2"
+          >
+            Emulated Countries
+          </.link>
+
 
           <.link
             href={~p"/users/log_out"}
@@ -100,7 +113,7 @@
             Sign out
           </.link>
         <% else %>
-          <.link
+         <.link
             href="/edges_live"
             class="menu-item"
             role="menuitem"
@@ -108,22 +121,35 @@
             method="get"
             id="user-menu-item-1"
           >
-            Connected Agents
+            View Producers
           </.link>
+          
           <.link
             href="/view_scapes"
-            class="menu-item border-b border-white border-opacity-50"
+            class="border-b border-white border-opacity-50 menu-item"
             role="menuitem"
             tabindex="-1"
             method="get"
             id="user-menu-item-2"
           >
-            View Fact Streams
+            View Consumers
           </.link>
 
           <.link
+            href="/view_regions"
+            class="border-b border-white border-opacity-50 menu-item"
+            role="menuitem"
+            tabindex="-1"
+            method="get"
+            id="user-menu-item-2"
+          >
+            Emulated Countries
+          </.link>
+
+
+          <.link
             href={~p"/users/log_in"}
-            class="menu-item border-b border-white border-opacity-50"
+            class="border-b border-white border-opacity-50 menu-item"
             role="menuitem"
             tabindex="-1"
             method="get"
@@ -149,7 +175,7 @@
 
   <%!-- MAIN CONTENT --%>
 
-  <main class="flex-grow overflow-auto pt-12">
+  <main class="flex-grow pt-12 overflow-auto">
     <.flash_group flash={@flash} />
     <%= @inner_content %>
   </main>
@@ -161,12 +187,12 @@
     <footer>
       <div class="w-full px-10">
         <div class="border-t-[1px] border-gray-700 w-full">
-          <div class="flex items-center space-x-2 py-6">
+          <div class="flex items-center py-6 space-x-2">
             <img src="/images/logo-img-only.png" alt="Logatron Logo image-only" class="h-7 w-7" />
-            <p class="text-white font-brand font-regular text-sm">
+            <p class="text-sm text-white font-brand font-regular">
               © 2024 by <a href="https://discomco.pl" class="hover:underline">DisComCo</a>
             </p>
-            <div class="text-ltOrange px-4 font-brand font-regular text-xs space-x-2">
+            <div class="px-4 space-x-2 text-xs text-ltOrange font-brand font-regular">
               <a href={~p"/"} class="text-ltOrange-light hover:underline">
                 Terms
               </a>

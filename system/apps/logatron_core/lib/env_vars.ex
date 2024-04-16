@@ -33,16 +33,48 @@ defmodule EnvVars do
   def logatron_edge_scape_nbr_of_countries,
     do: "LOGATRON_MAX_COUNTRIES"
 
+  def get_env_var_as_integer(var_name, default \\ 0) do
+    case System.get_env(var_name) do
+      nil ->
+        default
 
-    def get_env_var_as_integer(var_name, default \\ 0) do
-      case System.get_env(var_name) do
-        nil -> default
-        value ->
-          case Integer.parse(value) do
-            :error -> default
-            {int_value, _} -> int_value
-          end
-      end
+      value ->
+        case Integer.parse(value) do
+          :error -> default
+          {int_value, _} -> int_value
+        end
     end
+  end
+
+  def get_env_var_as_float(var_name, default \\ 0.0) do
+    case System.get_env(var_name) do
+      nil ->
+        default
+
+      value ->
+        case Float.parse(value) do
+          :error -> default
+          {float_value, _} -> float_value
+        end
+    end
+  end
+
+  def get_env_var_as_boolean(var_name, default \\ false) do
+    case System.get_env(var_name) do
+      nil ->
+        default
+
+      value ->
+        case value do
+          "1" -> true
+          "0" -> false
+          "true" -> true
+          "false" -> false
+          _ -> default
+        end
+    end
+  end
+
+
 
 end

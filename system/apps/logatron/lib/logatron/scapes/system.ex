@@ -5,36 +5,45 @@ defmodule Logatron.Scapes.System do
   Logatron.Scapes.System contains the GenServer for the System.
   """
 
-  ###################  PLUMBING  ###################
+  ################ CALLBACKS ################
+  @impl GenServer
+  def terminate(_reason, _state) do
+    :ok
+  end
 
-  def init(scape_init) do
+  @impl GenServer
+  def code_change(_old_vsn, state, _extra) do
+    {:ok, state}
+  end
+
+  @impl GenServer
+  def init(init_args) do
     Supervisor.start_link(
       [
-        {Logatron.Scapes.Handover, [scape_init]},
-        {Logatron.Scapes.Server, [scape_init]}
+        Logatron.Scapes.Server
       ],
       strategy: :one_for_one,
-      name: via_sup(scape_init.id)
+      name: :scapes_system_sup
     )
 
-    {:ok, scape_init}
+    {:ok, init_args}
   end
 
-  def child_spec(scape_init) do
+  ###################  PLUMBING  ###################
+  def start_link() do
+    GenServer.start_link(
+      __MODULE__,
+      [],
+      name: __MODULE__
+    )
+  end
+
+  def child_spec(_init_args) do
     %{
-      id: to_name(scape_init.id),
-      start: {__MODULE__, :start_link, [scape_init]},
+      id: __MODULE__,
+      start: {__MODULE__, :start_link, []},
       type: :worker,
-      restart: :permanent,
+      restart: :permanent
     }
   end
-
-  def to_name(key) when is_bitstring(key),
-    do: "scape.system.#{key}"
-
-  def via(key),
-    do: Logatron.Registry.via_tuple({:scape_system, to_name(key)})
-
-  def via_sup(key),
-    do: Logatron.Registry.via_tuple({:scape_sup, to_name(key)})
 end

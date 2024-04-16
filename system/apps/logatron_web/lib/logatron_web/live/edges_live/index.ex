@@ -6,9 +6,12 @@ defmodule LogatronWeb.EdgesLive.Index do
 
   alias Logatron.Edges.Cache
   alias Phoenix.PubSub
+  alias LogatronCore.Facts
 
-  @edge_attached_v1 LogatronCore.Facts.edge_attached_v1()
-  @edge_detached_v1 LogatronCore.Facts.edge_detached_v1()
+  @edge_attached_v1 Facts.edge_attached_v1()
+  @edge_detached_v1 Facts.edge_detached_v1()
+  @edges_cache_updated_v1 Facts.edges_cache_updated_v1()
+
   @refresh_seconds 1
 
   # def refresh(_caller_state),
@@ -27,8 +30,9 @@ defmodule LogatronWeb.EdgesLive.Index do
     case connected?(socket) do
       true ->
         Logger.info("Connected")
-        PubSub.subscribe(Logatron.PubSub, @edge_attached_v1)
-        PubSub.subscribe(Logatron.PubSub, @edge_detached_v1)
+        # PubSub.subscribe(Logatron.PubSub, @edge_attached_v1)
+        # PubSub.subscribe(Logatron.PubSub, @edge_detached_v1)
+        PubSub.subscribe(Logatron.PubSub, @edges_cache_updated_v1)
         # Phoenix.PubSub.subscribe(Logatron.PubSub, @scape_attached_v1)
         {:ok, refresh_edges(socket)}
 
@@ -40,18 +44,22 @@ defmodule LogatronWeb.EdgesLive.Index do
   end
 
   ########## CALLBACKS ##########
-  @impl true
-  def handle_info({@edge_attached_v1, _edge_init}, socket),
-    do: {:noreply, refresh_edges(socket)}
+  # @impl true
+  # def handle_info({@edge_attached_v1, _edge_init}, socket),
+  #   do: {:noreply, refresh_edges(socket)}
 
-  @impl true
-  def handle_info({@edge_detached_v1, _edge_init}, socket),
-    do: {:noreply, refresh_edges(socket)}
+  # @impl true
+  # def handle_info({@edge_detached_v1, _edge_init}, socket),
+  #   do: {:noreply, refresh_edges(socket)}
 
   # @impl true
   # def handle_info(:refresh, socket) do
   #   {:noreply, socket |> redirect(to: "/") }
   # end
+
+  @impl true
+  def handle_info({@edges_cache_updated_v1, _payload}, socket),
+    do: {:noreply, refresh_edges(socket)}
 
   ####################### INTERNALS #######################
 

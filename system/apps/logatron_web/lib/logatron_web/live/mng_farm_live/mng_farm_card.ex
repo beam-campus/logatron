@@ -8,7 +8,7 @@ defmodule LogatronWeb.MngFarmLive.MngFarmCard do
 
   @impl true
   def update(assigns, socket) do
-    {:noreply, assigns}
+    {:noreply, socket |> assign(assigns)}
   end
 
 

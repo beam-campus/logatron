@@ -90,6 +90,7 @@ defmodule LogatronWeb.Router do
       live "/stations", StationLive.Index, :index
       live "/devices", DeviceLive.Index, :index
       live "/view_scapes", ViewScapesLive.Index, :index
+      live "/view_regions", ViewRegionsLive.Index, :index
       live "/born_2_dieds", AnimalLive.Index, :index
     end
   end

@@ -55,7 +55,6 @@ defmodule LogatronWeb.MixProject do
       {:telemetry_metrics, "~> 0.6"},
       {:telemetry_poller, "~> 1.0"},
       {:gettext, "~> 0.20"},
-      {:logatron, in_umbrella: true},
       {:plug_cowboy, "~> 2.0"},
       {:contex, "~> 0.5.0"},
       {:jason, "~> 1.2"},
@@ -68,7 +67,8 @@ defmodule LogatronWeb.MixProject do
        compile: false,
        depth: 1},
       {:heroicons_liveview, "~> 0.5.0"},
-      {:apis, in_umbrella: true}
+      {:apis, in_umbrella: true},
+      {:logatron, in_umbrella: true}
     ]
   end
 

@@ -14,7 +14,9 @@ defmodule Logatron.Region.InitParams do
     :edge_id,
     :scape_id,
     :name,
-    :nbr_of_farms
+    :nbr_of_farms,
+    :continent,
+    :continent_region
   ]
 
   @required_fields [
@@ -22,7 +24,9 @@ defmodule Logatron.Region.InitParams do
     :edge_id,
     :scape_id,
     :name,
-    :nbr_of_farms
+    :nbr_of_farms,
+    :continent,
+    :continent_region
   ]
 
   @derive {Jason.Encoder, only: @all_fields}
@@ -33,15 +37,19 @@ defmodule Logatron.Region.InitParams do
     field(:scape_id, :string)
     field(:name, :string)
     field(:nbr_of_farms, :integer)
+    field(:continent, :string)
+    field(:continent_region, :string)
   end
 
-  def random(edge_id, scape_id, id, name) do
+  def random(edge_id, scape_id, id, name, continent, continent_region) do
     %Logatron.Region.InitParams{
       edge_id: edge_id,
       scape_id: scape_id,
       id: id,
       name: name,
-      nbr_of_farms: :rand.uniform(5)
+      nbr_of_farms: :rand.uniform(5),
+      continent: continent,
+      continent_region: continent_region
     }
   end
 
@@ -51,7 +59,9 @@ defmodule Logatron.Region.InitParams do
       scape_id: scape_id,
       id: "belgium",
       name: "Belgium",
-      nbr_of_farms: 3
+      nbr_of_farms: 3,
+      continent: "Europe",
+      continent_region: "Western Europe"
     }
 
   def from_map(map) when is_map(map) do
