@@ -16,15 +16,16 @@ defmodule LogatronEdge.Channel do
   @scape_initialized_v1 Facts.scape_initialized_v1()
   @scape_detached_v1 Facts.scape_detached_v1()
 
-  @initializing_region_v1 LogatronCore.Facts.initializing_region_v1()
-  @region_initialized_v1 LogatronCore.Facts.region_initialized_v1()
-  @region_detached_v1 LogatronCore.Facts.region_detached_v1()
+  @initializing_region_v1 Facts.initializing_region_v1()
+  @region_initialized_v1 Facts.region_initialized_v1()
+  @region_detached_v1 Facts.region_detached_v1()
 
-  @initializing_farm_v1 LogatronCore.Facts.initializing_farm_v1()
-  @farm_initialized_v1 LogatronCore.Facts.farm_initialized_v1()
+  @initializing_farm_v1 Facts.initializing_farm_v1()
+  @farm_initialized_v1 Facts.farm_initialized_v1()
+  @farm_detached_v1 Facts.farm_detached_v1()
 
-  @initializing_animal_v1 LogatronCore.Facts.initializing_animal_v1()
-  @animal_initialized_v1 LogatronCore.Facts.animal_initialized_v1()
+  @initializing_animal_v1 Facts.initializing_animal_v1()
+  @animal_initialized_v1 Facts.animal_initialized_v1()
 
   ############ API ##########
   # def attach_scape(scape_init),
@@ -90,6 +91,13 @@ defmodule LogatronEdge.Channel do
         {:farm_initialized, farm_init}
       )
 
+  def farm_detached(farm_init),
+    do:
+      GenServer.cast(
+        via(farm_init.scape_id),
+        {:farm_detached, farm_init}
+      )
+
   def emit_initializing_animal(animal_init),
     do:
       GenServer.cast(
@@ -108,8 +116,6 @@ defmodule LogatronEdge.Channel do
 
   @impl true
   def handle_cast({:scape_detached, scape_init}, state) do
-    Logger.debug(" :scape_detached ~> \n STATE: #{inspect(state)} \n\n #{scape_init.id} \n\n")
-
     Client.publish(
       scape_init.edge_id,
       @scape_detached_v1,
@@ -122,10 +128,6 @@ defmodule LogatronEdge.Channel do
   @impl true
   def handle_cast({:initializing_animal, animal_init}, state) do
     %{edge_id: edge_id} = state
-
-    Logger.debug(
-      " :initializing_animal ~> \n STATE: #{inspect(state)} \n\n #{animal_init.scape_id}.#{animal_init.id} \n\n"
-    )
 
     Client.publish(
       edge_id,
@@ -140,10 +142,6 @@ defmodule LogatronEdge.Channel do
   def handle_cast({:animal_initialized, animal_init}, state) do
     %{edge_id: edge_id} = state
 
-    Logger.debug(
-      " :animal_initialized ~> \n STATE: #{inspect(state)} \n\n #{animal_init.scape_id}.#{animal_init.id} \n\n"
-    )
-
     Client.publish(
       edge_id,
       @animal_initialized_v1,
@@ -156,10 +154,6 @@ defmodule LogatronEdge.Channel do
   @impl true
   def handle_cast({:initializing_farm, farm_init}, state) do
     %{edge_id: edge_id} = state
-
-    Logger.debug(
-      " :initializing_farm ~> \n STATE: #{inspect(state)} \n\n #{farm_init.scape_id}.#{farm_init.id} \n\n"
-    )
 
     Client.publish(
       edge_id,
@@ -174,10 +168,6 @@ defmodule LogatronEdge.Channel do
   def handle_cast({:farm_initialized, farm_init}, state) do
     %{edge_id: edge_id} = state
 
-    Logger.debug(
-      " :farm_initialized ~> \n STATE: #{inspect(state)} \n\n #{farm_init.scape_id}.#{farm_init.id} \n\n"
-    )
-
     Client.publish(
       edge_id,
       @farm_initialized_v1,
@@ -188,11 +178,18 @@ defmodule LogatronEdge.Channel do
   end
 
   @impl true
-  def handle_cast({:initializing_region, region_init}, %{edge_id: edge_id} = state) do
-    Logger.debug(
-      " :initializing_region ~> \n STATE: #{inspect(state)} \n\n #{region_init.scape_id}.#{region_init.id} \n\n"
+  def handle_cast({:farm_detached, farm_init}, state) do
+    Client.publish(
+      farm_init.edge_id,
+      @farm_detached_v1,
+      %{farm_init: farm_init}
     )
 
+    {:noreply, state}
+  end
+
+  @impl true
+  def handle_cast({:initializing_region, region_init}, %{edge_id: edge_id} = state) do
     Client.publish(
       edge_id,
       @initializing_region_v1,
@@ -204,10 +201,6 @@ defmodule LogatronEdge.Channel do
 
   @impl true
   def handle_cast({:region_initialized, region_init}, %{edge_id: edge_id} = state) do
-    Logger.debug(
-      " :region_initialized ~> \n STATE: #{inspect(state)} \n\n #{region_init.scape_id}.#{region_init.id} \n\n"
-    )
-
     Client.publish(
       edge_id,
       @region_initialized_v1,
@@ -219,10 +212,6 @@ defmodule LogatronEdge.Channel do
 
   @impl true
   def handle_cast({:region_detached, region_init}, state) do
-    Logger.debug(
-      " :region_detached ~> \n STATE: #{inspect(state)} \n\n #{region_init.scape_id}.#{region_init.id} \n\n"
-    )
-
     Client.publish(
       region_init.edge_id,
       @region_detached_v1,

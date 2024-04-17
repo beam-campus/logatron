@@ -1,13 +1,12 @@
 defmodule Logatron.Region.Builder do
   use GenServer
+
   @moduledoc """
   Logatron.Region.Builder is a GenServer that constructs an Logatron.Region
   by spawning Logatron.MngFarm Processes.
   """
 
   require Logger
-
-
 
   ############# CALLBACKS ############
   @impl GenServer
@@ -19,11 +18,12 @@ defmodule Logatron.Region.Builder do
   ############# INTERNALS ############
   defp do_build(region_init) do
     Enum.to_list(1..region_init.nbr_of_farms)
-    |> Enum.map(fn _ -> do_random_mng_farm_init(region_init) end)
-    |> Enum.each(&Logatron.Region.Farms.start_farm(region_init.id, &1))
+    |> Enum.map(fn _ -> random_mng_farm_init(region_init) end)
+    |> Enum.each(fn farm_init -> Logatron.Region.Farms.start_farm(region_init.id, farm_init)  end)
   end
 
-  defp do_random_mng_farm_init(region_init),
+
+  defp random_mng_farm_init(region_init),
     do: Logatron.MngFarm.InitParams.from_farm(Logatron.Schema.Farm.random(), region_init)
 
   ################# PLUMBING ################
@@ -31,7 +31,7 @@ defmodule Logatron.Region.Builder do
     do: "region.builder.#{key}"
 
   def via(region_id),
-    do: Logatron.Registry.via_tuple({:builder, to_name(region_id)})
+    do: Logatron.Registry.via_tuple({:region_builder, to_name(region_id)})
 
   def child_spec(%{id: region_id} = region_init) do
     %{

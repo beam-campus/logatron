@@ -1,4 +1,4 @@
-<div class="mx-5 px-4 py-1 text-white">
+<div class="px-4 py-1 mx-5 text-white">
   <div>
     <% scapes_list =
       get_scapes_summary() %>
@@ -14,15 +14,14 @@
 
     <div class="flex flex-col">
       <%= for {id, scape} <- scapes_list do %>
-        <div class="py-1 px-3 flex flex-row gap-5 justify-between">
-          <div class="flex gap-4 w-1/2">
-            <p class="w-[300px]">[<%= id %>]</p>
-            <p class="font-bold hover:text-ltOrange-light text-ltOlive-light w-full">
+        <div class="flex flex-row justify-between gap-5 px-3 py-1">
+          <div class="flex w-1/2 gap-4">            
+            <p class="w-full font-bold hover:text-ltOrange-light text-ltOlive-light">
               <%= scape.name %>
             </p>
           </div>
           <div class="w-[300px]">
-            <p>provisioned by <%= scape.count %> station(s)</p>
+            <p><%= scape.count %> producer(s)</p>
           </div>
         </div>
       <% end %>

@@ -1,23 +1,27 @@
-defmodule Logatron.Regions.System do
+defmodule Logatron.CachesSystem do
   use GenServer
 
   @moduledoc """
-  Logatron.Regions.System is a GenServer that manages the Regions cache system.
+  Logatron.MngFarms.System is a GenServer that manages the MngFarms cache system.
   """
 
   require Logger
+
 
   ################## CALLBACKS ############
   @impl GenServer
   def init(opts) do
     children = [
-      Logatron.Regions.Server
+      Logatron.Edges.Server,
+      Logatron.Scapes.Server,
+      Logatron.Regions.Server,
+      Logatron.MngFarms.Server
     ]
 
     Supervisor.start_link(
       children,
       strategy: :one_for_one,
-      name: :regions_system_supervisor
+      name: :caches_system_supervisor
     )
 
     {:ok, opts}
@@ -39,4 +43,5 @@ defmodule Logatron.Regions.System do
         opts,
         name: __MODULE__
       )
+
 end

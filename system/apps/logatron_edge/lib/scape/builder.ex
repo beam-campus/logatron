@@ -11,9 +11,6 @@ defmodule LogatronEdge.Scape.Builder do
 
   ########## API #######################
   def init_scape(scape_init) do
-    Logger.error(
-      "\n\n\t#{Colors.red_on_black()}Initializing Scape [#{scape_init.id}] \n\n\n scape_init= #{inspect(scape_init)} #{Colors.reset()}\n\n"
-    )
 
     selection =
       String.split(scape_init.select_from, ",")
@@ -40,9 +37,6 @@ defmodule LogatronEdge.Scape.Builder do
       LogatronEdge.Scape.Regions.start_region(region_init)
     end)
 
-    Logger.debug(
-      "\n\n\t#{Colors.red_on_black()}Scape [#{scape_init.id}] has been initialized #{Colors.reset()}\n\n"
-    )
   end
 
   def get_state(scape_id),

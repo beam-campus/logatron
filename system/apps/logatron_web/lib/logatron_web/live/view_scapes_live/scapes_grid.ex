@@ -6,7 +6,7 @@ defmodule LogatronWeb.ViewScapesLive.ScapesGrid do
   """
 
   def get_scapes_summary() do
-    :scapes
+    :scapes_cache
     |> Cachex.stream!
     |> Stream.map(fn {:entry, _, _, _, scape} -> scape end)
     |> Enum.reduce(%{}, fn scape, acc -> Map.update(acc, %{name: scape.name, id: scape.id}, 1, & &1 + 1) end)

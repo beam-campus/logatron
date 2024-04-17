@@ -4,18 +4,15 @@ defmodule LogatronEdge.Scape.Regions do
   """
   use GenServer
 
-
   require Logger
 
   ################ API ########################
-  def start_region(region_init) do
-    Logger.debug(" REGION ~> #{region_init.scape_id}.#{region_init.id} - #{region_init.nbr_of_farms} farms")
-
-    DynamicSupervisor.start_child(
-      via_sup(region_init.scape_id),
-      {Logatron.Region.System, region_init}
-    )
-  end
+  def start_region(region_init),
+    do:
+      DynamicSupervisor.start_child(
+        via_sup(region_init.scape_id),
+        {Logatron.Region.System, region_init}
+      )
 
   @doc """
   Returns the list of children supervised by this module

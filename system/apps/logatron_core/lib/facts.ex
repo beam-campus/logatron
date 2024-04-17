@@ -49,6 +49,12 @@ defmodule LogatronCore.Facts do
   def farm_initialized_v1,
     do: "farm_initialized_v1"
 
+  def farm_detached_v1,
+    do: "farm_detached_v1"
+
+  def farms_cache_updated_v1,
+    do: "farms_cache_updated_v1"
+
   ######## ANIMAL FACTS ########
   def initializing_animal_v1,
     do: "initializing_animal_v1"

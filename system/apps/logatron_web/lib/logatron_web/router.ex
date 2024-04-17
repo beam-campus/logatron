@@ -91,6 +91,8 @@ defmodule LogatronWeb.Router do
       live "/devices", DeviceLive.Index, :index
       live "/view_scapes", ViewScapesLive.Index, :index
       live "/view_regions", ViewRegionsLive.Index, :index
+      live "/view_farms", ViewFarmsLive.Index, :index
+
       live "/born_2_dieds", AnimalLive.Index, :index
     end
   end

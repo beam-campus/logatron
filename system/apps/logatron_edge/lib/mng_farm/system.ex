@@ -11,6 +11,7 @@ defmodule Logatron.MngFarm.System do
   ################### CALLBACKS ###################
   @impl GenServer
   def init(mng_farm_init) do
+    Process.flag(:trap_exit, true)
 
     Channel.initializing_farm(mng_farm_init)
 
@@ -30,6 +31,15 @@ defmodule Logatron.MngFarm.System do
 
     {:ok, mng_farm_init}
   end
+
+  @impl GenServer
+  def terminate(_reason, mng_farm_init) do
+    Logger.info("Terminating Farm System #{to_name(mng_farm_init.id)}")
+    Channel.farm_detached(mng_farm_init)
+    {:ok, mng_farm_init}
+  end
+
+  
 
 
   ############ PLUMBING ############

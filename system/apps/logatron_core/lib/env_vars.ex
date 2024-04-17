@@ -28,6 +28,9 @@ defmodule EnvVars do
     do: "LOGATRON_MAX_FARMS_PER_COUNTRY"
 
   def logatron_edge_max_animals,
+    do: "LOGATRON_MAX_ANIMALS_PER_FARM"
+
+  def logatron_init_animals_per_farm,
     do: "LOGATRON_INIT_ANIMALS_PER_FARM"
 
   def logatron_edge_scape_nbr_of_countries,
@@ -74,7 +77,4 @@ defmodule EnvVars do
         end
     end
   end
-
-
-
 end

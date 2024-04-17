@@ -16,7 +16,7 @@ defmodule Logatron.Region.InitParams do
     :name,
     :nbr_of_farms,
     :continent,
-    :continent_region
+    :continent_region,
   ]
 
   @required_fields [
@@ -26,7 +26,7 @@ defmodule Logatron.Region.InitParams do
     :name,
     :nbr_of_farms,
     :continent,
-    :continent_region
+    :continent_region,
   ]
 
   @derive {Jason.Encoder, only: @all_fields}
@@ -49,7 +49,7 @@ defmodule Logatron.Region.InitParams do
       name: name,
       nbr_of_farms: :rand.uniform(5),
       continent: continent,
-      continent_region: continent_region
+      continent_region: continent_region,
     }
   end
 

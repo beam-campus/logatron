@@ -34,7 +34,19 @@ defmodule Logatron.Limits do
         @defaults[:min_people]
 
   def init_nbr_of_lives,
-    do: @defaults[:init_nbr_of_lives]
+    do:
+    EnvVars.get_env_var_as_integer(
+      EnvVars.logatron_edge_max_animals(),
+      EnvVars.get_env_var_as_integer(
+        EnvVars.
+        logatron_edge_scape_init_nbr_of_lives(),
+        @defaults[:max_lives]
+      )
+
+    )
+
+
+
 
   def min_lives,
     do: @defaults[:min_lives]

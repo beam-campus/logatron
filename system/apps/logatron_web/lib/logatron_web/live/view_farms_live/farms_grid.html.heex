@@ -1,7 +1,7 @@
 <div class="px-4 py-1 mx-5 text-white">
   <div>
-    <% regions_list =
-      get_regions_summary(@regions) %>
+    <% farms_list =
+      get_farms_summary(@farms) %>
 
     <%!-- <.table    
     id="scapes-table"
@@ -13,18 +13,13 @@
   </.table> --%>
 
     <div class="flex flex-col">
-      <%= for {id, region} <- regions_list do %>
+      <%= for {id, farm} <- farms_list do %>
         <div class="flex flex-row justify-between gap-5 px-3 py-1">
           <div class="flex w-1/2 gap-4">
             <p class="w-full font-bold hover:text-ltOrange-light text-ltOlive-light">
-             <%= region.continent %>, <%= region.name %>
+              <%= farm.name %>
             </p>
           </div>
-          <div class="flex w-1/4 gap-4 text-white font-regular">
-            <p>
-              <%= region.count %> producer(s)
-            </p>
-            </div>
         </div>
       <% end %>
     </div>

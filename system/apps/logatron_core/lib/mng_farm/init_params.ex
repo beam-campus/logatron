@@ -8,14 +8,17 @@ defmodule Logatron.MngFarm.InitParams do
 
   alias Logatron.MngFarm.InitParams
   alias Logatron.Schema.{Id, Farm}
+
   import Ecto.Changeset
+
+  require Logger
 
   @all_fields [
     :id,
     :edge_id,
     :region_id,
     :scape_id,
-    :nbr_of_lives,
+    :country,
     :farm
   ]
 
@@ -24,7 +27,7 @@ defmodule Logatron.MngFarm.InitParams do
     :edge_id,
     :region_id,
     :scape_id,
-    :nbr_of_lives
+    :country
   ]
 
   @required_fields [
@@ -32,7 +35,7 @@ defmodule Logatron.MngFarm.InitParams do
     :edge_id,
     :region_id,
     :scape_id,
-    :nbr_of_lives,
+    :country,
     :farm
   ]
 
@@ -43,15 +46,9 @@ defmodule Logatron.MngFarm.InitParams do
     field(:edge_id, :string)
     field(:scape_id, :string)
     field(:region_id, :string)
-    field(:nbr_of_lives, :integer)
+    field(:country, :string)
     embeds_one(:farm, Farm)
   end
-
-  def default,
-    do: %Logatron.MngFarm.InitParams{
-      id: "mng_farm-0000-0000-0000-000000000000",
-      nbr_of_lives: 10
-    }
 
   def from_farm(farm, region_init),
     do: %Logatron.MngFarm.InitParams{
@@ -59,7 +56,7 @@ defmodule Logatron.MngFarm.InitParams do
       edge_id: region_init.edge_id,
       region_id: region_init.id,
       scape_id: region_init.scape_id,
-      nbr_of_lives: Logatron.Limits.init_nbr_lives(),
+      country: region_init.name,
       farm: farm
     }
 

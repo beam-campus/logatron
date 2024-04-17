@@ -37,6 +37,7 @@ defmodule LogatronWeb.EdgeChannel do
 
   @initializing_farm_v1 Facts.initializing_farm_v1()
   @farm_initialized_v1 Facts.farm_initialized_v1()
+  @farm_detached_v1 Facts.farm_detached_v1()
 
   @initializing_animal_v1 Facts.initializing_animal_v1()
   @animal_initialized_v1 Facts.animal_initialized_v1()
@@ -164,10 +165,17 @@ defmodule LogatronWeb.EdgeChannel do
   end
 
   @impl true
+  def handle_in(@farm_detached_v1, payload, socket) do
+    Logger.debug("EdgeChannel.handle_in: #{@farm_detached_v1} #{inspect(payload)}")
+    FarmHandler.pub_farm_detached_v1(payload, socket)
+  end
+
+  @impl true
   def handle_in(@initializing_animal_v1, payload, socket) do
     Logger.debug("EdgeChannel.handle_in: #{@initializing_animal_v1} #{inspect(payload)}")
     AnimalHandler.pub_initializing_animal_v1(payload, socket)
   end
+
 
   @impl true
   def handle_in(@animal_initialized_v1, payload, socket) do

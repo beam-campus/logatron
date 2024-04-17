@@ -10,6 +10,7 @@ defmodule LogatronWeb.Dispatch.FarmHandler do
 
   @initializing_farm_v1 Facts.initializing_farm_v1()
   @farm_initialized_v1 Facts.farm_initialized_v1()
+  @farm_detached_v1 Facts.farm_detached_v1()
 
   require Logger
 
@@ -31,6 +32,17 @@ defmodule LogatronWeb.Dispatch.FarmHandler do
       Logatron.PubSub,
       @farm_initialized_v1,
       {@farm_initialized_v1, farm_init}
+    )
+    {:noreply, socket}
+  end
+
+  def pub_farm_detached_v1(payload, socket) do
+    Logger.info("Farm Detached: #{inspect(payload)}")
+    {:ok, farm_init} = InitParams.from_map(payload["farm_init"])
+    Phoenix.PubSub.broadcast!(
+      Logatron.PubSub,
+      @farm_detached_v1,
+      {@farm_detached_v1, farm_init}
     )
     {:noreply, socket}
   end

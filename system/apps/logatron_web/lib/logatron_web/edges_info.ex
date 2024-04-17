@@ -15,7 +15,7 @@ end
 defp mount_edges_count(socket, _session) do
   Logger.info("mount_edges_count")
   Phoenix.Component.assign_new(socket, :edges_count, fn ->
-    Logatron.Edges.Cache.count()
+    Logatron.Edges.Server.count()
   end)
 end
 

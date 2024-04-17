@@ -4,20 +4,16 @@ defmodule Logatron.Region.Farms do
   """
   use GenServer
 
-
   require Logger
-
-
 
   ############### API ###################
 
-  def start_farm(region_id, mng_farm_init) do
-    Logger.debug("\tFARM ~> #{region_id}: #{mng_farm_init.farm.name} - #{mng_farm_init.nbr_of_lives} lifes")
-    DynamicSupervisor.start_child(
-      via_sup(region_id),
-      {Logatron.MngFarm.System, mng_farm_init}
-    )
-  end
+  def start_farm(region_id, mng_farm_init),
+    do:
+      DynamicSupervisor.start_child(
+        via_sup(region_id),
+        {Logatron.MngFarm.System, mng_farm_init}
+      )
 
   ################# CALLBACKS #####################
 
@@ -27,6 +23,7 @@ defmodule Logatron.Region.Farms do
       name: via_sup(region_init.id),
       strategy: :one_for_one
     )
+
     {:ok, region_init}
   end
 

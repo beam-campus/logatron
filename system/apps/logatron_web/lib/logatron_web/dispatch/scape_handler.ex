@@ -16,8 +16,6 @@ defmodule LogatronWeb.Dispatch.ScapeHandler do
   def pub_initializing_scape_v1(scape_init_env, socket) do
     {:ok, scape_init} = InitParams.from_map(scape_init_env["scape_init"])
 
-    Cachex.set!(:scapes, {scape_init.edge_id, scape_init.id}, scape_init)
-
     Phoenix.PubSub.broadcast(
       Logatron.PubSub,
       @scape_initializing_v1,
@@ -42,7 +40,6 @@ defmodule LogatronWeb.Dispatch.ScapeHandler do
 
   def pub_scape_detached_v1(scape_init_env, socket) do
     {:ok, scape_init} = InitParams.from_map(scape_init_env["scape_init"])
-
 
 
     Phoenix.PubSub.broadcast(

@@ -1,23 +1,28 @@
-<div class="flex flex-col w-screen h-full justify-left font-mono py-1">
-  <div class="lt-view-gradient flex flex-col items-center justify-center">
+<div class="flex flex-col w-screen h-full py-1 font-mono justify-left">
+  <div class="flex flex-col items-center justify-center lt-view-gradient">
     <div>
-      <h1 class="text-white font-brand font-normal text-2xl">
-        Connected Agents
+      <h1 class="text-2xl font-normal text-white font-brand">
+        Connected Producers
       </h1>
     </div>
-    <div class="text-white font-brand font-regular text-sm m-1 px-2">
+    <div class="px-2 m-1 text-sm text-white font-brand font-regular">
       <%= edges_count = Enum.count(@edges)
         if edges_count > 0 do %>
-        <%= edges_count %> agent(s) connected
+        <%= edges_count %> producer(s) connected
       <% else %>
-        awaiting agents...
+        awaiting producers...
       <% end %>
     </div>
   </div>
+      <.live_component 
+    module={LogatronWeb.BreadCrumbsBar} 
+    id={@current_user.id <> "_farms_breadcrumbs"} 
+  />
+
 
   <div class="px-8">
 
-      <div class="flex flex-col w-full text-sm text-white gap-2" >
+      <div class="flex flex-col w-full gap-2 text-sm text-white" >
      
         <%= for edge <- @edges |> Enum.sort_by(&(&1.continent), :asc) do %>
             <%

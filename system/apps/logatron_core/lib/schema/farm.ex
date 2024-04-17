@@ -144,11 +144,13 @@ defmodule Logatron.Schema.Farm do
   end
 
   def random do
+    name = random_name()
+
+    id = Id.new(id_prefix()) |> Id.as_string()
+
     %Logatron.Schema.Farm{
-      id:
-        Logatron.Schema.Id.new(id_prefix())
-        |> Id.as_string(),
-      name: random_name(),
+      id: id,
+      name: name,
       nbr_of_lives:
         normalize(
           abs(
