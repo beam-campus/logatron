@@ -15,6 +15,8 @@ defmodule Logatron.Born2Died.State do
     Life
   }
 
+  require Logger
+
   defguard is_born_2_died_state(state)
            when is_struct(state, __MODULE__)
 
@@ -108,13 +110,14 @@ defmodule Logatron.Born2Died.State do
     }
   end
 
-  def from_life(life, edge_id, scape_id, region_id, farm_id) do
+  def from_life(life, mng_farm_init) do
+    Logger.debug("from_life: #{inspect(life)} mng_farm_init: #{inspect(mng_farm_init)}")
     %Logatron.Born2Died.State{
       id: Id.new(@id_prefix) |> Id.as_string(),
-      edge_id: edge_id,
-      scape_id: scape_id,
-      region_id: region_id,
-      farm_id: farm_id,
+      edge_id: mng_farm_init.edge_id,
+      scape_id: mng_farm_init.scape_id,
+      region_id: mng_farm_init.region_id,
+      farm_id: mng_farm_init.farm.id,
       field_id: Id.new("field", to_string(1)) |> Id.as_string(),
       life: life,
       pos: Vector.random(1_000, 1_000, 1),

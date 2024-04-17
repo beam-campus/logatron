@@ -14,19 +14,21 @@ defmodule LogatronWeb.EdgeChannel do
     ScapeHandler,
     RegionHandler,
     FarmHandler,
-    AnimalHandler
+    Born2DiedHandler
   }
 
   alias LogatronCore.Facts
+  alias LogatronWeb.Dispatch.ChannelWatcher
 
   @fact_born "fact:born"
   @fact_died "fact:died"
   @hope_shout "hope:shout"
   @hope_ping "ping"
   @hope_join_edge "join_edge"
-  @edge_attached_v1 Facts.edge_attached_v1()
 
   # @scape_attached_v1 Facts.scape_attached_v1()
+
+  @edge_attached_v1 Facts.edge_attached_v1()
 
   @initializing_scape_v1 Facts.initializing_scape_v1()
   @scape_initialized_v1 Facts.scape_initialized_v1()
@@ -39,8 +41,8 @@ defmodule LogatronWeb.EdgeChannel do
   @farm_initialized_v1 Facts.farm_initialized_v1()
   @farm_detached_v1 Facts.farm_detached_v1()
 
-  @initializing_animal_v1 Facts.initializing_animal_v1()
-  @animal_initialized_v1 Facts.animal_initialized_v1()
+  @initializing_born2died_v1 Facts.initializing_born2died_v1()
+  @born2died_initialized_v1 Facts.born2died_initialized_v1()
 
   # @attach_scape_v1 "attach_scape:v1"
 
@@ -48,8 +50,20 @@ defmodule LogatronWeb.EdgeChannel do
 
   ################ CALLBACKS ################
   @impl true
-  def join("edge:lobby", edge_init, socket),
-    do: EdgeHandler.handle_join("edge:lobby", edge_init, socket)
+  def join("edge:lobby", edge_init, socket)    do
+
+    send(self(), :after_join)
+
+    ChannelWatcher.monitor(
+      "edge:lobby",
+      self(),
+      {EdgeHandler, :pub_edge_detached, [edge_init]}
+    )
+
+    {:ok, socket}
+
+  end
+
 
   @impl true
   def handle_info(:after_join, socket) do
@@ -118,7 +132,7 @@ defmodule LogatronWeb.EdgeChannel do
   @impl true
   def handle_in(@edge_attached_v1, payload, socket) do
     Logger.info("#{@edge_attached_v1} #{inspect(payload)}")
-    EdgeHandler.pub_edge_attached(payload, socket)
+    EdgeHandler.pub_edge_attached(payload)
     {:reply, {:ok, payload}, socket}
   end
 
@@ -171,19 +185,30 @@ defmodule LogatronWeb.EdgeChannel do
   end
 
   @impl true
-  def handle_in(@initializing_animal_v1, payload, socket) do
-    Logger.debug("EdgeChannel.handle_in: #{@initializing_animal_v1} #{inspect(payload)}")
-    AnimalHandler.pub_initializing_animal_v1(payload, socket)
+  def handle_in(@initializing_born2died_v1, payload, socket) do
+    Logger.debug("EdgeChannel.handle_in: #{@initializing_born2died_v1} #{inspect(payload)}")
+    Born2DiedHandler.pub_initializing_animal_v1(payload, socket)
   end
-
 
   @impl true
-  def handle_in(@animal_initialized_v1, payload, socket) do
-    Logger.debug("EdgeChannel.handle_in: #{@animal_initialized_v1} #{inspect(payload)}")
-    AnimalHandler.pub_animal_initialized_v1(payload, socket)
+  def handle_in(@born2died_initialized_v1, payload, socket) do
+    Logger.debug("EdgeChannel.handle_in: #{@born2died_initialized_v1} #{inspect(payload)}")
+    Born2DiedHandler.pub_animal_initialized_v1(payload, socket)
   end
 
+
+
   ################ INTERNALS ################
+  alias Phoenix.PubSub
+  alias LogatronCore.Facts
+
+
+  @edge_detached_v1 Facts.edge_detached_v1()
+  @edge_attached_v1 Facts.edge_attached_v1()
+
+
+
+
   defp to_topic(edge_id),
     do: "edge:lobby:#{edge_id}"
 end

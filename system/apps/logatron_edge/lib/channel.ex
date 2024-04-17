@@ -24,8 +24,12 @@ defmodule LogatronEdge.Channel do
   @farm_initialized_v1 Facts.farm_initialized_v1()
   @farm_detached_v1 Facts.farm_detached_v1()
 
-  @initializing_animal_v1 Facts.initializing_animal_v1()
-  @animal_initialized_v1 Facts.animal_initialized_v1()
+
+  @initializing_born2died_v1 Facts.initializing_born2died_v1()
+  @born2died_initialized_v1 Facts.born2died_initialized_v1()
+
+
+
 
   ############ API ##########
   # def attach_scape(scape_init),
@@ -98,18 +102,18 @@ defmodule LogatronEdge.Channel do
         {:farm_detached, farm_init}
       )
 
-  def emit_initializing_animal(animal_init),
+  def emit_initializing_born2died(born2died_init),
     do:
       GenServer.cast(
-        via(animal_init.scape_id),
-        {:initializing_animal, animal_init}
+        via(born2died_init.scape_id),
+        {:initializing_born2died, born2died_init}
       )
 
-  def emit_animal_initialized(animal_init),
+  def emit_born2died_initialized(born2died_init),
     do:
       GenServer.cast(
-        via(animal_init.scape_id),
-        {:animal_initialized, animal_init}
+        via(born2died_init.scape_id),
+        {:born2died_initialized, born2died_init}
       )
 
   ########### CALLBACKS ################
@@ -126,26 +130,26 @@ defmodule LogatronEdge.Channel do
   end
 
   @impl true
-  def handle_cast({:initializing_animal, animal_init}, state) do
+  def handle_cast({:initializing_born2died, born2died_init}, state) do
     %{edge_id: edge_id} = state
 
     Client.publish(
       edge_id,
-      @initializing_animal_v1,
-      %{animal_init: animal_init}
+      @initializing_born2died_v1,
+      %{born2died_init: born2died_init}
     )
 
     {:noreply, state}
   end
 
   @impl true
-  def handle_cast({:animal_initialized, animal_init}, state) do
+  def handle_cast({:born2died_initialized, born2died_init}, state) do
     %{edge_id: edge_id} = state
 
     Client.publish(
       edge_id,
-      @animal_initialized_v1,
-      %{animal_init: animal_init}
+      @born2died_initialized_v1,
+      %{born2died_init: born2died_init}
     )
 
     {:noreply, state}

@@ -4,7 +4,7 @@ defmodule LogatronWeb.EdgesLive.Index do
   require Logger
   require Seconds
 
-  alias Logatron.Edges.Server
+  alias Logatron.Edges.Server, as: EdgesCache
   alias Phoenix.PubSub
   alias LogatronCore.Facts
 
@@ -18,12 +18,15 @@ defmodule LogatronWeb.EdgesLive.Index do
     case connected?(socket) do
       true ->
         Logger.info("Connected")
-        PubSub.subscribe(Logatron.PubSub, @edges_cache_updated_v1)
+        PubSub.subscribe(Logatron.PubSub, "edges_cache_updated_v1")
 
         {
           :ok,
           socket
-          |> refresh_edges()
+          |> assign(
+            edges: EdgesCache.get_all(),
+            now: DateTime.utc_now()
+          )
         }
 
       false ->
@@ -32,24 +35,31 @@ defmodule LogatronWeb.EdgesLive.Index do
         {
           :ok,
           socket
-          |> refresh_edges()
+          |> assign(
+            edges: [],
+            now: DateTime.utc_now()
+          )
         }
     end
   end
 
+  # @impl true
+  # def handle_info({@edges_cache_updated_v1, _payload}, socket) do
+
+  #   {
+  #     :noreply,
+  #     socket
+  #     |> assign(
+  #       edges: EdgesCache.get_all(),
+  #       now: DateTime.utc_now()
+  #     )
+  #   }
+  # end
+
   @impl true
-  def handle_info({@edges_cache_updated_v1, _payload}, socket),
-    do: {
-      :noreply,
-      socket
-      |> refresh_edges()
-    }
+  def handle_info(msg, socket) do
+    Logger.error("Unhandled message: #{inspect(msg)}")
+    {:noreply, socket}
+  end
 
-  ####################### INTERNALS #######################
-
-  defp refresh_edges(socket),
-    do:
-      socket
-      |> assign(:edges, Server.get_all())
-      |> assign(:now, DateTime.utc_now())
 end

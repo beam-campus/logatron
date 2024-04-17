@@ -37,7 +37,7 @@ defmodule Logatron.Born2Died.System do
   def init(state) do
     # Process.flag(:trap_exit, true)
 
-    Channel.emit_initializing_animal(state)
+    Channel.emit_initializing_born2died(state)
 
     children =
       [
@@ -52,7 +52,7 @@ defmodule Logatron.Born2Died.System do
       strategy: :one_for_one
     )
 
-    Channel.emit_animal_initialized(state)
+    Channel.emit_born2died_initialized(state)
 
     {:ok, state}
   end

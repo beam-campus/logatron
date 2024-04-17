@@ -1,4 +1,5 @@
-<!DOCTYPE html> <%!-- <html lang="en" class="[scrollbar-gutter:stable]"> --%>
+<!DOCTYPE html> 
+<%!-- <html lang="en" class="[scrollbar-gutter:stable]"> --%>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
@@ -6,6 +7,7 @@
     <meta name="csrf-token" content={get_csrf_token()} />
     <.live_title suffix=" · Streams Exchange">
       <%= assigns[:page_title] || "Logatron" %>
+      
     </.live_title>
     <link phx-track-static rel="stylesheet" href={~p"/assets/app.css"} />
     <script defer phx-track-static type="text/javascript" src={~p"/assets/app.js"}>
@@ -62,7 +64,7 @@
 
 
 
-  <body class="bg-ltDark-dark antialiased">
+  <body class="antialiased bg-ltDark-dark">
     <%= @inner_content %>
   </body>
 </html>

@@ -1,0 +1,21 @@
+<div class="px-4 py-1 mx-5 text-white">
+  <div>
+
+
+  <div class="px-1 py-1 mx-3 text-white">
+  <div>
+    <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
+      <%= for state <- @born2dieds do %>        
+          <.live_component
+            module={LogatronWeb.Born2DiedsLive.Born2DiedsCard}
+            id={@current_user.id <> "born2dieds-card" <> state.id} 
+            state={state}
+            />            
+      <% end %>
+    </div>
+  </div>
+</div>
+
+
+  </div>
+</div>

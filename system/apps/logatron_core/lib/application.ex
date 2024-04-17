@@ -11,7 +11,7 @@ defmodule Logatron.Core.Application do
       # Start the Registry
       {Logatron.Registry, name: Logatron.Registry},
       # Start the PubSub system
-      {Phoenix.PubSub, name: Agrex.PubSub},
+      # {Phoenix.PubSub, name: Agrex.PubSub},
     ]
 
     Supervisor.start_link(children,

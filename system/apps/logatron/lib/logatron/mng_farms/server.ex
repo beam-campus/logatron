@@ -85,7 +85,7 @@ defmodule Logatron.MngFarms.Server do
         mng_farm_init.region_id,
         mng_farm_init.id
       }
-      
+
     :farms_cache
     |> Cachex.del!(key)
 
@@ -94,9 +94,11 @@ defmodule Logatron.MngFarms.Server do
     {:noreply, state}
   end
 
+
+
   @impl GenServer
   def init(opts) do
-    Logger.info("Starting farms cache")
+      Logger.info("Starting farms cache")
 
     :farms_cache
     |> Cachex.start()

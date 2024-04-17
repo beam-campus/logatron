@@ -38,12 +38,12 @@ defmodule Logatron.Core.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:phoenix_pubsub, "~> 2.1"},
-      {:ecto, "~> 3.10"},
-      {:uuid, "~> 1.1"},
-      {:jason, "~> 1.3"},
-      {:req, "~> 0.4.5"},
-      {:hackney, "~> 1.9"},
+      {:phoenix_pubsub, "~> 2.1.3"},
+      {:ecto, "~> 3.11.2"},
+      {:uuid, "~> 1.1.8"},
+      {:jason, "~> 1.4.1"},
+      {:req, "~> 0.4.14"},
+      {:hackney, "~> 1.20.1"},
       {:dialyze, "~> 0.2.0", only: [:dev]},
       {:mix_test_watch, "~> 1.1", only: [:dev, :test], runtime: false},
       {:credo, "~> 1.6", only: [:dev, :test], runtime: false},

@@ -39,7 +39,19 @@ defmodule Logatron.MngFarm.System do
     {:ok, mng_farm_init}
   end
 
-  
+  @impl GenServer
+  def handle_info({:EXIT, _pid, _reason}, mng_farm_init) do
+    Logger.info("Terminating Farm System #{to_name(mng_farm_init.id)}")
+    Channel.farm_detached(mng_farm_init)
+    {:stop, :normal, mng_farm_init}
+  end
+
+  @impl GenServer
+  def handle_info(msg, mng_farm_init) do
+    Logger.warning("Unexpected message: #{inspect(msg)}")
+    Channel.farm_detached(mng_farm_init)
+    {:noreply, mng_farm_init}
+  end
 
 
   ############ PLUMBING ############

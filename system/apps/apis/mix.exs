@@ -38,18 +38,19 @@ defmodule Apis.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:uuid, "~> 1.1"},
-      {:jason, "~> 1.3"},
-      {:mix_test_watch, "~> 1.0", only: [:dev, :test], runtime: false},
-      {:credo, "~> 1.6", only: [:dev, :test], runtime: false},
-      {:ex_doc, "~> 0.27", only: [:dev], runtime: false},
-      {:req, "~> 0.4.5"},
-      {:typed_struct, "~> 0.3.0"},
-      {:hackney, "~> 1.9"},
+      {:mix_test_watch, "~> 1.2.0", only: [:dev, :test], runtime: false},
+      {:credo, "~> 1.7.5", only: [:dev, :test], runtime: false},
+      {:ex_doc, "~> 0.32.1", only: [:dev], runtime: false},
       {:dialyze, "~> 0.2.0", only: [:dev]},
-      {:dialyxir, "~> 1.0", only: [:dev], runtime: false},
+      {:dialyxir, "~> 1.4.3", only: [:dev], runtime: false},
+
+      {:uuid, "~> 1.1.8"},
+      {:jason, "~> 1.4.1"},
+      {:req, "~> 0.4.14"},
+      {:typed_struct, "~> 0.3.0"},
+      {:hackney, "~> 1.20.1"},
       {:mnemonic_slugs, "~> 0.0.3"},
-      {:cachex, "~> 3.6"}
+      {:cachex, "~> 3.6.0"}
     ]
   end
 end

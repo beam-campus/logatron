@@ -9,12 +9,9 @@ defmodule LogatronWeb.Application do
   def start(_type, _args) do
     children = [
       LogatronWeb.Telemetry,
-      # Start a worker by calling: LogatronWeb.Worker.start_link(arg)
-      # {LogatronWeb.Worker, arg},
-      # Start to serve requests, typically the last entry
       LogatronWeb.Dispatch.EdgePresence,
+      {LogatronWeb.Dispatch.ChannelWatcher, "edge:lobby"},
       LogatronWeb.Endpoint,
-      {LogatronWeb.Dispatch.ChannelWatcher, "edge:lobby"}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

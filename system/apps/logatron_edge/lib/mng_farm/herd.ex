@@ -11,9 +11,9 @@ defmodule Logatron.MngFarm.Herd do
 
   ################# API ##################
   def populate(mng_farm_init) do
-    Enum.to_list(1..mng_farm_init.nbr_of_lives)
-    |> Enum.map(&do_new_life/1)
-    |> Enum.each(&do_start_born2died(mng_farm_init, &1))
+      Enum.to_list(1..mng_farm_init.farm.nbr_of_lives)
+      |> Enum.map(&do_new_life/1)
+      |> Enum.each(&do_start_born2died(mng_farm_init, &1))
   end
 
   def which_children(mng_farm_id) do
@@ -33,19 +33,21 @@ defmodule Logatron.MngFarm.Herd do
 
   ############### INTERNALS ################
   defp do_new_life(_) do
-    Life.random()
+    res = Life.random()
+    Logger.info("Created new Life: #{inspect(res)}")
+    res
   end
 
   defp do_start_born2died(mng_farm_init, life) do
-    Logger.info("Starting Born2Died for life: #{life.id}")
     DynamicSupervisor.start_child(
       via_sup(mng_farm_init.id),
-      {Logatron.Born2Died.System, Logatron.Born2Died.State.from_life(
-        life,
-        mng_farm_init.edge_id,
-        mng_farm_init.scape_id,
-        mng_farm_init.region_id,
-        mng_farm_init.id)}
+      {
+        Logatron.Born2Died.System,
+        Logatron.Born2Died.State.from_life(
+          life,
+          mng_farm_init
+        )
+      }
     )
   end
 

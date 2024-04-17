@@ -15,7 +15,8 @@ defmodule Logatron.CachesSystem do
       Logatron.Edges.Server,
       Logatron.Scapes.Server,
       Logatron.Regions.Server,
-      Logatron.MngFarms.Server
+      Logatron.MngFarms.Server,
+      Logatron.Born2Dieds.Server
     ]
 
     Supervisor.start_link(

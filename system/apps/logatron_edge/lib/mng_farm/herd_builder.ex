@@ -1,8 +1,9 @@
 defmodule Logatron.MngFarm.HerdBuilder do
+  use GenServer
   @moduledoc """
   Logatron.MngFarm.HerdBuilder is a GenServer that builds the herd of animals for a Farm.
   """
-  use GenServer
+
 
   ##### CALLBACKS #####
   @impl GenServer
@@ -12,19 +13,20 @@ defmodule Logatron.MngFarm.HerdBuilder do
     {:ok, mng_farm_init}
   end
 
+
   @impl GenServer
   def terminate(reason, state) do
     {:ok, reason, state}
   end
 
   ###### HANDLE_CAST
-  @impl GenServer
-  def handle_cast({:build_herd, mng_farm_init}, state) do
-    Logatron.MngFarm.Herd.populate(mng_farm_init)
-    {:noreply, state}
-  end
+  # @impl GenServer
+  # def handle_cast({:build_herd, mng_farm_init}, state) do
+  #   Logatron.MngFarm.Herd.populate(mng_farm_init)
+  #   {:noreply, state}
+  # end
 
-  ###### HANDLE_INFO
+  ###### HANDLE_INFO ###############
   @impl GenServer
   def handle_info({:EXIT, _from, reason}, state) do
     {:stop, reason, state}

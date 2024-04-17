@@ -1,46 +1,34 @@
 defmodule LogatronWeb.Dispatch.EdgeHandler do
+
   @moduledoc """
   The EdgeHandler is used to broadcast messages to all clients
   """
 
-  require Logger
-
-  alias LogatronWeb.Dispatch.ChannelWatcher
+  alias LogatronCore.Facts
   alias Phoenix.PubSub
 
+  @edge_detached_v1 Facts.edge_detached_v1()
+  @edge_attached_v1 Facts.edge_attached_v1()
 
-  @edge_detached_v1 LogatronCore.Facts.edge_detached_v1()
-  @edge_attached_v1 LogatronCore.Facts.edge_attached_v1()
+  ################ CALLBACKS ################
 
-  def handle_join("edge:lobby", edge_init, socket) do
-    send(self(), :after_join)
-
-    ChannelWatcher.monitor(
-      "edge:lobby",
-      self(),
-      {__MODULE__, :pub_edge_detached, [edge_init, socket]}
-    )
-
-    {:ok, socket}
-  end
-
-  def pub_edge_attached(payload, _socket) do
-    {:ok, edge_init} = LogatronEdge.InitParams.from_map(payload["edge_init"])
-
-    PubSub.broadcast!(
-      Logatron.PubSub,
-      @edge_attached_v1,
-      {@edge_attached_v1, edge_init}
-    )
-  end
-
-  def pub_edge_detached(payload, _socket) do
+  def pub_edge_detached(payload) do
     {:ok, edge_init} = LogatronEdge.InitParams.from_map(payload["edge_init"])
 
     PubSub.broadcast!(
       Logatron.PubSub,
       @edge_detached_v1,
       {@edge_detached_v1, edge_init}
+    )
+  end
+
+  def pub_edge_attached(payload) do
+    {:ok, edge_init} = LogatronEdge.InitParams.from_map(payload["edge_init"])
+
+    PubSub.broadcast!(
+      Logatron.PubSub,
+      @edge_attached_v1,
+      {@edge_attached_v1, edge_init}
     )
   end
 end
