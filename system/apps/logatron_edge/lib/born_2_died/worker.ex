@@ -45,7 +45,7 @@ defmodule Logatron.Born2Died.Worker do
     Process.flag(:trap_exit, true)
 
     Cronlike.start_link(%{
-      interval: :rand.uniform(3),
+      interval: :rand.uniform(10),
       unit: :second,
       callback_function: &do_cron/1,
       caller_state: state
@@ -120,10 +120,13 @@ defmodule Logatron.Born2Died.Worker do
   defp do_process_reproduce(state) when state.life.gender == "female" do
     r = :rand.uniform(1000)
     rea = rem(r, 7)
-    freq = rem(state.ticks, 23)
+    freq = rem(state.ticks, 32)
     if freq == 0 and rea == 0  and state.vitals.health >= 71 do
-       MngFarm.Herd.birth_calves(state, 1)
+       MngFarm.Herd.birth_calves(state, 2)
     end
+    if freq == 0 and rea == 0  and state.vitals.health >= 54 do
+      MngFarm.Herd.birth_calves(state, 1)
+   end
     state
   end
 
