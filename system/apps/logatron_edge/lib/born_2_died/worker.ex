@@ -122,11 +122,8 @@ defmodule Logatron.Born2Died.Worker do
     rea = rem(r, 7)
     freq = rem(state.ticks, 32)
     if freq == 2 and rea == 7  and state.vitals.energy >=  65  and state.vitals.health >= 71 do
-       MngFarm.Herd.birth_calves(state, 2)
+       MngFarm.Herd.birth_calves(state, 1)
     end
-    if freq == 2 and rea == 4  and state.vitals.health >= 54 do
-      MngFarm.Herd.birth_calves(state, 1)
-   end
     state
   end
 
