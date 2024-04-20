@@ -121,9 +121,9 @@ defmodule Logatron.Born2Died.Worker do
     r = :rand.uniform(1000)
     rea = rem(r, 7)
     freq = rem(state.ticks, 32)
-    if freq == 2 and rea == 7  and state.vitals.energy >=  65  and state.vitals.health >= 71 do
-       MngFarm.Herd.birth_calves(state, 1)
-    end
+    Process.sleep(2000 * freq)
+    MngFarm.Herd.birth_calves(state, 1)
+
     state
   end
 
