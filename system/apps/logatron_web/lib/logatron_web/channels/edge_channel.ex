@@ -43,6 +43,14 @@ defmodule LogatronWeb.EdgeChannel do
 
   @initializing_born2died_v1 Facts.initializing_born2died_v1()
   @born2died_initialized_v1 Facts.born2died_initialized_v1()
+  @born2died_state_changed_v1 Facts.born2died_state_changed_v1()
+  @born2died_died_v1 Facts.born2died_died_v1()
+
+
+
+
+  @edge_detached_v1 Facts.edge_detached_v1()
+  @edge_attached_v1 Facts.edge_attached_v1()
 
   # @attach_scape_v1 "attach_scape:v1"
 
@@ -196,19 +204,21 @@ defmodule LogatronWeb.EdgeChannel do
     Born2DiedHandler.pub_animal_initialized_v1(payload, socket)
   end
 
+  def handle_in(@born2died_died_v1, payload, socket) do
+    Logger.debug("EdgeChannel.handle_in: #{@born2died_died_v1} #{inspect(payload)}")
+    Born2DiedHandler.pub_born2died_died_v1(payload, socket)
+  end
+
+
+  @impl true
+  def handle_in(@born2died_state_changed_v1, payload, socket) do
+    Logger.debug("EdgeChannel.handle_in: #{@born2died_state_changed_v1} #{inspect(payload)}")
+    Born2DiedHandler.pub_born2died_state_changed_v1(payload, socket)
+  end
+
 
 
   ################ INTERNALS ################
-  alias Phoenix.PubSub
-  alias LogatronCore.Facts
-
-
-  @edge_detached_v1 Facts.edge_detached_v1()
-  @edge_attached_v1 Facts.edge_attached_v1()
-
-
-
-
-  defp to_topic(edge_id),
+    defp to_topic(edge_id),
     do: "edge:lobby:#{edge_id}"
 end

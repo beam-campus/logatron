@@ -1,9 +1,7 @@
 defmodule LogatronWeb.Born2DiedsLive.Born2DiedsGrid do
   use LogatronWeb, :live_component
 
-  alias Logatron.Edges.Server
-
-
+  
   def get_born2dieds_summary(born2dieds) do
     born2dieds
     |> Enum.reduce(%{}, fn born2died, acc ->

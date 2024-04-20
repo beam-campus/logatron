@@ -24,12 +24,10 @@ defmodule LogatronEdge.Channel do
   @farm_initialized_v1 Facts.farm_initialized_v1()
   @farm_detached_v1 Facts.farm_detached_v1()
 
-
   @initializing_born2died_v1 Facts.initializing_born2died_v1()
   @born2died_initialized_v1 Facts.born2died_initialized_v1()
-
-
-
+  @born2died_state_changed_v1 Facts.born2died_state_changed_v1()
+  @born2died_died_v1 Facts.born2died_died_v1()
 
   ############ API ##########
   # def attach_scape(scape_init),
@@ -116,7 +114,32 @@ defmodule LogatronEdge.Channel do
         {:born2died_initialized, born2died_init}
       )
 
+  def emit_born2died_state_changed(born2died_state),
+    do:
+      GenServer.cast(
+        via(born2died_state.scape_id),
+        {:born2died_state_changed, born2died_state}
+      )
+
+  def emit_born2died_died(born2died_state),
+    do:
+      GenServer.cast(
+        via(born2died_state.scape_id),
+        {:born2died_died, born2died_state}
+      )
+
   ########### CALLBACKS ################
+
+  @impl true
+  def handle_cast({:born2died_state_changed, born2died_state}, state) do
+    Client.publish(
+      born2died_state.edge_id,
+      @born2died_state_changed_v1,
+      %{born2died_init: born2died_state}
+    )
+
+    {:noreply, state}
+  end
 
   @impl true
   def handle_cast({:scape_detached, scape_init}, state) do
@@ -246,6 +269,17 @@ defmodule LogatronEdge.Channel do
       edge_id,
       @scape_initialized_v1,
       %{scape_init: scape_init}
+    )
+
+    {:noreply, state}
+  end
+
+  @impl true
+  def handle_cast({:born2died_died, born2died_state}, state) do
+    Client.publish(
+      born2died_state.edge_id,
+      @born2died_died_v1,
+      %{born2died_init: born2died_state}
     )
 
     {:noreply, state}

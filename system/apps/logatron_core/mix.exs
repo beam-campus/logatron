@@ -45,10 +45,12 @@ defmodule Logatron.Core.MixProject do
       {:req, "~> 0.4.14"},
       {:hackney, "~> 1.20.1"},
       {:dialyze, "~> 0.2.0", only: [:dev]},
-      {:mix_test_watch, "~> 1.1", only: [:dev, :test], runtime: false},
-      {:credo, "~> 1.6", only: [:dev, :test], runtime: false},
-      {:ex_doc, "~> 0.27", only: [:dev], runtime: false},
       {:dialyxir, "~> 1.0", only: [:dev], runtime: false},
+      {:credo, "~> 1.6", only: [:dev, :test], runtime: false},
+      {:mix_test_watch, "~> 1.1", only: [:dev, :test], runtime: false},
+
+      {:ex_doc, "~> 0.27", only: [:dev], runtime: false},
+
       {:mnemonic_slugs, "~> 0.0.3"},
     ]
   end

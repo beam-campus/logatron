@@ -64,6 +64,12 @@ defmodule LogatronCore.Facts do
   def born2died_detached_v1,
     do: "born2died_detached_v1"
 
+  def born2died_state_changed_v1,
+    do: "born2died_state_changed_v1"
+
+  def born2died_died_v1,
+    do: "born2died_died_v1"
+
   def born2dieds_cache_updated_v1,
     do: "born2dieds_cache_updated_v1"
 

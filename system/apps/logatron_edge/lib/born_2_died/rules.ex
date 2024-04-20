@@ -36,12 +36,14 @@ defmodule Logatron.Born2Died.Rules do
   def apply_age(state)
       when state.vitals.age >= div(@max_age, 2) do
     state = put_in(state.vitals.health, state.vitals.health - 1)
+    
     state
   end
 
   def apply_age(state)
       when state.vitals.age < div(@max_age, 2) do
     state = put_in(state.vitals.health, state.vitals.health + 1)
+
     state
   end
 

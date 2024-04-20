@@ -15,6 +15,8 @@ defmodule Logatron.Born2Dieds.Server do
   @born2died_initialized_v1 Facts.born2died_initialized_v1()
   @born2died_detached_v1 Facts.born2died_detached_v1()
 
+  @born2died_state_changed_v1 Facts.born2died_state_changed_v1()
+
   @born2dieds_cache_updated_v1 Facts.born2dieds_cache_updated_v1()
 
   ################### PUBLIC API ##################
@@ -58,6 +60,7 @@ defmodule Logatron.Born2Dieds.Server do
 
     # PubSub.subscribe(Logatron.PubSub, @initializing_born2died_v1)
     # PubSub.subscribe(Logatron.PubSub, @born2died_detached_v1)
+
 
     {:ok, opts}
   end
@@ -118,6 +121,16 @@ defmodule Logatron.Born2Dieds.Server do
     {:noreply, state}
   end
 
+
+  @impl GenServer
+  def handle_info({@born2died_initialized_v1, born2died_init}, state) do
+    :born2dieds_cache
+    |> Cachex.put!(born2died_init.id, born2died_init)
+
+    notify_born2dieds_updated({@born2died_initialized_v1, born2died_init})
+    {:noreply, state}
+  end
+
   @impl GenServer
   def handle_info({@born2died_detached_v1, born2died_init}, state) do
     :born2dieds_cache
@@ -126,6 +139,17 @@ defmodule Logatron.Born2Dieds.Server do
     notify_born2dieds_updated({@born2died_detached_v1, born2died_init})
     {:noreply, state}
   end
+
+
+  @impl GenServer
+  def handle_info({:born2died_state_changed, born2died_init}, state) do
+    :born2dieds_cache
+    |> Cachex.put!(born2died_init.id, born2died_init)
+
+    notify_born2dieds_updated({@born2died_state_changed_v1, born2died_init})
+    {:noreply, state}
+  end
+
 
   ################### INTERNALS ###################
   defp notify_born2dieds_updated(cause),

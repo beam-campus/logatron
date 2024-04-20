@@ -12,6 +12,9 @@ defmodule LogatronWeb.Dispatch.Born2DiedHandler do
 
   @initializing_born2died_v1 Facts.initializing_born2died_v1()
   @born2died_initialized_v1 Facts.born2died_initialized_v1()
+  @born2died_state_changed_v1 Facts.born2died_state_changed_v1()
+  @born2died_died_v1 Facts.born2died_died_v1()
+
 
 
   def pub_initializing_animal_v1(payload, socket) do
@@ -39,6 +42,32 @@ defmodule LogatronWeb.Dispatch.Born2DiedHandler do
       {@born2died_initialized_v1, animal_init}
     )
     {:noreply, socket}
+  end
+
+
+  def pub_born2died_state_changed_v1(payload, socket) do
+    Logger.info("pub_born2died_state_changed_v1 #{inspect(payload)}")
+    {:ok, born2died_init} = State.from_map(payload["born2died_init"])
+    Logatron.Born2Dieds.Server.save(born2died_init)
+    Phoenix.PubSub.broadcast(
+      Logatron.PubSub,
+      @born2died_state_changed_v1,
+      {@born2died_state_changed_v1, born2died_init}
+    )
+    {:noreply, socket}
+  end
+
+  def pub_born2died_died_v1(payload, socket) do
+    Logger.info("pub_born2died_died_v1 #{inspect(payload)}")
+    {:ok, born2died_init} = State.from_map(payload["born2died_init"])
+    Logatron.Born2Dieds.Server.save(born2died_init)
+    Phoenix.PubSub.broadcast(
+      Logatron.PubSub,
+      @born2died_state_changed_v1,
+      {@born2died_state_changed_v1, born2died_init}
+    )
+    {:noreply, socket}
+
   end
 
 

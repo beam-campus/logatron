@@ -6,6 +6,7 @@ defmodule Logatron.Born2Died.Worker do
   require Logger
   require Logatron.Born2Died.Emitter
 
+  alias LogatronEdge.Channel
   alias Logatron.Born2Died.Rules
 
   ################ INTERFACE ###############
@@ -71,19 +72,24 @@ defmodule Logatron.Born2Died.Worker do
 
   ################# HANDLE_CAST #####################
   @impl GenServer
-  def handle_cast({:live}, state) do
-    Logger.debug(
-      " \n\tLIVING [#{state.life.name}  \n\t\tage: #{state.vitals.age}, \n\t\thealth: #{state.vitals.health}]"
-    )
+  def handle_cast({:live}, state) when state.status == "died" do
+    {:noreply, state}
+  end
 
-    state =
+  @impl GenServer
+  def handle_cast({:live}, state) do
+
+    new_state =
       state
       |> Rules.calc_age()
       |> Rules.apply_age()
       |> Rules.calc_pos()
+      |> do_process()
 
-    {:noreply, do_process(state)}
+
+    {:noreply, new_state}
   end
+
 
   @impl GenServer
   def handle_cast({:die}, state),
@@ -108,13 +114,11 @@ defmodule Logatron.Born2Died.Worker do
 
   defp do_process(state) do
     state
-    |> do_process_status()
     |> do_process_health()
     |> do_process_pos()
   end
 
-  defp do_process_health(state)
-       when state.vitals.health <= 0 do
+  defp do_process_health(state)  when state.vitals.health <= 0 do
     die(state.life.id)
     state
   end
@@ -141,26 +145,30 @@ defmodule Logatron.Born2Died.Worker do
   #   state
   # end
 
-  defp do_process_status(state),
-    do: state
+  # defp do_process_status(state) do
+  #   Channel.emit_born2died_died(state)
+  #   state
+  # end
 
   defp do_die(state) do
-    Logger.debug(
-      "\n\t DIED [#{state.life.name}, \n\t\tage: #{state.vitals.age}, \n\t\thealth: #{state.vitals.health}]"
-    )
+    new_state =
+      state
+      |> Map.put(:status, "died")
+
+    Channel.emit_born2died_died(new_state)
 
     Logatron.Born2Died.System.stop(state.life.id)
-    state
+
+    new_state
   end
 
   defp do_move(state, delta_x, delta_y) do
-    s1 =
-      " \n MOVING [#{String.slice(state.life.name, 0, 29)}\tFROM: (#{state.pos.x}, #{state.pos.y}) TO: (#{state.pos.x + delta_x}, #{state.pos.y + delta_y})]"
-
     new_state =
       Map.put(state, :pos, do_change_pos(state.pos, delta_x, delta_y))
+      |> Map.put(:status, "moving")
 
-    Logger.debug("#{s1}")
+    Channel.emit_born2died_state_changed(new_state)
+
     new_state
   end
 
