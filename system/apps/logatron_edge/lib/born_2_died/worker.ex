@@ -45,7 +45,7 @@ defmodule Logatron.Born2Died.Worker do
     Process.flag(:trap_exit, true)
 
     Cronlike.start_link(%{
-      interval: :rand.uniform(10),
+      interval: :rand.uniform(5),
       unit: :second,
       callback_function: &do_cron/1,
       caller_state: state
@@ -127,6 +127,10 @@ defmodule Logatron.Born2Died.Worker do
     if freq == 0 and rea == 0  and state.vitals.health >= 54 do
       MngFarm.Herd.birth_calves(state, 1)
    end
+    state
+  end
+
+  defp do_process_reproduce(state) do
     state
   end
 
