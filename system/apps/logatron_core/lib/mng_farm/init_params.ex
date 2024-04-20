@@ -50,6 +50,17 @@ defmodule Logatron.MngFarm.InitParams do
     embeds_one(:farm, Farm)
   end
 
+  def from_born2died(born2died, farm) do
+    %InitParams{
+      id: Id.new(@id_prefix) |> Id.as_string(),
+      edge_id: born2died.edge_id,
+      region_id: born2died.region_id,
+      scape_id: born2died.scape_id,
+      country: born2died.country,
+      farm: farm
+    }
+  end
+
   def from_farm(farm, region_init),
     do: %Logatron.MngFarm.InitParams{
       id: Id.new(@id_prefix) |> Id.as_string(),

@@ -63,7 +63,7 @@ defmodule LogatronWeb.ViewBorn2DiedsLive.Index do
           socket
           |> assign(
             edges: EdgesCache.get_all(),
-            born2dieds: Logatron.Born2Dieds.Server.get_all()
+            born2dieds: Born2DiedsCache.get_all()
           )
         }
 
@@ -149,7 +149,7 @@ defmodule LogatronWeb.ViewBorn2DiedsLive.Index do
   end
 
 
-  def handle_info({@born2died_died, born2died_state}, socket) do
+  def handle_info({@born2died_died_v1, born2died_state}, socket) do
     {
       :noreply,
       socket

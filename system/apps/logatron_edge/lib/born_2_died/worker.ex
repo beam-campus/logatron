@@ -6,6 +6,7 @@ defmodule Logatron.Born2Died.Worker do
   require Logger
   require Logatron.Born2Died.Emitter
 
+  alias Logatron.MngFarm
   alias LogatronEdge.Channel
   alias Logatron.Born2Died.Rules
 
@@ -78,7 +79,6 @@ defmodule Logatron.Born2Died.Worker do
 
   @impl GenServer
   def handle_cast({:live}, state) do
-
     new_state =
       state
       |> Rules.calc_age()
@@ -86,10 +86,8 @@ defmodule Logatron.Born2Died.Worker do
       |> Rules.calc_pos()
       |> do_process()
 
-
     {:noreply, new_state}
   end
-
 
   @impl GenServer
   def handle_cast({:die}, state),
@@ -116,9 +114,20 @@ defmodule Logatron.Born2Died.Worker do
     state
     |> do_process_health()
     |> do_process_pos()
+    |> do_process_reproduce()
   end
 
-  defp do_process_health(state)  when state.vitals.health <= 0 do
+  defp do_process_reproduce(state) when state.life.gender == "female" do
+    r = :rand.uniform(1000)
+    rea = rem(r, 7)
+    freq = rem(state.ticks, 23)
+    if freq == 0 and rea == 0  and state.vitals.health >= 71 do
+       MngFarm.Herd.birth_calves(state, 1)
+    end
+    state
+  end
+
+  defp do_process_health(state) when state.vitals.health <= 0 do
     die(state.life.id)
     state
   end

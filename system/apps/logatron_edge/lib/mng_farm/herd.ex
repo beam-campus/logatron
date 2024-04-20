@@ -16,11 +16,29 @@ defmodule Logatron.MngFarm.Herd do
       |> Enum.each(&do_start_born2died(mng_farm_init, &1))
   end
 
+  def birth_calves(mother_state, nbr_of_calves) do
+    GenServer.cast(
+      via(mother_state.mng_farm_id),
+      {:birth_calves, mother_state, nbr_of_calves}
+    )
+
+  end
+
   def which_children(mng_farm_id) do
     DynamicSupervisor.which_children(via_sup(mng_farm_id))
   end
 
   ################# CALLBACKS ##################
+  def handle_cast({:birth_calves, mother, number}, state) do
+
+    Enum.to_list(1..number)
+    |> Enum.map(&do_new_life/1)
+    |> Enum.each(&do_start_born2died(state, &1))
+
+    {:noreply, state}
+
+  end
+
   @impl GenServer
   def init(mng_farm_init) do
     DynamicSupervisor.start_link(

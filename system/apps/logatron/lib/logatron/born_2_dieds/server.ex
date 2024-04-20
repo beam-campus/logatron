@@ -85,7 +85,9 @@ defmodule Logatron.Born2Dieds.Server do
       :reply,
       :born2dieds_cache
       |> Cachex.stream!()
-      |> Enum.map(fn {:entry, _key, _nil, _internal_id, born2died_init} -> born2died_init end),
+      |> Enum.map(fn {:entry, _key, _nil, _internal_id, born2died_init} -> born2died_init end)
+      |> Enum.sort_by(& &1.vitals.age)
+      |> Enum.reverse(),
       state
     }
   end

@@ -69,6 +69,7 @@ defmodule Logatron.Born2Died.State do
     field(:scape_id, :string)
     field(:region_id, :string)
     field(:farm_id, :string)
+    field(:mng_farm_id, :string)
     field(:field_id, :string)
     field(:ticks, :integer)
     field(:status, :string)
@@ -77,38 +78,39 @@ defmodule Logatron.Born2Died.State do
     embeds_one(:vitals, Vitals)
   end
 
-  def random(edge_id, scape_id, region_id, farm_id, %{x: max_x, y: max_y, z: z} = _vector, life) do
-    %Logatron.Born2Died.State{
-      id: Id.new(@id_prefix) |> Id.as_string(),
-      edge_id: edge_id,
-      scape_id: scape_id,
-      region_id: region_id,
-      farm_id: farm_id,
-      field_id: Id.new("field", to_string(z)) |> Id.as_string(),
-      life: life,
-      pos: Vector.random(max_x, max_y, 1),
-      vitals: Vitals.random(),
-      status: "unknown",
-      ticks: 0,
-      status: 0
-    }
-  end
+  # def random(edge_id, scape_id, region_id, farm_id, %{x: max_x, y: max_y, z: z} = _vector, life) do
+  #   %Logatron.Born2Died.State{
+  #     id: Id.new(@id_prefix) |> Id.as_string(),
+  #     edge_id: edge_id,
+  #     scape_id: scape_id,
+  #     region_id: region_id,
+  #     farm_id: farm_id,
+  #     field_id: Id.new("field", to_string(z)) |> Id.as_string(),
+  #     life: life,
+  #     pos: Vector.random(max_x, max_y, 1),
+  #     vitals: Vitals.random(),
+  #     status: "unknown",
+  #     ticks: 0,
+  #     status: 0
+  #   }
+  # end
 
-  def default(edge_id, scape_id, region_id, farm_id) do
-    %Logatron.Born2Died.State{
-      id: Id.new(@id_prefix) |> Id.as_string(),
-      edge_id: edge_id,
-      scape_id: scape_id,
-      region_id: region_id,
-      farm_id: farm_id,
-      field_id: Id.new("field", to_string(1)) |> Id.as_string(),
-      life: Life.random(),
-      pos: Vector.random(1_000, 1_000, 1),
-      vitals: Vitals.random(),
-      ticks: 0,
-      status: "unknown"
-    }
-  end
+  # def default(edge_id, scape_id, region_id, farm_id) do
+  #   %Logatron.Born2Died.State{
+  #     id: Id.new(@id_prefix) |> Id.as_string(),
+  #     edge_id: edge_id,
+  #     scape_id: scape_id,
+  #     region_id: region_id,
+  #     farm_id: farm_id,
+  #     mng_fa
+  #     field_id: Id.new("field", to_string(1)) |> Id.as_string(),
+  #     life: Life.random(),
+  #     pos: Vector.random(1_000, 1_000, 1),
+  #     vitals: Vitals.random(),
+  #     ticks: 0,
+  #     status: "unknown"
+  #   }
+  # end
 
   def from_life(life, mng_farm_init) do
     Logger.debug("from_life: #{inspect(life)} mng_farm_init: #{inspect(mng_farm_init)}")
@@ -118,6 +120,7 @@ defmodule Logatron.Born2Died.State do
       scape_id: mng_farm_init.scape_id,
       region_id: mng_farm_init.region_id,
       farm_id: mng_farm_init.farm.id,
+      mng_farm_id: mng_farm_init.id,
       field_id: Id.new("field", to_string(1)) |> Id.as_string(),
       life: life,
       pos: Vector.random(1_000, 1_000, 1),

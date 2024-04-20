@@ -24,6 +24,13 @@ defmodule Logatron.Born2Died.System do
   #       {:die, life_id}
   #     )
 
+  def do_birth(life_id, delta_x, delta_y),
+    do:
+      GenServer.cast(
+        via(life_id),
+        {:do_birth, life_id, delta_x, delta_y}
+      )
+
   def stop(life_id) do
     try do
       Supervisor.stop(via_sup(life_id), :shutdown)
@@ -81,6 +88,13 @@ defmodule Logatron.Born2Died.System do
   #   Logatron.Born2Died.Worker.die(life_id)
   #   {:noreply, state}
   # end
+
+
+  @impl GenServer
+  def handle_cast({:do_birth, life_id, delta_x, delta_y}, state) do
+    Logatron.Born2Died.Worker.do_birth(life_id, delta_x, delta_y)
+    {:noreply, state}
+  end
 
   ########################## INTERNALS ########################################
   defp to_name(life_id),
