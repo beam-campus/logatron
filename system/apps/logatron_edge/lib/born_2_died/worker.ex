@@ -121,10 +121,10 @@ defmodule Logatron.Born2Died.Worker do
     r = :rand.uniform(1000)
     rea = rem(r, 7)
     freq = rem(state.ticks, 32)
-    if freq == 0 and rea == 7  and state.vitals.energy >=  65  and state.vitals.health >= 71 do
+    if freq == 2 and rea == 7  and state.vitals.energy >=  65  and state.vitals.health >= 71 do
        MngFarm.Herd.birth_calves(state, 2)
     end
-    if freq == 0 and rea == 0  and state.vitals.health >= 54 do
+    if freq == 2 and rea == 4  and state.vitals.health >= 54 do
       MngFarm.Herd.birth_calves(state, 1)
    end
     state
