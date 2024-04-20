@@ -159,6 +159,7 @@ defmodule LogatronWeb.ViewBorn2DiedsLive.Index do
   end
 
 
+
   # @impl true
   # def handle_info(msg, socket) do
   #   Logger.error("Unhandled message: #{inspect(msg)}")

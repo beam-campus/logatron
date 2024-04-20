@@ -117,15 +117,15 @@ defmodule Logatron.Born2Died.Worker do
     |> do_process_reproduce()
   end
 
-  defp do_process_reproduce(state) when state.life.gender == "female" do
-    r = :rand.uniform(1000)
-    rea = rem(r, 7)
-    freq = rem(state.ticks, 32)
-    Process.sleep(2000 * freq)
-    MngFarm.Herd.birth_calves(state, 1)
+  # defp do_process_reproduce(state) when state.life.gender == "female" do
+  #   # r = :rand.uniform(1000)
+  #   # rea = rem(r, 7)
+  #   # freq = rem(state.ticks, 32)
+  #   # Process.sleep(2000 * freq)
+  #   # MngFarm.Herd.birth_calves(state, 1)
 
-    state
-  end
+  #   state
+  # end
 
   defp do_process_reproduce(state) do
     state
