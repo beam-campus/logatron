@@ -12,6 +12,8 @@ defmodule Logatron.Region.System do
   ############## CALLBACKS #############
   @impl GenServer
   def init(%{id: region_id} = region_init) do
+    Logger.info("process: #{Colors.region_theme(self())}")
+
     Channel.initializing_region(region_init)
 
     children = [

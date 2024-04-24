@@ -52,11 +52,6 @@ defmodule LogatronWeb.ViewBorn2DiedsLive.Index do
         Logger.info("Connected")
 
         PubSub.subscribe(Logatron.PubSub, @born2dieds_cache_updated_v1)
-        PubSub.subscribe(Logatron.PubSub, @edges_cache_updated_v1)
-        PubSub.subscribe(Logatron.PubSub, @initializing_born2died_v1)
-        PubSub.subscribe(Logatron.PubSub, @born2died_initialized_v1)
-        PubSub.subscribe(Logatron.PubSub, @born2died_state_changed_v1)
-        PubSub.subscribe(Logatron.PubSub, @edge_detached_v1)
 
         {
           :ok,
@@ -120,24 +115,6 @@ defmodule LogatronWeb.ViewBorn2DiedsLive.Index do
       )
     }
 
-  @impl true
-  def handle_info({@initializing_born2died_v1, _born2died_init}, socket) do
-    {
-      :noreply,
-      socket
-      |> assign(born2dieds: Born2DiedsCache.get_all())
-    }
-  end
-
-
-  @impl true
-  def handle_info({@born2died_initialized_v1, _born2died_init}, socket) do
-    {
-      :noreply,
-      socket
-      |> assign(born2dieds: Born2DiedsCache.get_all())
-    }
-  end
 
   @impl true
   def handle_info({@born2died_state_changed_v1, _payload}, socket) do
@@ -155,14 +132,12 @@ defmodule LogatronWeb.ViewBorn2DiedsLive.Index do
       socket
       |> assign(born2dieds: Born2DiedsCache.get_all())
     }
-
   end
 
 
-
-  # @impl true
-  # def handle_info(msg, socket) do
-  #   Logger.error("Unhandled message: #{inspect(msg)}")
-  #   {:noreply, socket}
-  # end
+  @impl true
+  def handle_info(msg, socket) do
+    Logger.error("Unhandled message: #{inspect(msg)}")
+    {:noreply, socket}
+  end
 end

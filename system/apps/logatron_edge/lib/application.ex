@@ -8,6 +8,8 @@ defmodule LogatronEdge.Application do
 
   require Logger
 
+  alias LogatronEdge.InitParams, as: EdgeInit
+
 
   @default_edge_id Logatron.Core.constants()[:edge_id]
 
@@ -20,7 +22,7 @@ defmodule LogatronEdge.Application do
 
     # {:ok, info} = Apis.IpInfoCache.refresh()
 
-    edge_init = LogatronEdge.InitParams.enriched()
+    edge_init = EdgeInit.enriched()
 
     Logger.info("\n\n\n Starting Logatron Edge with edge_init: #{inspect(edge_init)} \n\n\n")
 
@@ -34,9 +36,10 @@ defmodule LogatronEdge.Application do
       {LogatronEdge.Scape.System, scape_init}
     ]
 
-    Supervisor.start_link(children,
-      strategy: :one_for_one,
-      name: __MODULE__
+    Supervisor.start_link(
+      children,
+      name: __MODULE__,
+      strategy: :one_for_one
     )
     # stop(scape_init)
   end

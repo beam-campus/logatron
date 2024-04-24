@@ -1,4 +1,4 @@
-defmodule Logatron.Born2Died.State do
+defmodule Born2Died.State do
   use Ecto.Schema
 
   @moduledoc """
@@ -14,6 +14,9 @@ defmodule Logatron.Born2Died.State do
     Vitals,
     Life
   }
+
+  alias Logatron.MngFarm.InitParams, as: MngFarmInit
+  alias Logatron.Schema.Life, as: Life
 
   require Logger
 
@@ -40,9 +43,10 @@ defmodule Logatron.Born2Died.State do
     :scape_id,
     :region_id,
     :farm_id,
-    :field_id,
+    :mng_farm_id,
     :ticks,
     :status,
+    :limits,
     :life,
     :pos,
     :vitals
@@ -54,7 +58,7 @@ defmodule Logatron.Born2Died.State do
     :scape_id,
     :region_id,
     :farm_id,
-    :field_id,
+    :mng_farm_id,
     :ticks,
     :status
   ]
@@ -70,16 +74,16 @@ defmodule Logatron.Born2Died.State do
     field(:region_id, :string)
     field(:farm_id, :string)
     field(:mng_farm_id, :string)
-    field(:field_id, :string)
     field(:ticks, :integer)
     field(:status, :string)
+    embeds_one(:limits, Vector)
     embeds_one(:life, Life)
     embeds_one(:pos, Vector)
     embeds_one(:vitals, Vitals)
   end
 
   # def random(edge_id, scape_id, region_id, farm_id, %{x: max_x, y: max_y, z: z} = _vector, life) do
-  #   %Logatron.Born2Died.State{
+  #   %Born2Died.State{
   #     id: Id.new(@id_prefix) |> Id.as_string(),
   #     edge_id: edge_id,
   #     scape_id: scape_id,
@@ -95,35 +99,17 @@ defmodule Logatron.Born2Died.State do
   #   }
   # end
 
-  # def default(edge_id, scape_id, region_id, farm_id) do
-  #   %Logatron.Born2Died.State{
-  #     id: Id.new(@id_prefix) |> Id.as_string(),
-  #     edge_id: edge_id,
-  #     scape_id: scape_id,
-  #     region_id: region_id,
-  #     farm_id: farm_id,
-  #     mng_fa
-  #     field_id: Id.new("field", to_string(1)) |> Id.as_string(),
-  #     life: Life.random(),
-  #     pos: Vector.random(1_000, 1_000, 1),
-  #     vitals: Vitals.random(),
-  #     ticks: 0,
-  #     status: "unknown"
-  #   }
-  # end
-
-  def from_life(life, mng_farm_init) do
-    Logger.debug("from_life: #{inspect(life)} mng_farm_init: #{inspect(mng_farm_init)}")
-    %Logatron.Born2Died.State{
+  def from_life(%Life{} = life, %MngFarmInit{} = mng_farm_init) do
+    %Born2Died.State{
       id: Id.new(@id_prefix) |> Id.as_string(),
       edge_id: mng_farm_init.edge_id,
       scape_id: mng_farm_init.scape_id,
       region_id: mng_farm_init.region_id,
       farm_id: mng_farm_init.farm.id,
       mng_farm_id: mng_farm_init.id,
-      field_id: Id.new("field", to_string(1)) |> Id.as_string(),
       life: life,
-      pos: Vector.random(1_000, 1_000, 1),
+      limits: Vector.new(mng_farm_init.max_col, mng_farm_init.max_row, mng_farm_init.max_depth),
+      pos: Vector.random(mng_farm_init.max_col, mng_farm_init.max_row, mng_farm_init.max_depth),
       vitals: Vitals.random(),
       ticks: 0,
       status: "unknown"
@@ -133,6 +119,7 @@ defmodule Logatron.Born2Died.State do
   def changeset(state, args) when is_map(args) do
     state
     |> cast(args, @flat_fields)
+    |> cast_embed(:limits, required: true)
     |> cast_embed(:life, required: true)
     |> cast_embed(:pos, required: true)
     |> cast_embed(:vitals, required: true)
@@ -140,7 +127,7 @@ defmodule Logatron.Born2Died.State do
   end
 
   def from_map(map) when is_map(map) do
-    case(changeset(%Logatron.Born2Died.State{}, map)) do
+    case(changeset(%Born2Died.State{}, map)) do
       %{valid?: true} = changeset ->
         state =
           changeset

@@ -15,7 +15,7 @@ defmodule LogatronEdge.Client do
 
   ############# API ################
   def publish(edge_id, event, payload) do
-    Logger.debug("event => #{inspect(event) } payload => #{inspect(payload)}")
+    # Logger.debug("event => #{inspect(event) } payload => #{inspect(payload)}")
     GenServer.cast(
       via(edge_id),
       {:publish, @edge_lobby, event, payload}

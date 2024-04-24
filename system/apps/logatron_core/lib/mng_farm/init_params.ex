@@ -19,6 +19,10 @@ defmodule Logatron.MngFarm.InitParams do
     :region_id,
     :scape_id,
     :country,
+    :farm_id,
+    :max_row,
+    :max_col,
+    :max_depth,
     :farm
   ]
 
@@ -27,6 +31,10 @@ defmodule Logatron.MngFarm.InitParams do
     :edge_id,
     :region_id,
     :scape_id,
+    :farm_id,
+    :max_row,
+    :max_col,
+    :max_depth,
     :country
   ]
 
@@ -36,6 +44,10 @@ defmodule Logatron.MngFarm.InitParams do
     :region_id,
     :scape_id,
     :country,
+    :farm_id,
+    :max_row,
+    :max_col,
+    :max_depth,
     :farm
   ]
 
@@ -47,29 +59,28 @@ defmodule Logatron.MngFarm.InitParams do
     field(:scape_id, :string)
     field(:region_id, :string)
     field(:country, :string)
+    field(:farm_id, :string)
+    field(:max_row, :integer)
+    field(:max_col, :integer)
+    field(:max_depth, :integer)
     embeds_one(:farm, Farm)
   end
 
-  def from_born2died(born2died, farm) do
-    %InitParams{
-      id: Id.new(@id_prefix) |> Id.as_string(),
-      edge_id: born2died.edge_id,
-      region_id: born2died.region_id,
-      scape_id: born2died.scape_id,
-      country: born2died.country,
-      farm: farm
-    }
-  end
-
-  def from_farm(farm, region_init),
-    do: %Logatron.MngFarm.InitParams{
+  def from_region(region_init) do
+    farm = Logatron.Schema.Farm.random()
+    %Logatron.MngFarm.InitParams{
       id: Id.new(@id_prefix) |> Id.as_string(),
       edge_id: region_init.edge_id,
       region_id: region_init.id,
       scape_id: region_init.scape_id,
       country: region_init.name,
+      farm_id: farm.id,
+      max_col: farm.fields_def.x,
+      max_row: farm.fields_def.y,
+      max_depth: farm.fields_def.z,
       farm: farm
     }
+  end
 
   def changeset(mng_farm, args)
       when is_map(args) do

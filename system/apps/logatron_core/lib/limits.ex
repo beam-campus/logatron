@@ -19,7 +19,7 @@ defmodule Logatron.Limits do
     max_weight: 750,
     max_robots: 3,
     min_robots: 2,
-    select_from: "Europe, North America, Asia, Africa, South America, Oceania",
+    select_from: "Europe",
     init_nbr_of_lives: 5
   ]
 
@@ -30,16 +30,17 @@ defmodule Logatron.Limits do
 
   def min_people,
     do:
-      System.get_env(EnvVars.logatron_edge_scape_min_people()) ||
+      EnvVars.get_env_var_as_integer(
+        EnvVars.logatron_edge_scape_min_people(),
         @defaults[:min_people]
+      )
 
   def init_nbr_of_lives,
     do:
     EnvVars.get_env_var_as_integer(
       EnvVars.logatron_edge_max_animals(),
       EnvVars.get_env_var_as_integer(
-        EnvVars.
-        logatron_edge_scape_init_nbr_of_lives(),
+        EnvVars.logatron_init_animals_per_farm(),
         @defaults[:max_lives]
       )
 

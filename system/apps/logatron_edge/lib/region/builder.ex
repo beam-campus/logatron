@@ -6,6 +6,8 @@ defmodule Logatron.Region.Builder do
   by spawning Logatron.MngFarm Processes.
   """
 
+  alias Logatron.MngFarm.InitParams, as: FarmInit
+
   require Logger
 
   ############# CALLBACKS ############
@@ -18,13 +20,12 @@ defmodule Logatron.Region.Builder do
   ############# INTERNALS ############
   defp do_build(region_init) do
     Enum.to_list(1..region_init.nbr_of_farms)
-    |> Enum.map(fn _ -> random_mng_farm_init(region_init) end)
-    |> Enum.each(fn farm_init -> Logatron.Region.Farms.start_farm(region_init.id, farm_init)  end)
+    |> Enum.map(& from_region(&1, region_init))
+    |> Enum.each(fn farm_init -> Logatron.Region.Farms.start_farm(region_init.id, farm_init) end)
   end
 
-
-  defp random_mng_farm_init(region_init),
-    do: Logatron.MngFarm.InitParams.from_farm(Logatron.Schema.Farm.random(), region_init)
+  defp from_region(_, region_init),
+    do: FarmInit.from_region(region_init)
 
   ################# PLUMBING ################
   def to_name(key),

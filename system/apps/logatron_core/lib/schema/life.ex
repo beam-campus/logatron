@@ -74,8 +74,7 @@ defmodule Logatron.Schema.Life do
 
   def random do
     gender = Enum.random(@genders)
-
-    life = %Life{
+    %Life{
       id: Id.new(id_prefix()) |> Id.as_string(),
       name: LifeNames.random_name(gender),
       gender: gender,
@@ -83,8 +82,18 @@ defmodule Logatron.Schema.Life do
       father_id: "unknown",
       mother_id: "unknown"
     }
-    Logger.debug("Random Life: #{inspect(life)}")
-    life
+  end
+
+  def from_calving(calving) do
+    gender = Enum.random(@genders)
+    %Life{
+      id: Id.new(id_prefix()) |> Id.as_string(),
+      name: LifeNames.random_name(gender),
+      gender: gender,
+      birth_date: calving.calving_date,
+      father_id: calving.father_id,
+      mother_id: calving.mother_id
+    }
   end
 
 

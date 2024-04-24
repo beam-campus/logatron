@@ -8,6 +8,10 @@ defmodule Logatron.Schema.Farm do
   alias Logatron.Schema.Farm
   alias Logatron.Schema.Id
 
+  @cols 50
+  @rows 50
+  @depth 1
+
   @farm_names [
     "Aaron",
     "Abira",
@@ -84,7 +88,23 @@ defmodule Logatron.Schema.Farm do
     :id,
     :name,
     :nbr_of_robots,
-    :nbr_of_lives
+    :nbr_of_lives,
+    :fields_def,
+  ]
+
+  @cast_fields [
+    :id,
+    :name,
+    :nbr_of_robots,
+    :nbr_of_lives,
+  ]
+
+  @required_fields [
+    :id,
+    :name,
+    :nbr_of_robots,
+    :nbr_of_lives,
+    :fields_def,
   ]
 
   @derive {Jason.Encoder, only: @all_fields}
@@ -94,6 +114,7 @@ defmodule Logatron.Schema.Farm do
     field(:name, :string)
     field(:nbr_of_robots, :integer)
     field(:nbr_of_lives, :integer)
+    embeds_one(:fields_def, LogatronCore.Schema.Vector)
   end
 
   defp id_prefix,
@@ -102,18 +123,8 @@ defmodule Logatron.Schema.Farm do
   def changeset(farm, args) do
     farm
     |> cast(
-      args,
-      [
-        :name,
-        :nbr_of_robots,
-        :nbr_of_lives
-      ]
-    )
-    |> validate_required([
-      :name,
-      :nbr_of_robots,
-      :nbr_of_lives
-    ])
+      args, @cast_fields)
+    |> validate_required(@required_fields)
   end
 
   def new(attrs) do
@@ -134,6 +145,8 @@ defmodule Logatron.Schema.Farm do
         {:error, changeset}
     end
   end
+
+
 
   def random_name() do
     Enum.random(@farm_colors) <>
@@ -164,10 +177,10 @@ defmodule Logatron.Schema.Farm do
             :rand.uniform(Logatron.Limits.max_robots()) -
               :rand.uniform(Logatron.Limits.max_robots() - Logatron.Limits.min_robots())
           )
-        )
+        ),
+        fields_def: Logatron.Schema.Vector.new(@cols, @rows, @depth)
     }
   end
-
   defp normalize(res) when res > 0, do: res
   defp normalize(res) when res <= 0, do: 1
 end

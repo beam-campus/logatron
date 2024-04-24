@@ -11,7 +11,7 @@ defmodule Logatron.Born2Died.DiedFact do
     field(:topic, :string, default: "life.died.v1")
     field(:type, :string, default: "died")
     field(:meta, :map)
-    embeds_one(:state, Logatron.Born2Died.State)
+    embeds_one(:state, Born2Died.State)
   end
 
   def new(state) do

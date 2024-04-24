@@ -13,12 +13,14 @@ defmodule Logatron.MngFarm.System do
   def init(mng_farm_init) do
     Process.flag(:trap_exit, true)
 
+    Logger.debug("process: #{Colors.farm_theme(self())}")
+
     Channel.initializing_farm(mng_farm_init)
 
     children =
       [
-        {Logatron.MngFarm.Herd, mng_farm_init},
-        {Logatron.MngFarm.HerdBuilder, mng_farm_init}
+        {Logatron.MngFarm.Server, mng_farm_init},
+        {Logatron.MngFarm.Builder, mng_farm_init}
       ]
 
     Supervisor.start_link(

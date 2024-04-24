@@ -7,11 +7,10 @@ defmodule LogatronEdge.Scape.System do
   import Logger
 
   alias LogatronEdge.Channel
-
+  alias Logatron.Region.InitParams, as: RegionInit
 
   def start_region_system(scape_id, region_init) do
     Logger.debug("for [#{scape_id}] with region_init #{inspect(region_init)}")
-
     GenServer.cast(
       via(scape_id),
       {:start_region_system, region_init}
@@ -30,8 +29,6 @@ defmodule LogatronEdge.Scape.System do
     end
   end
 
-
-
   ####### CALLBACKS ############
   # @impl GenServer
   # def handle_info({:EXIT, from_pid, reason}, state) do
@@ -44,12 +41,9 @@ defmodule LogatronEdge.Scape.System do
   #   {:noreply, state}
   # end
 
-
   @impl GenServer
-  def handle_info(msg,  state) do
-    Logger.error(
-      "#{Colors.red_on_black()}received: [#{msg}]"
-    )
+  def handle_info(msg, state) do
+    Logger.error("#{Colors.red_on_black()}received: [#{msg}]")
     {:noreply, state}
   end
 
@@ -67,7 +61,6 @@ defmodule LogatronEdge.Scape.System do
 
   @impl GenServer
   def terminate(reason, scape_init) do
-
     Logger.error(
       "#{Colors.red_on_black()}Terminating Scape.System with reason: #{inspect(reason)}#{Colors.reset()}"
     )
@@ -79,6 +72,7 @@ defmodule LogatronEdge.Scape.System do
   @impl GenServer
   def init(%{id: scape_id} = scape_init) do
     # Process.flag(:trap_exit, true)
+    Logger.debug("process: #{Colors.scape_theme(self())}")
 
     Channel.initializing_scape(scape_init)
 
@@ -99,6 +93,8 @@ defmodule LogatronEdge.Scape.System do
 
     {:ok, scape_init}
   end
+
+
 
   ################# PLUMBIMG #####################
   def via(key),

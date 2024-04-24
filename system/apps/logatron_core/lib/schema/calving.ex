@@ -8,39 +8,48 @@ defmodule Logatron.Schema.Calving do
   alias Logatron.Schema.Calving
   alias Logatron.Schema.Id
 
+  @all_fields [
+    :id,
+    :mother_id,
+    :father_id,
+    :calving_date,
+    :remarks,
+    :dryoff_date,
+    :lac_number
+  ]
+
+  @required_fields [
+    :id,
+    :mother_id,
+    :father_id,
+    :calving_date
+  ]
+
+
+
+  @prefix "calving"
+
+  @primary_key false
+  @derive {Jason.Encoder, only: @all_fields}
   embedded_schema do
-    field :mother_life_number, :string
-    field :father_life_number, :string
-    field :calving_date, :date
-    field :remarks, :string
-    field :dryoff_date, :date
-    field :lac_number, :integer
+    field(:id, :string)
+    field(:mother_id, :string)
+    field(:father_id, :string)
+    field(:calving_date, :date)
+    field(:remarks, :string)
+    field(:dryoff_date, :date)
+    field(:lac_number, :integer)
   end
 
   def id_prefix, do: "calving"
 
   def changeset(calving, attrs) do
     calving
-    |> cast(
-      attrs,
-      [
-        :mother_life_number,
-        :father_life_number,
-        :calving_date,
-        :remarks,
-        :dryoff_date,
-        :lac_number
-      ]
-    )
-    |> validate_required([
-      :mother_life_number,
-      :father_life_number,
-      :calving_date,
-      :lac_number
-    ])
+    |> cast(attrs, @all_fields)
+    |> validate_required(@required_fields)
   end
 
-  def new(attrs) do
+  def from_map(attrs) do
     case changeset(%Calving{}, attrs) do
       %{valid?: true} = changeset ->
         calving =

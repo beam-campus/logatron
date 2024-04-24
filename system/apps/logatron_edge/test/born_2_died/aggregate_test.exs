@@ -7,7 +7,7 @@ defmodule Logatron.Born2Died.AggregateTest do
   test "that we can start the Aggregate Actor" do
     agg_state = %{
       state:
-        Logatron.Born2Died.State.random(
+        Born2Died.State.random(
           "edge_1",
           Logatron.Schema.Vector.new(100, 100, 0),
           Logatron.Schema.Life.random()

@@ -1,18 +1,23 @@
-defmodule Logatron.MngFarm.HerdBuilder do
+defmodule Logatron.MngFarm.Builder do
   use GenServer
+
   @moduledoc """
-  Logatron.MngFarm.HerdBuilder is a GenServer that builds the herd of animals for a Farm.
+  Logatron.MngFarm.Builder is a GenServer that builds the herd of animals for a Farm.
   """
 
+  alias Logatron.PlayingField.InitParams, as: FieldInit
+  alias Logatron.MngFarm.System, as: FarmSystem
+
+  ################ INTERNALS ################
 
   ##### CALLBACKS #####
   @impl GenServer
   def init(mng_farm_init) do
     Process.flag(:trap_exit, true)
-    Logatron.MngFarm.Herd.populate(mng_farm_init)
+    Logatron.MngFarm.Server.generate_fields(mng_farm_init)
+    Logatron.MngFarm.Server.populate(mng_farm_init)
     {:ok, mng_farm_init}
   end
-
 
   @impl GenServer
   def terminate(reason, state) do
@@ -34,7 +39,7 @@ defmodule Logatron.MngFarm.HerdBuilder do
 
   ####### PLUMBING ########
   defp to_name(mng_farm_id),
-    do: "mng_farm.herd_builder.#{mng_farm_id}"
+    do: "mng_farm.builder.#{mng_farm_id}"
 
   def via(mng_farm_id),
     do: Logatron.Registry.via_tuple({:mng_farm_herd_builder, to_name(mng_farm_id)})

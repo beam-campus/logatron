@@ -51,7 +51,6 @@ defmodule Logatron.Born2Died.Worker do
       caller_state: state
     })
 
-    Logger.debug(" \n\tBORN: #{state.life.name}  #{state.life.gender}")
     {:ok, state}
   end
 

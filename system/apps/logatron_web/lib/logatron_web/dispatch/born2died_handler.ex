@@ -6,7 +6,7 @@ defmodule LogatronWeb.Dispatch.Born2DiedHandler do
   require Logger
 
   alias LogatronCore.Facts
-  alias Logatron.Born2Died.State
+  alias Born2Died.State
   alias Logatron.Born2Dieds.Server, as: Born2DiedsCache
 
 

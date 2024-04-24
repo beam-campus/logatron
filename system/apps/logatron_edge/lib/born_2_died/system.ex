@@ -43,6 +43,7 @@ defmodule Logatron.Born2Died.System do
   @impl GenServer
   def init(state) do
     # Process.flag(:trap_exit, true)
+    Logger.debug("process: #{Colors.born2died_theme(self())}")
 
     Channel.emit_initializing_born2died(state)
 
