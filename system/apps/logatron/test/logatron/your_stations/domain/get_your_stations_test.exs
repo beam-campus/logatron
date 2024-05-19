@@ -12,7 +12,7 @@ defmodule Logatron.YourStations.Domain.GetYourStationsTest do
   @tag :your_stations_domain_tests
   test "[that execute/1 returns a list of stations for a given user]" do
     # GIVEN
-    user_email = "rl@discomco.pl"
+    user_email = "rl@DisComCo.pl"
     # WHEN
     result = GetYourStations.execute(user_email)
 

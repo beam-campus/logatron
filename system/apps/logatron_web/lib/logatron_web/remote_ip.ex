@@ -16,5 +16,5 @@ defmodule LogatronWeb.RemoteIp do
     end
   end
 
-  
+
 end

@@ -4,16 +4,18 @@ defmodule LogatronWeb.Dispatch.EdgeHandler do
   The EdgeHandler is used to broadcast messages to all clients
   """
 
-  alias LogatronCore.Facts
+  require Logger
+  alias Edge.Facts, as: EdgeFacts
   alias Phoenix.PubSub
 
-  @edge_detached_v1 Facts.edge_detached_v1()
-  @edge_attached_v1 Facts.edge_attached_v1()
+  @edge_detached_v1 EdgeFacts.edge_detached_v1()
+  @edge_attached_v1 EdgeFacts.edge_attached_v1()
 
   ################ CALLBACKS ################
 
   def pub_edge_detached(payload) do
-    {:ok, edge_init} = LogatronEdge.InitParams.from_map(payload["edge_init"])
+
+    {:ok, edge_init} = Edge.Init.from_map(payload["edge_init"])
 
     PubSub.broadcast!(
       Logatron.PubSub,
@@ -23,7 +25,7 @@ defmodule LogatronWeb.Dispatch.EdgeHandler do
   end
 
   def pub_edge_attached(payload) do
-    {:ok, edge_init} = LogatronEdge.InitParams.from_map(payload["edge_init"])
+    {:ok, edge_init} = Edge.Init.from_map(payload["edge_init"])
 
     PubSub.broadcast!(
       Logatron.PubSub,

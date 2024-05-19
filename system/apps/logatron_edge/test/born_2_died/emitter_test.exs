@@ -1,24 +1,24 @@
-defmodule Logatron.Born2Died.EmitterTest do
+defmodule Logatron.Born2Died.HealthEmitterTest do
   use ExUnit.Case
 
   @moduledoc """
-  These are the tests for Logatron.Born2Died.Emitter
+  These are the tests for Logatron.Born2Died.HealthEmitter
  """
 
   require Logger
-  alias Logatron.Born2Died.Emitter
+  alias Logatron.Born2Died.HealthEmitter
 
   @edge_id "edge-1"
 
   setup_all do
-    res = LogatronEdge.Client.start_link(@edge_id)
-    Logger.info("LogatronEdge.Client.start_link/1: #{inspect(res)}")
+    res = Edge.Client.start_link(@edge_id)
+    Logger.info("Edge.Client.start_link/1: #{inspect(res)}")
     res
   end
 
   @tag :ignore_test
-  test "that the Logatron.Born2Died.Emitter module exists" do
-    assert is_list(Logatron.Born2Died.Emitter.module_info())
+  test "that the Logatron.Born2Died.HealthEmitter module exists" do
+    assert is_list(Logatron.Born2Died.HealthEmitter.module_info())
   end
 
   test "emit_born/2 emits the 'emit_born' fact" do
@@ -66,7 +66,7 @@ defmodule Logatron.Born2Died.EmitterTest do
     # Assert
     assert result == %{
              id: {:emitter, "life-123"},
-             start: {Logatron.Born2Died.Emitter, :start_link, [state]},
+             start: {Logatron.Born2Died.HealthEmitter, :start_link, [state]},
              type: :worker,
              restart: :transient
            }

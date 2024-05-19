@@ -3,7 +3,7 @@ defmodule Logatron.Schema.Hope do
   Logatron.Schema.Hope is a data structure that represents Hopes (Commands) in the Logatron system.
   """
   use Ecto.Schema
-  alias Logatron.Schema.Meta
+  alias Schema.Meta
 
   defguard is_hope(hope) when is_struct(hope, __MODULE__)
 

@@ -1,14 +1,17 @@
-defmodule Logatron.Schema.Id do
+defmodule Schema.Id do
   use Ecto.Schema
   import Ecto.Changeset
 
   @moduledoc """
-  Logatron.Schema.Id is a module that contains the schema for a given Id
+  Schema.Id is a module that contains the schema for a given Id
   """
 
-  alias Logatron.Schema.Id
+  @all_fields [:prefix, :value]
+
+  alias Schema.Id
 
   @primary_key false
+  @derive {Jason.Encoder, only: @all_fields}
   embedded_schema do
     field(:prefix, :string)
     field(:value, :string)
@@ -19,8 +22,8 @@ defmodule Logatron.Schema.Id do
 
   def changeset(id, args) do
     id
-    |> cast(args, [:prefix, :value])
-    |> validate_required([:prefix, :value])
+    |> cast(args, @all_fields)
+    |> validate_required(@all_fields)
   end
 
   def new(prefix, value) do

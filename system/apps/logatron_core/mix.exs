@@ -15,7 +15,7 @@ defmodule Logatron.Core.MixProject do
       # ExDoc
       name: "Logatron Core Library",
       source_url: "https://github.com/beam-campus/logatron/system/apps/logatron_core",
-      homepage_url: "https://discomco.pl",
+      homepage_url: "https://DisComCo.pl",
       docs: [
         main: "Logatron Core Library",
         extras: ["README.md"]

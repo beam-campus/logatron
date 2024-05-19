@@ -11,9 +11,12 @@
 /deps
 /doc
 /.fetch
+/tmp
 erl_crash.dump
 *.ez
 *.beam
+apis-*.tar.gz
+
 /config/*.secret.exs
 .elixir_ls/
 
@@ -36,3 +39,7 @@ deps
 .rebar3
 _build/
 _checkouts/
+
+
+
+

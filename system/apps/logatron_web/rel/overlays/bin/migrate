@@ -2,4 +2,4 @@
 set -eu
 
 cd -P -- "$(dirname -- "$0")"
-exec ./for_web eval LogatronWeb.Release.migrate
+exec ./for_web eval Web.Release.migrate

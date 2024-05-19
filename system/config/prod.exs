@@ -10,7 +10,7 @@ config :logatron, Logatron.Repo,
   show_sensitive_data_on_connection_error: true,
   pool_size: 10
 
-config :logatron_edge, LogatronEdge.Client,
+config :logatron_edge, Edge.Client,
   uri: "wss://logatron.io/edge_socket/websocket",
   reconnect_after_msec: [200, 500, 1_000, 2_000]
 

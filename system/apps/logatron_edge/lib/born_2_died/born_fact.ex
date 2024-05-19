@@ -1,8 +1,8 @@
 defmodule Logatron.Born2Died.BornFact do
   use Ecto.Schema
 
-  alias Logatron.Schema.Life
-  alias Logatron.Schema.Id
+  alias Schema.Life
+  alias Schema.Id
 
   @moduledoc """
   Life.BornFact is a fact that is emitted when a new Life is born.

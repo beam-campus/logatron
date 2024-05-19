@@ -66,7 +66,7 @@ defmodule LogatronWeb.UserAuthTest do
 
     test "broadcasts to the given live_socket_id", %{conn: conn} do
       live_socket_id = "users_sessions:abcdef-token"
-      LogatronWeb.Endpoint.subscribe(live_socket_id)
+      Web.Endpoint.subscribe(live_socket_id)
 
       conn
       |> put_session(:live_socket_id, live_socket_id)

@@ -21,7 +21,7 @@ defmodule NordVpnCache do
 
   ############### CALLBACKS ###############
   @impl GenServer
-  def handle_call({:get_overview, country}, _from, state) do
+  def handle_call({:get_overview, _country}, _from, state) do
     overview =
       state
       |> Enum.map(fn server ->

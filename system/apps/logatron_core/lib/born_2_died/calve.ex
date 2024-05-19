@@ -18,7 +18,7 @@ defmodule Logatron.Born2Died.Calve do
     the payload for the edge:attached:v1 fact
     """
     use Ecto.Schema
-    alias Logatron.Schema.Life
+    alias Schema.Life
 
     @primary_key false
     embedded_schema do

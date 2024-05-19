@@ -1,15 +1,15 @@
-defmodule Logatron.MngFarm.Server do
+defmodule MngFarm.Server do
   use GenServer
 
-  alias Logatron.Schema.Life
+  alias Schema.Life
   require DynamicSupervisor
   require Logger
 
-  alias PlayingField.InitParams, as: FieldInit
-  alias Logatron.Born2Died.System, as: Born2DiedSystem
-  alias Born2Died.State, as: Born2DiedState
+  # alias Field.Init, as: FieldInit
+  alias Born2Died.System, as: LifeSystem
+  alias Born2Died.State, as: LifeState
 
-  alias Logatron.MngFarm.InitParams, as: MngFarmInit
+  alias MngFarm.Init, as: MngFarmInit
 
 
   @moduledoc """
@@ -17,24 +17,32 @@ defmodule Logatron.MngFarm.Server do
   """
 
   ################# API ##################
-  def populate(%MngFarmInit{} = mng_farm_init) do
+
+  # def initiate_nature(%MngFarmInit{} = mng_farm_init) do
+  #   Enum.to_list(1..mng_farm_init.farm.nbr_of_fields)
+  #   |> Enum.map(&NatureInit.from_mng_farm(&1, mng_farm_init))
+
+  # end
+
+
+  def populate_live_stock(%MngFarmInit{} = mng_farm_init) do
     Enum.to_list(1..mng_farm_init.farm.nbr_of_lives)
     |> Enum.map(&do_new_life/1)
     |> Enum.each(&do_start_born2died(&1, mng_farm_init))
   end
 
-  def generate_fields(%MngFarmInit{} = mng_farm_init) do
-    Enum.to_list(1..mng_farm_init.max_depth)
-    |> Enum.map(&FieldInit.from_mng_farm(&1, mng_farm_init))
-    |> Enum.each(&start_field/1)
-  end
+  # def generate_fields(%MngFarmInit{} = mng_farm_init) do
+  #   Enum.to_list(1..mng_farm_init.max_depth)
+  #   |> Enum.map(&FieldInit.from_mng_farm(&1, mng_farm_init))
+  #   |> Enum.each(&start_field/1)
+  # end
 
-  def start_field(%FieldInit{} = field_init),
-    do:
-      DynamicSupervisor.start_child(
-        via_sup(field_init.farm_id),
-        {PlayingField.System, field_init}
-      )
+  # def start_field(%FieldInit{} = field_init),
+  #   do:
+  #     DynamicSupervisor.start_child(
+  #       via_sup(field_init.mng_farm_id),
+  #     {Field.System, field_init}
+  #     )
 
   def birth_calves(mother_state, nbr_of_calves),
     do:
@@ -59,9 +67,9 @@ defmodule Logatron.MngFarm.Server do
   end
 
   @impl GenServer
-  def init(mng_farm_init) do
+  def init(%MngFarmInit{} = mng_farm_init) do
     DynamicSupervisor.start_link(
-      name: via_sup(mng_farm_init.farm_id),
+      name: via_sup(mng_farm_init.id),
       strategy: :one_for_one
     )
 
@@ -69,21 +77,20 @@ defmodule Logatron.MngFarm.Server do
   end
 
   ############### INTERNALS ################
-
   defp do_new_life(_),
     do: Life.random()
 
   defp do_start_born2died(%Life{} = life, %MngFarmInit{} = mng_farm_init) do
     DynamicSupervisor.start_child(
-      via_sup(mng_farm_init.farm_id),
+      via_sup(mng_farm_init.id),
       {
-        Born2DiedSystem, Born2DiedState.from_life(life, mng_farm_init)
+        LifeSystem, LifeState.from_life(life, mng_farm_init)
       }
     )
   end
 
   ################# PLUMBING ##################
-  def start_link(mng_farm_init),
+  def start_link(%MngFarmInit{} = mng_farm_init),
     do:
       GenServer.start_link(
         __MODULE__,
@@ -91,7 +98,7 @@ defmodule Logatron.MngFarm.Server do
         name: via(mng_farm_init.id)
       )
 
-  def child_spec(mng_farm_init) do
+  def child_spec(%MngFarmInit{} = mng_farm_init) do
     %{
       id: to_name(mng_farm_init.id),
       start: {__MODULE__, :start_link, [mng_farm_init]},
@@ -102,11 +109,11 @@ defmodule Logatron.MngFarm.Server do
   end
 
   def to_name(mng_farm_id),
-    do: "mng_farm.herd.#{mng_farm_id}"
+    do: "mng_farm.server.#{mng_farm_id}"
 
   def via(mng_farm_id),
-    do: Logatron.Registry.via_tuple({:mng_farm_herd, to_name(mng_farm_id)})
+    do: Edge.Registry.via_tuple({:mng_farm_herd, to_name(mng_farm_id)})
 
   def via_sup(mng_farm_id),
-    do: Logatron.Registry.via_tuple({:mng_farm_herd_sup, to_name(mng_farm_id)})
+    do: Edge.Registry.via_tuple({:mng_farm_herd_sup, to_name(mng_farm_id)})
 end

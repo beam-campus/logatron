@@ -6,19 +6,26 @@ defmodule LogatronWeb.EdgeChannel do
   """
   require Logger
   require Phoenix.PubSub
-  require LogatronCore.Facts
+
 
   alias LogatronWeb.Dispatch.{
     EdgePresence,
     EdgeHandler,
     ScapeHandler,
     RegionHandler,
-    FarmHandler,
-    Born2DiedHandler
+    FarmHandler
   }
 
-  alias LogatronCore.Facts
+
+
+  alias LogatronWeb.Dispatch.Born2DiedHandler, as: Born2DiedHandler
+
   alias LogatronWeb.Dispatch.ChannelWatcher
+  alias Edge.Facts, as: EdgeFacts
+  alias Scape.Facts, as: ScapeFacts
+  alias Region.Facts, as: RegionFacts
+  alias MngFarm.Facts, as: FarmFacts
+  alias Born2Died.Facts, as: LifeFacts
 
   @fact_born "fact:born"
   @fact_died "fact:died"
@@ -28,33 +35,32 @@ defmodule LogatronWeb.EdgeChannel do
 
   # @scape_attached_v1 Facts.scape_attached_v1()
 
-  @edge_attached_v1 Facts.edge_attached_v1()
+  @edge_attached_v1 EdgeFacts.edge_attached_v1()
 
-  @initializing_scape_v1 Facts.initializing_scape_v1()
-  @scape_initialized_v1 Facts.scape_initialized_v1()
-  @scape_detached_v1 Facts.scape_detached_v1()
+  @initializing_scape_v1 ScapeFacts.initializing_scape_v1()
+  @scape_initialized_v1 ScapeFacts.scape_initialized_v1()
+  @scape_detached_v1 ScapeFacts.scape_detached_v1()
 
-  @initializing_region_v1 Facts.initializing_region_v1()
-  @region_initialized_v1 Facts.region_initialized_v1()
+  @initializing_region_v1 RegionFacts.initializing_region_v1()
+  @region_initialized_v1 RegionFacts.region_initialized_v1()
 
-  @initializing_farm_v1 Facts.initializing_farm_v1()
-  @farm_initialized_v1 Facts.farm_initialized_v1()
-  @farm_detached_v1 Facts.farm_detached_v1()
+  @initializing_farm_v1 FarmFacts.initializing_farm_v1()
+  @farm_initialized_v1 FarmFacts.farm_initialized_v1()
+  @farm_detached_v1 FarmFacts.farm_detached_v1()
 
-  @initializing_born2died_v1 Facts.initializing_born2died_v1()
-  @born2died_initialized_v1 Facts.born2died_initialized_v1()
-  @born2died_state_changed_v1 Facts.born2died_state_changed_v1()
-  @born2died_died_v1 Facts.born2died_died_v1()
+  @initializing_life_v1 LifeFacts.initializing_life_v1()
+  @life_initialized_v1 LifeFacts.life_initialized_v1()
+  @life_state_changed_v1 LifeFacts.life_state_changed_v1()
+  @life_died_v1 LifeFacts.life_died_v1()
 
+  @life_moved_v1 LifeFacts.life_moved_v1()
 
-
-
-  @edge_detached_v1 Facts.edge_detached_v1()
-  @edge_attached_v1 Facts.edge_attached_v1()
+  # @edge_detached_v1 EdgeFacts.edge_detached_v1()
+  @edge_attached_v1 EdgeFacts.edge_attached_v1()
 
   # @attach_scape_v1 "attach_scape:v1"
 
-  @presence_changed_v1 Facts.presence_changed_v1()
+  @presence_changed_v1 EdgeFacts.presence_changed_v1()
 
   ################ CALLBACKS ################
   @impl true
@@ -65,7 +71,7 @@ defmodule LogatronWeb.EdgeChannel do
     ChannelWatcher.monitor(
       "edge:lobby",
       self(),
-      {EdgeHandler, :pub_edge_detached, [edge_init]}
+      {EdgeHandler, :pub_edge_detached, [%{"edge_init" => edge_init}]}
     )
 
     {:ok, socket}
@@ -97,7 +103,7 @@ defmodule LogatronWeb.EdgeChannel do
   # by sending replies to requests from the client
   @impl true
   def handle_in(@hope_ping, payload, socket) do
-    Logger.debug("EdgeChannel.handle_in: #{@hope_ping} #{inspect(payload)}")
+    # Logger.debug("EdgeChannel.handle_in: #{@hope_ping} #{inspect(payload)}")
     {:reply, {:ok, payload}, socket}
   end
 
@@ -119,7 +125,7 @@ defmodule LogatronWeb.EdgeChannel do
   # instead of publishing it on PubSub (should PubSub be a bottleneck).
   @impl true
   def handle_in(@fact_born, payload, socket) do
-    Logger.debug("EdgeChannel.handle_in (#{inspect(@fact_born)}): #{inspect(payload)}")
+    # Logger.debug("EdgeChannel.handle_in (#{inspect(@fact_born)}): #{inspect(payload)}")
     topic = to_topic(payload["edge_id"])
     Phoenix.PubSub.broadcast(Logatron.PubSub, topic, @fact_born, payload)
     {:noreply, socket}
@@ -127,7 +133,7 @@ defmodule LogatronWeb.EdgeChannel do
 
   @impl true
   def handle_in(@fact_died, payload, socket) do
-    Logger.debug("EdgeChannel.handle_in: #{@fact_died} #{inspect(payload)}")
+    # Logger.debug("EdgeChannel.handle_in: #{@fact_died} #{inspect(payload)}")
     topic = to_topic(payload["edge_id"])
     Phoenix.PubSub.broadcast(Logatron.PubSub, topic, @fact_died, payload)
     {:noreply, socket}
@@ -139,82 +145,91 @@ defmodule LogatronWeb.EdgeChannel do
 
   @impl true
   def handle_in(@edge_attached_v1, payload, socket) do
-    Logger.info("#{@edge_attached_v1} #{inspect(payload)}")
+    # Logger.info("#{@edge_attached_v1} #{inspect(payload)}")
     EdgeHandler.pub_edge_attached(payload)
     {:reply, {:ok, payload}, socket}
   end
 
   @impl true
   def handle_in(@initializing_scape_v1, payload, socket) do
-    Logger.debug("EdgeChannel.handle_in: #{@initializing_scape_v1} #{inspect(payload)}")
+    Logger.alert("EdgeChannel.handle_in: #{@initializing_scape_v1} #{inspect(payload)}")
     ScapeHandler.pub_initializing_scape_v1(payload, socket)
   end
 
   @impl true
   def handle_in(@scape_initialized_v1, payload, socket) do
-    Logger.debug("EdgeChannel.handle_in: #{@scape_initialized_v1} #{inspect(payload)}")
+    Logger.alert("EdgeChannel.handle_in: #{@scape_initialized_v1} #{inspect(payload)}")
     ScapeHandler.pub_scape_initialized_v1(payload, socket)
   end
 
   @impl true
   def handle_in(@scape_detached_v1, payload, socket) do
-    Logger.debug("EdgeChannel.handle_in: #{@scape_detached_v1} #{inspect(payload)}")
+    # Logger.debug("EdgeChannel.handle_in: #{@scape_detached_v1} #{inspect(payload)}")
     ScapeHandler.pub_scape_detached_v1(payload, socket)
   end
 
   @impl true
   def handle_in(@initializing_region_v1, payload, socket) do
-    Logger.debug("EdgeChannel.handle_in: #{@initializing_region_v1} #{inspect(payload)}")
+    # Logger.debug("EdgeChannel.handle_in: #{@initializing_region_v1} #{inspect(payload)}")
     RegionHandler.pub_initializing_region_v1(payload, socket)
   end
 
   @impl true
   def handle_in(@region_initialized_v1, payload, socket) do
-    Logger.debug("EdgeChannel.handle_in: #{@region_initialized_v1} #{inspect(payload)}")
+    # Logger.debug("EdgeChannel.handle_in: #{@region_initialized_v1} #{inspect(payload)}")
     RegionHandler.pub_region_initialized_v1(payload, socket)
   end
 
   @impl true
   def handle_in(@initializing_farm_v1, payload, socket) do
-    Logger.debug("EdgeChannel.handle_in: #{@initializing_farm_v1} #{inspect(payload)}")
+    # Logger.debug("EdgeChannel.handle_in: #{@initializing_farm_v1} #{inspect(payload)}")
     FarmHandler.pub_initializing_farm_v1(payload, socket)
   end
 
   @impl true
   def handle_in(@farm_initialized_v1, payload, socket) do
-    Logger.debug("EdgeChannel.handle_in: #{@farm_initialized_v1} #{inspect(payload)}")
+    # Logger.debug("EdgeChannel.handle_in: #{@farm_initialized_v1} #{inspect(payload)}")
     FarmHandler.pub_farm_initialized_v1(payload, socket)
   end
 
   @impl true
   def handle_in(@farm_detached_v1, payload, socket) do
-    Logger.debug("EdgeChannel.handle_in: #{@farm_detached_v1} #{inspect(payload)}")
+    # Logger.debug("EdgeChannel.handle_in: #{@farm_detached_v1} #{inspect(payload)}")
     FarmHandler.pub_farm_detached_v1(payload, socket)
   end
 
+
   @impl true
-  def handle_in(@initializing_born2died_v1, payload, socket) do
-    Logger.debug("EdgeChannel.handle_in: #{@initializing_born2died_v1} #{inspect(payload)}")
+  def handle_in(@initializing_life_v1, payload, socket) do
+    # Logger.debug("EdgeChannel.handle_in: #{@initializing_life_v1} #{inspect(payload)}")
     Born2DiedHandler.pub_initializing_animal_v1(payload, socket)
   end
 
   @impl true
-  def handle_in(@born2died_initialized_v1, payload, socket) do
-    Logger.debug("EdgeChannel.handle_in: #{@born2died_initialized_v1} #{inspect(payload)}")
+  def handle_in(@life_initialized_v1, payload, socket) do
+    # Logger.debug("EdgeChannel.handle_in: #{@life_initialized_v1} #{inspect(payload)}")
     Born2DiedHandler.pub_animal_initialized_v1(payload, socket)
   end
 
-  def handle_in(@born2died_died_v1, payload, socket) do
-    Logger.debug("EdgeChannel.handle_in: #{@born2died_died_v1} #{inspect(payload)}")
-    Born2DiedHandler.pub_born2died_died_v1(payload, socket)
+  def handle_in(@life_died_v1, payload, socket) do
+    # Logger.debug("EdgeChannel.handle_in: #{@life_died_v1} #{inspect(payload)}")
+    Born2DiedHandler.pub_life_died_v1(payload, socket)
   end
 
 
   @impl true
-  def handle_in(@born2died_state_changed_v1, payload, socket) do
-    Logger.debug("EdgeChannel.handle_in: #{@born2died_state_changed_v1} #{inspect(payload)}")
-    Born2DiedHandler.pub_born2died_state_changed_v1(payload, socket)
+  def handle_in(@life_state_changed_v1, payload, socket) do
+    # Logger.debug("EdgeChannel.handle_in: #{@life_state_changed_v1} #{inspect(payload)}")
+    Born2DiedHandler.pub_life_state_changed_v1(payload, socket)
   end
+
+  @impl true
+  def handle_in(@life_moved_v1, payload, socket) do
+    # Logger.debug("EdgeChannel.handle_in: #{@life_moved_v1} #{inspect(payload)}")
+    Born2DiedHandler.pub_life_moved_v1(payload, socket)
+  end
+
+
 
 
 

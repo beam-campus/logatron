@@ -8,8 +8,10 @@ defmodule LogatronWeb.Application do
   @impl true
   def start(_type, _args) do
     children = [
+      {Edge.Registry, name: Edge.Registry},
       LogatronWeb.Telemetry,
       LogatronWeb.Dispatch.EdgePresence,
+
       {LogatronWeb.Dispatch.ChannelWatcher, "edge:lobby"},
       LogatronWeb.Endpoint,
     ]

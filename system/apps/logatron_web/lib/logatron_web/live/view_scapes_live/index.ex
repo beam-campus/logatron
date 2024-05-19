@@ -7,17 +7,13 @@ defmodule LogatronWeb.ViewScapesLive.Index do
 
   alias Phoenix.PubSub
 
-  alias Logatron.Scapes.{
-    Scape,
-    Region
-  }
-
   require Logger
 
-  alias LogatronCore.Facts
+  alias Edge.Facts, as: EdgeFacts
+  alias Scape.Facts, as: ScapeFacts
 
-  @edges_cache_updated_v1 Facts.edges_cache_updated_v1()
-  @scapes_cache_updated_v1 Facts.scapes_cache_updated_v1()
+  @edges_cache_updated_v1 EdgeFacts.edges_cache_updated_v1()
+  @scapes_cache_updated_v1 ScapeFacts.scapes_cache_updated_v1()
 
   @impl true
   def mount(_params, _session, socket) do
@@ -30,8 +26,8 @@ defmodule LogatronWeb.ViewScapesLive.Index do
         {:ok,
          socket
          |> assign(
-           scapes: Logatron.Scapes.Server.get_all(),
-           edges: Logatron.Edges.Server.get_all()
+           scapes: Scapes.Service.get_all(),
+           edges: Edges.Service.get_all()
          )}
 
       false ->
@@ -53,7 +49,7 @@ defmodule LogatronWeb.ViewScapesLive.Index do
     {
       :noreply,
       socket
-      |> assign(scapes: Logatron.Scapes.Server.get_all())
+      |> assign(scapes: Scapes.Service.get_all())
       |> put_flash(:success, "Scapes updated")
     }
   end
@@ -63,11 +59,18 @@ defmodule LogatronWeb.ViewScapesLive.Index do
     {
       :noreply,
       socket
-      |> assign(edges: Logatron.Edges.Server.get_all())
+      |> assign(edges: Edges.Service.get_all())
       |> put_flash(:success, "Edges updated")
     }
   end
 
-  
-
+  @impl true
+  def handle_info(_msg, socket),
+    do:
+      {:noreply,
+       socket
+       |> assign(
+         scapes: Scapes.Service.get_all(),
+         edges: Edges.Service.get_all()
+       )}
 end

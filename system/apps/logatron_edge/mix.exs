@@ -15,7 +15,7 @@ defmodule LogatronEdge.MixProject do
       # ExDoc
       name: "Logatron Edge",
       source_url: "https://github.com/beam-campus/logatron/system/apps/logatron_edge",
-      homepage_url: "https://discomco.pl",
+      homepage_url: "https://DisComCo.pl",
       docs: [
         main: "Logatron Edge",
         extras: ["README.md"]
@@ -26,7 +26,7 @@ defmodule LogatronEdge.MixProject do
   # Run "mix help compile.app" to learn about applications.
   def application do
     [
-      mod: {LogatronEdge.Application, []},
+      mod: {Edge.Application, []},
       extra_applications: [:logger, :runtime_tools, :eex]
     ]
   end

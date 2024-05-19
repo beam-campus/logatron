@@ -2,7 +2,7 @@ defmodule LogatronWeb.ScapeLiveTest do
   use LogatronWeb.ConnCase
 
   import Phoenix.LiveViewTest
-  import Logatron.ScapesFixtures
+  import Service.ScapesFixtures
 
   @create_attrs %{}
   @update_attrs %{}

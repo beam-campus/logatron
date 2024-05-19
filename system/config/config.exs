@@ -9,7 +9,7 @@
 # move said applications out of the umbrella.
 import Config
 
-config :logatron_edge, LogatronEdge.Client,
+config :logatron_edge, Edge.Client,
   uri: "ws://localhost:4000/edge_socket/websocket",
   reconnect_after_msec: [200, 500, 1_000, 2_000]
 

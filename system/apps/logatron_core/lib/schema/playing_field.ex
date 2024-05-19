@@ -1,16 +1,23 @@
-defmodule LogatronCore.Schema.PlayingField do
+defmodule LogatronCore.Schema.Field do
   use Ecto.Schema
 
   @moduledoc """
   LogatronCore.Schema.Field is the module that contains the field schema
   """
 
-  alias LogatronCore.Schema.{Vector, FieldCell}
-  alias Logatron.Schema.Id
+  alias LogatronCore.Schema.{FieldCell}
+  alias Schema.Id
 
-  import Ecto.Changeset
+  @all_fields [
+    :id,
+    :name,
+    :dimensions,
+    :cells
+  ]
+
 
   @primary_key false
+  @derive {Jason.Encoder, only: @all_fields}
   embedded_schema do
     field(:id, :string)
     field(:name, :string)
@@ -19,7 +26,7 @@ defmodule LogatronCore.Schema.PlayingField do
   end
 
   def new(id, name, dimensions) do
-    %LogatronCore.Schema.PlayingField{
+    %LogatronCore.Schema.Field{
       id: id,
       name: name,
       dimensions: dimensions,
@@ -28,10 +35,12 @@ defmodule LogatronCore.Schema.PlayingField do
   end
 
   def build_cells(dimensions) do
-    for x <- 1..dimensions.x, y <- 1..dimensions.y, z <- 1..dimensions.z do
-      %LogatronCore.Schema.FieldCell{
+    for x <- 1..dimensions.x,
+        y <- 1..dimensions.y,
+        z <- 1..dimensions.z do
+      %FieldCell{
         id: Id.new("cell", "#{to_string(x)}_#{to_string(y)}_#{to_string(z)}") |> Id.as_string(),
-        name: "cell_#{to_string(x)}_#{to_string(y)}_#{to_string(z)}",
+        name: "cell_#{to_string(x)}_#{to_string(y)}_#{to_string(z)}"
       }
     end
   end

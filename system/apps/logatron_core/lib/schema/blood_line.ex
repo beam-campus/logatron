@@ -6,7 +6,7 @@ defmodule Logatron.Schema.BloodLine do
   Logatron.Schema.BloodLine contains the Ecto schema definition for a BloodLine
   """
   alias Logatron.Schema.BloodLine
-  alias Logatron.Schema.Id
+  alias Schema.Id
 
   embedded_schema do
     field :life_number,       :string

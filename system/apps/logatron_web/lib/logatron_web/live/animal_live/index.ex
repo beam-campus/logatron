@@ -33,7 +33,7 @@ defmodule LogatronWeb.AnimalLive.Index do
   end
 
   @impl true
-  def handle_info({LogatronWeb.AnimalLive.FormComponent, {:saved, animal}}, socket) do
+  def handle_info({Web.AnimalLive.FormComponent, {:saved, animal}}, socket) do
     {:noreply, stream_insert(socket, :born_2_dieds, animal)}
   end
 

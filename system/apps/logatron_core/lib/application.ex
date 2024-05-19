@@ -7,13 +7,7 @@ defmodule Logatron.Core.Application do
 
   @impl Application
   def start(_type, _args) do
-    children = [
-      # Start the Registry
-      {Logatron.Registry, name: Logatron.Registry},
-      # Start the PubSub system
-      # {Phoenix.PubSub, name: Agrex.PubSub},
-    ]
-
+    children = []
     Supervisor.start_link(children,
       strategy: :one_for_one,
       name: __MODULE__

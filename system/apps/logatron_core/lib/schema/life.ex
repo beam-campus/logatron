@@ -1,18 +1,17 @@
-defmodule Logatron.Schema.Life do
+defmodule Schema.Life do
   use Ecto.Schema
   import Ecto.Changeset
 
   @moduledoc """
-  Logatron.Schema.Life is the module that contains the Ecto data definition
+  Schema.Life is the module that contains the Ecto data definition
   for a ver
   """
   require Logger
 
-  alias Logatron.Schema.{
-    Id,
-    Life,
-    LifeNames
-  }
+  alias Schema.Id, as: Id
+  alias Schema.Life, as: Life
+  alias Schema.LifeNames, as: LifeNames
+
 
   @genders [
     "male",
@@ -97,7 +96,7 @@ defmodule Logatron.Schema.Life do
   end
 
 
-  defimpl String.Chars, for: Logatron.Schema.Life do
+  defimpl String.Chars, for: Schema.Life do
     def to_string(s) do
       "\n\n [Life]" <>
         "\n\t id: \t #{s.id} \t name: \t #{s.name}" <>

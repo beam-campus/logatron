@@ -1,9 +1,9 @@
-defmodule Logatron.Schema.Meta do
+defmodule Schema.Meta do
   @moduledoc """
-  Logatron.Schema.Meta is the module that contains the facts for the Life Subsystem
+  Schema.Meta is the module that contains the facts for the Life Subsystem
   """
   use Ecto.Schema
-  alias Logatron.Schema.Id
+  alias Schema.Id
 
   defguard is_meta(meta)
            when is_struct(meta, __MODULE__)

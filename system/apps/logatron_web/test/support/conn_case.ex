@@ -20,7 +20,7 @@ defmodule LogatronWeb.ConnCase do
   using do
     quote do
       # The default endpoint for testing
-      @endpoint LogatronWeb.Endpoint
+      @endpoint Web.Endpoint
 
       use LogatronWeb, :verified_routes
 

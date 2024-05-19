@@ -1,21 +1,25 @@
-defmodule Logatron.MngFarm.Builder do
+defmodule MngFarm.Builder do
   use GenServer
 
   @moduledoc """
-  Logatron.MngFarm.Builder is a GenServer that builds the herd of animals for a Farm.
+  MngFarm.Builder is a GenServer that builds the herd of animals for a Farm.
   """
 
-  alias Logatron.PlayingField.InitParams, as: FieldInit
-  alias Logatron.MngFarm.System, as: FarmSystem
+  # alias Field.Init, as: FieldInit
+  # alias MngFarm.System, as: FarmSystem
+  alias MngFarm.Init, as: FarmInit
 
   ################ INTERNALS ################
 
   ##### CALLBACKS #####
   @impl GenServer
-  def init(mng_farm_init) do
+  def init(%FarmInit{} = mng_farm_init) do
     Process.flag(:trap_exit, true)
-    Logatron.MngFarm.Server.generate_fields(mng_farm_init)
-    Logatron.MngFarm.Server.populate(mng_farm_init)
+    MngFarm.Server.populate_live_stock(mng_farm_init)
+
+    # MngFarm.Server.generate_fields(mng_farm_init)
+    # MngFarm.Server.initiate_nature(mng_farm_init)
+
     {:ok, mng_farm_init}
   end
 
@@ -42,9 +46,9 @@ defmodule Logatron.MngFarm.Builder do
     do: "mng_farm.builder.#{mng_farm_id}"
 
   def via(mng_farm_id),
-    do: Logatron.Registry.via_tuple({:mng_farm_herd_builder, to_name(mng_farm_id)})
+    do: Edge.Registry.via_tuple({:mng_farm_herd_builder, to_name(mng_farm_id)})
 
-  def child_spec(mng_farm_init) do
+  def child_spec(%FarmInit{} = mng_farm_init) do
     %{
       id: to_name(mng_farm_init.id),
       start: {__MODULE__, :start_link, [mng_farm_init]},
@@ -54,7 +58,7 @@ defmodule Logatron.MngFarm.Builder do
     }
   end
 
-  def start_link(mng_farm_init),
+  def start_link(%FarmInit{} = mng_farm_init),
     do:
       GenServer.start_link(
         __MODULE__,

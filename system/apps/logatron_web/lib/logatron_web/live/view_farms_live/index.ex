@@ -1,15 +1,14 @@
 defmodule LogatronWeb.ViewFarmsLive.Index do
-  use LogatronWeb, :live_view
 
+  use LogatronWeb, :live_view
   alias Phoenix.PubSub
-  alias LogatronCore.Facts
+  alias Edge.Facts, as: EdgeFacts
+  alias MngFarm.Facts, as: FarmFacts
 
   require Logger
 
-  @edges_cache_updated_v1 Facts.edges_cache_updated_v1()
-  # @scapes_cache_updated_v1 Facts.scapes_cache_updated_v1()
-  # @regions_cache_updated_v1 Facts.regions_cache_updated_v1()
-  @farms_cache_updated_v1 Facts.farms_cache_updated_v1()
+  @edges_cache_updated_v1 EdgeFacts.edges_cache_updated_v1()
+  @farms_cache_updated_v1 FarmFacts.farms_cache_updated_v1()
 
   @impl true
   def mount(_params, _session, socket) do
@@ -23,8 +22,8 @@ defmodule LogatronWeb.ViewFarmsLive.Index do
           :ok,
           socket
           |> assign(
-            farms: Logatron.MngFarms.Server.get_all(),
-            edges: Logatron.Edges.Server.get_all()
+            farms: Farms.Service.get_all(),
+            edges: Edges.Service.get_all()
           )
         }
 
@@ -45,7 +44,7 @@ defmodule LogatronWeb.ViewFarmsLive.Index do
     do: {
       :noreply,
       socket
-      |> assign(:farms, Logatron.Edges.Server.get_all())
+      |> assign(:farms, Edges.Service.get_all())
     }
 
   @impl true
@@ -53,6 +52,19 @@ defmodule LogatronWeb.ViewFarmsLive.Index do
     do: {
       :noreply,
       socket
-      |> assign(:farms, Logatron.MngFarms.Server.get_all())
+      |> assign(:farms, Farms.Service.get_all())
     }
+
+
+
+  @impl true
+  def handle_event("show_field", %{"id" => id} = _value, socket) do
+    Logger.info("show field for farm: #{inspect(id)}")
+    {
+      :noreply,
+      socket
+      |> push_redirect(to:  ~p"/view_fields?mng_farm_id=#{id}")}
+  end
+
+
 end

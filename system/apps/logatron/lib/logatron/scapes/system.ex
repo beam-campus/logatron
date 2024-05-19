@@ -1,8 +1,8 @@
-defmodule Logatron.Scapes.System do
+defmodule Service.Scapes.System do
   use GenServer
 
   @moduledoc """
-  Logatron.Scapes.System contains the GenServer for the System.
+  Service.Scapes.System contains the GenServer for the System.
   """
 
   ################ CALLBACKS ################
@@ -20,7 +20,7 @@ defmodule Logatron.Scapes.System do
   def init(init_args) do
     Supervisor.start_link(
       [
-        Logatron.Scapes.Server
+        Scapes.Service
       ],
       strategy: :one_for_one,
       name: :scapes_system_sup

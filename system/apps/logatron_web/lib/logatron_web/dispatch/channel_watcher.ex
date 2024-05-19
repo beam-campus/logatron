@@ -61,7 +61,7 @@ defmodule LogatronWeb.Dispatch.ChannelWatcher do
     do: "channel_watcher.#{key}"
 
   def via(key),
-    do: Logatron.Registry.via_tuple({:edge_channel_watcher, to_name(key)})
+    do: Edge.Registry.via_tuple({:edge_channel_watcher, to_name(key)})
 
   def start_link(name),
     do:

@@ -1,0 +1,29 @@
+<div>
+  
+  <%=   
+  for row <- 1..@field.rows do 
+  %>  
+  <div class="flex">
+    <%= for col <- 1..@field.cols do %>
+    <.live_component
+      module={LogatronWeb.ViewFieldsLive.FieldCell}
+      id={@current_user.id <> "field-cell" <> "#{@field.depth}" <> "_col_#{col}" <> "_row_#{row}"} 
+      row={row}
+      col={col}
+      field={@field}
+      current_user={@current_user}
+      cell_state={get_cell_state(@lives, col,row)}
+    />
+          
+      <%!-- <% 
+      pos = Schema.Vector.new(row, col, @field.depth)
+      color = get_cell_color(pos, @lives) 
+      %>
+      <div class="w-4 h-4 border rounded {get_cell_color(pos, @lives)}">
+        <% get_cell_text(pos, @lives) %>      
+      </div> --%>
+      
+    <% end %>
+  </div>
+<% end %>
+</div>

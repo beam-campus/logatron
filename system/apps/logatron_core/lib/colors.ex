@@ -55,7 +55,14 @@ defmodule Colors do
   def black_on_magenta_blinking, do: "\e[5;30;45m"
   def black_on_cyan_blinking, do: "\e[5;30;46m"
 
-  def process_theme(pid),
+  def white_on_magenta, do: "\e[37;45m"
+  def white_on_cyan, do: "\e[37;46m"
+  def white_on_red, do: "\e[37;41m"
+  def white_on_green, do: "\e[37;42m"
+  def white_on_blue, do: "\e[37;44m"
+
+
+  def edge_theme(pid),
     do: "#{yellow_on_black()}#{inspect(pid)}#{reset()}"
 
   def scape_theme(pid),
@@ -68,11 +75,12 @@ defmodule Colors do
     do: "#{yellow_on_black()}#{inspect(pid)}#{reset()}"
 
   def field_theme(pid),
-    do: "#{yellow_on_magenta()}#{inspect(pid)}#{reset()}"
+    do: "#{white_on_green()}#{inspect(pid)}#{reset()}"
 
   def cell_theme(pid),
-    do: "#{black_on_cyan()}#{inspect(pid)}#{reset()}"
+    do: "#{white_on_blue()}#{inspect(pid)}#{reset()}"
 
   def born2died_theme(pid),
-    do: "#{white_on_black()}#{inspect(pid)}#{reset()}"
+    do: "#{white_on_magenta()}#{inspect(pid)}#{reset()}"
+
 end

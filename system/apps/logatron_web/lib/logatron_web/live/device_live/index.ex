@@ -33,7 +33,7 @@ defmodule LogatronWeb.DeviceLive.Index do
   end
 
   @impl true
-  def handle_info({LogatronWeb.DeviceLive.FormComponent, {:saved, device}}, socket) do
+  def handle_info({Web.DeviceLive.FormComponent, {:saved, device}}, socket) do
     {:noreply, stream_insert(socket, :devices, device)}
   end
 

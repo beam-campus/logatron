@@ -1,6 +1,6 @@
-defmodule LogatronEdge.Scape.SystemTest do
+defmodule Scape.SystemTest do
   @moduledoc """
-  This module tests the LogatronEdge.Scape.System module.
+  This module tests the Scape.System module.
   """
   use ExUnit.Case
 
@@ -14,7 +14,7 @@ defmodule LogatronEdge.Scape.SystemTest do
   }
 
   @tag :test_scape_system
-  doctest LogatronEdge.Scape.System
+  doctest Scape.System
 
   describe "\n[~> Setup the Scape.System test environment <~]\n" do
     setup %{} do
@@ -28,8 +28,8 @@ defmodule LogatronEdge.Scape.SystemTest do
     end
 
     @tag :test_scape_system
-    test "\n[== Test that we can start the LogatronEdge.Scape.System ==]" do
-      res = LogatronEdge.Scape.System.start_link(@test_scape_params)
+    test "\n[== Test that we can start the Scape.System ==]" do
+      res = Scape.System.start_link(@test_scape_params)
 
       case res do
         {:ok, _} ->
@@ -39,18 +39,18 @@ defmodule LogatronEdge.Scape.SystemTest do
           assert true
       end
 
-      Logger.debug("LogatronEdge.Scape.System.start_link/1 returned => #{inspect(res)}")
+      Logger.debug("Scape.System.start_link/1 returned => #{inspect(res)}")
     end
 
     @tag :test_scape_system
-    test "that the LogatronEdge.Scape.System module exists" do
-      assert is_list(LogatronEdge.Scape.System.module_info())
+    test "that the Scape.System module exists" do
+      assert is_list(Scape.System.module_info())
     end
 
     @tag :test_scape_system
     test "that we can start the Scape.System for a particular scape" do
       res =
-        LogatronEdge.Scape.System.start_link(@test_scape_params)
+        Scape.System.start_link(@test_scape_params)
 
       inspect(res)
     end

@@ -1,16 +1,19 @@
-defmodule Logatron.Schema.Farm do
+defmodule Schema.Farm do
   @moduledoc """
-  Logatron.Schema.Farm is a schema for a farm.
+  Schema.Farm is a schema for a farm.
   """
   use Ecto.Schema
   import Ecto.Changeset
 
-  alias Logatron.Schema.Farm
-  alias Logatron.Schema.Id
+  alias Schema.Farm
+  alias Schema.Id
+  alias Schema.Vector, as: Vector
 
   @cols 50
   @rows 50
   @depth 1
+  @max_pct_good 10
+  @max_pct_bad 10
 
   @farm_names [
     "Aaron",
@@ -90,13 +93,15 @@ defmodule Logatron.Schema.Farm do
     :nbr_of_robots,
     :nbr_of_lives,
     :fields_def,
+    :max_pct_good,
+    :max_pct_bad
   ]
 
   @cast_fields [
     :id,
     :name,
     :nbr_of_robots,
-    :nbr_of_lives,
+    :nbr_of_lives
   ]
 
   @required_fields [
@@ -105,6 +110,8 @@ defmodule Logatron.Schema.Farm do
     :nbr_of_robots,
     :nbr_of_lives,
     :fields_def,
+    :max_pct_good,
+    :max_pct_bad
   ]
 
   @derive {Jason.Encoder, only: @all_fields}
@@ -114,7 +121,9 @@ defmodule Logatron.Schema.Farm do
     field(:name, :string)
     field(:nbr_of_robots, :integer)
     field(:nbr_of_lives, :integer)
-    embeds_one(:fields_def, LogatronCore.Schema.Vector)
+    field(:max_pct_good, :integer)
+    field(:max_pct_bad, :integer)
+    embeds_one(:fields_def, Vector)
   end
 
   defp id_prefix,
@@ -122,8 +131,8 @@ defmodule Logatron.Schema.Farm do
 
   def changeset(farm, args) do
     farm
-    |> cast(
-      args, @cast_fields)
+    |> cast(args, @cast_fields)
+    |> cast_embed(:fields_def, with: &Vector.changeset/2)
     |> validate_required(@required_fields)
   end
 
@@ -146,8 +155,6 @@ defmodule Logatron.Schema.Farm do
     end
   end
 
-
-
   def random_name() do
     Enum.random(@farm_colors) <>
       " " <>
@@ -159,9 +166,11 @@ defmodule Logatron.Schema.Farm do
   def random do
     name = random_name()
 
-    id = Id.new(id_prefix()) |> Id.as_string()
+    id =
+      Id.new(id_prefix())
+      |> Id.as_string()
 
-    %Logatron.Schema.Farm{
+    %Schema.Farm{
       id: id,
       name: name,
       nbr_of_lives:
@@ -178,9 +187,12 @@ defmodule Logatron.Schema.Farm do
               :rand.uniform(Logatron.Limits.max_robots() - Logatron.Limits.min_robots())
           )
         ),
-        fields_def: Logatron.Schema.Vector.new(@cols, @rows, @depth)
+      max_pct_good: :random.uniform(@max_pct_good),
+      max_pct_bad: :random.uniform(@max_pct_bad),
+      fields_def: Vector.new(@cols, @rows, @depth)
     }
   end
+
   defp normalize(res) when res > 0, do: res
   defp normalize(res) when res <= 0, do: 1
 end

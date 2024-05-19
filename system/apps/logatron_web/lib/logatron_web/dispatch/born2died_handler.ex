@@ -5,69 +5,87 @@ defmodule LogatronWeb.Dispatch.Born2DiedHandler do
 
   require Logger
 
-  alias LogatronCore.Facts
-  alias Born2Died.State
-  alias Logatron.Born2Dieds.Server, as: Born2DiedsCache
+  alias Born2Died.Movement
+  alias Born2Died.Facts, as: LifeFacts
+  alias Born2Died.State, as: LifeState
+  alias Born2Died.Movement, as: Movement
+  alias Lives.Service, as: Born2DiedsCache
 
 
-  @initializing_born2died_v1 Facts.initializing_born2died_v1()
-  @born2died_initialized_v1 Facts.born2died_initialized_v1()
-  @born2died_state_changed_v1 Facts.born2died_state_changed_v1()
-  @born2died_died_v1 Facts.born2died_died_v1()
+  @initializing_life_v1 LifeFacts.initializing_life_v1()
+  @life_initialized_v1 LifeFacts.life_initialized_v1()
+  @life_state_changed_v1 LifeFacts.life_state_changed_v1()
+  @life_died_v1 LifeFacts.life_died_v1()
+
+  @life_moved_v1 LifeFacts.life_moved_v1()
 
 
 
   def pub_initializing_animal_v1(payload, socket) do
     Logger.info("pub_initializing_animal_v1 #{inspect(payload)}")
-    {:ok, animal_init} = State.from_map(payload["born2died_init"])
+    {:ok, animal_init} = LifeState.from_map(payload["life_init"])
 
     Born2DiedsCache.save(animal_init)
 
     Phoenix.PubSub.broadcast(
       Logatron.PubSub,
-      @initializing_born2died_v1,
-      {@initializing_born2died_v1, animal_init}
+      @initializing_life_v1,
+      {@initializing_life_v1, animal_init}
     )
     {:noreply, socket}
   end
 
 
-
-  def pub_animal_initialized_v1(payload, socket) do
+    def pub_animal_initialized_v1(payload, socket) do
     Logger.info("pub_animal_initialized_v1 #{inspect(payload)}")
-    {:ok, animal_init} = State.from_map(payload["born2died_init"])
+    {:ok, animal_init} = LifeState.from_map(payload["life_init"])
     Phoenix.PubSub.broadcast(
       Logatron.PubSub,
-      @born2died_initialized_v1,
-      {@born2died_initialized_v1, animal_init}
+      @life_initialized_v1,
+      {@life_initialized_v1, animal_init}
     )
     {:noreply, socket}
   end
 
 
-  def pub_born2died_state_changed_v1(payload, socket) do
-    Logger.info("pub_born2died_state_changed_v1 #{inspect(payload)}")
-    {:ok, born2died_init} = State.from_map(payload["born2died_init"])
-    Logatron.Born2Dieds.Server.save(born2died_init)
+  def pub_life_state_changed_v1(payload, socket) do
+    Logger.info("pub_life_state_changed_v1 #{inspect(payload)}")
+    {:ok, life_init} = LifeState.from_map(payload["life_init"])
+    Lives.Service.save(life_init)
     Phoenix.PubSub.broadcast(
       Logatron.PubSub,
-      @born2died_state_changed_v1,
-      {@born2died_state_changed_v1, born2died_init}
+      @life_state_changed_v1,
+      {@life_state_changed_v1, life_init}
     )
     {:noreply, socket}
   end
 
-  def pub_born2died_died_v1(payload, socket) do
-    Logger.info("pub_born2died_died_v1 #{inspect(payload)}")
-    {:ok, born2died_init} = State.from_map(payload["born2died_init"])
-    Logatron.Born2Dieds.Server.save(born2died_init)
+  def pub_life_died_v1(payload, socket) do
+    Logger.info("pub_life_died_v1 #{inspect(payload)}")
+    {:ok, life_init} = LifeState.from_map(payload["life_init"])
+    Lives.Service.save(life_init)
     Phoenix.PubSub.broadcast(
       Logatron.PubSub,
-      @born2died_state_changed_v1,
-      {@born2died_state_changed_v1, born2died_init}
+      @life_died_v1,
+      {@life_state_changed_v1, life_init}
     )
     {:noreply, socket}
+  end
 
+
+  def pub_life_moved_v1(payload, socket) do
+    Logger.info("pub_life_moved_v1 #{inspect(payload)}")
+    {:ok, %Movement{} = movement} = Movement.from_map(payload["movement"])
+
+    Lives.Service.save(movement.life)
+    Phoenix.PubSub.broadcast(
+      Logatron.PubSub,
+      @life_moved_v1,
+      {@life_moved_v1, movement}
+    )
+
+
+    {:noreply, socket}
   end
 
 

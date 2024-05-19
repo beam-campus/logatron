@@ -1,21 +1,20 @@
-defmodule LogatronEdge.Client do
+defmodule Edge.Client do
   use Slipstream
   @moduledoc """
-  LogatronEdge.Client is the client-side of the LogatronEdge.Socket server.
+  Edge.Client is the client-side of the LogatronEdge.Socket server.
   It is part of the main application supervision tree.
   """
   require Logger
 
-  alias LogatronCore.Facts
+  alias Edge.Facts, as: EdgeFacts
 
   @edge_lobby "edge:lobby"
-  @edge_attached_v1 Facts.edge_attached_v1()
-  @presence_changed_v1 Facts.presence_changed_v1()
+  @edge_attached_v1 EdgeFacts.edge_attached_v1()
+  @presence_changed_v1 EdgeFacts.presence_changed_v1()
   # @joined_edge_lobby "edge:lobby:joined"
 
   ############# API ################
   def publish(edge_id, event, payload) do
-    # Logger.debug("event => #{inspect(event) } payload => #{inspect(payload)}")
     GenServer.cast(
       via(edge_id),
       {:publish, @edge_lobby, event, payload}
@@ -26,14 +25,17 @@ defmodule LogatronEdge.Client do
   ############# CALLBACKS ################
   @impl Slipstream
   def handle_cast({:publish, topic, event, payload}, socket) do
-    socket
+    Logger.debug(":publish :\n event => #{inspect(event)}\n payload => #{inspect(payload)}")
+    res = socket
     |> push(topic, event, payload)
+    Logger.debug("pushed: #{inspect(res)}")
     {:noreply, socket}
   end
 
 
   @impl Slipstream
   def init(args) do
+    Logger.alert("Edge.Client init: #{inspect(args)}")
     socket =
       new_socket()
       |> assign(:edge_init, args.edge_init)
@@ -43,11 +45,14 @@ defmodule LogatronEdge.Client do
 
   @impl Slipstream
   def handle_connect(socket) do
-    {:ok, join(socket, @edge_lobby, %{edge_init: socket.assigns.edge_init})}
+    join_result = join(socket, @edge_lobby, socket.assigns.edge_init)
+    Logger.alert("Edge.Client handle_connect: #{inspect(join_result)}")
+    {:ok, join_result}
   end
 
   @impl Slipstream
-  def handle_join(@edge_lobby, _join_response, socket) do
+  def handle_join(@edge_lobby, join_response, socket) do
+    Logger.alert("Edge.Client handle_join: #{@edge_lobby} #{inspect(join_response)}")
     push(socket, @edge_lobby, @edge_attached_v1, %{edge_init: socket.assigns.edge_init})
     # {:noreply, socket}
     {:ok, socket}
@@ -65,20 +70,20 @@ defmodule LogatronEdge.Client do
 
 
   @impl Slipstream
-  def handle_info({:after_join, _}, socket) do
-    Logger.debug("Edge.Client received: :after_join")
+  def handle_info({:after_join, something}, socket) do
+    Logger.debug("Edge.Client received: :after_join #{inspect(something)}")
     {:noreply, socket}
   end
 
   @impl Slipstream
   def handle_info({@presence_changed_v1, presence_list}, socket) do
-    Logger.debug("Edge.Client received: [#{@presence_changed_v1}] \n #{inspect(presence_list)}")
+    Logger.alert("Edge.Client received: [#{@presence_changed_v1}] \n #{inspect(presence_list)}")
     {:noreply, socket}
   end
 
   @impl Slipstream
   def handle_info(msg, socket) do
-    Logger.debug("Edge.Client received: #{inspect(msg)}")
+    Logger.alert("Edge.Client received: #{inspect(msg)}")
     {:noreply, socket}
   end
 
@@ -92,7 +97,7 @@ defmodule LogatronEdge.Client do
     do: "edge:lobby:#{edge_id}"
 
   def via(edge_id),
-    do: Logatron.Registry.via_tuple({:client, to_name(edge_id)})
+    do: Edge.Registry.via_tuple({:client, to_name(edge_id)})
 
   def child_spec(edge_init) do
     config = Application.fetch_env!(:logatron_edge, __MODULE__)

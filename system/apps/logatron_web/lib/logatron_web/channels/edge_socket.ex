@@ -11,7 +11,7 @@ defmodule LogatronWeb.EdgeSocket do
 
   ## Channels
   # Uncomment the following line to define a "room:*" topic
-  # pointing to the `LogatronWeb.EdgeChannel`:
+  # pointing to the `Web.EdgeChannel`:
   #
   channel "edge:*", LogatronWeb.EdgeChannel
   channel "life:*", LogatronWeb.LifeChannel
@@ -59,7 +59,7 @@ defmodule LogatronWeb.EdgeSocket do
   # Would allow you to broadcast a "disconnect" event and terminate
   # all active sockets and channels for a given user:
   #
-  #     Elixir.LogatronWeb.Endpoint.broadcast("user_socket:#{user.id}", "disconnect", %{})
+  #     Elixir.Web.Endpoint.broadcast("user_socket:#{user.id}", "disconnect", %{})
   #
   # Returning `nil` makes this socket anonymous.
   @impl true

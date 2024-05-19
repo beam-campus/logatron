@@ -23,8 +23,8 @@ defmodule Logatron.Born2Died.Initialize do
     @primary_key false
     embedded_schema do
       field(:edge_id, :string)
-      embeds_one(:pos, Logatron.Schema.Vector)
-      embeds_one(:life, Logatron.Schema.Life)
+      embeds_one(:pos, Schema.Vector)
+      embeds_one(:life, Schema.Life)
     end
 
     def new(edge_id, pos, life),

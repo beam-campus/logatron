@@ -12,6 +12,8 @@ defmodule Logatron.Application do
 
   @impl true
   def start(_type, _args) do
+    start_caches()
+
     children = [
       Logatron.Repo,
       {DNSCluster, query: Application.get_env(:logatron, :dns_cluster_query) || :ignore},
@@ -23,4 +25,20 @@ defmodule Logatron.Application do
 
     Supervisor.start_link(children, strategy: :one_for_one, name: Logatron.Supervisor)
   end
+
+
+  defp start_caches() do
+    Logger.info("Starting caches")
+    :edges_cache  |> Cachex.start()
+    :scapes_cache |> Cachex.start()
+    :regions_cache |> Cachex.start()
+    :farms_cache |> Cachex.start()
+    :lives_cache |> Cachex.start()
+    :nature_cache |> Cachex.start()
+  end
+
+
+
+
+
 end

@@ -4,11 +4,11 @@ defmodule LogatronWeb.EdgesLive.Index do
   require Logger
   require Seconds
 
-  alias Logatron.Edges.Server, as: EdgesCache
+  alias Edges.Service, as: EdgesCache
   alias Phoenix.PubSub
-  alias LogatronCore.Facts
+  alias Edge.Facts, as: EdgeFacts
 
-  @edges_cache_updated_v1 Facts.edges_cache_updated_v1()
+  # @edges_cache_updated_v1 EdgeFacts.edges_cache_updated_v1()
 
   # def refresh(_caller_state),
   #   do: Process.send(self(), :refresh, @refresh_seconds * 1_000)
@@ -18,7 +18,7 @@ defmodule LogatronWeb.EdgesLive.Index do
     case connected?(socket) do
       true ->
         Logger.info("Connected")
-        PubSub.subscribe(Logatron.PubSub, "edges_cache_updated_v1")
+        PubSub.subscribe(Logatron.PubSub, EdgeFacts.edges_cache_updated_v1())
 
         {
           :ok,

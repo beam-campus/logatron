@@ -1,8 +1,8 @@
-defmodule Logatron.Scapes.Region do
+defmodule Service.Scapes.Region do
   use Ecto.Schema
 
   @moduledoc """
-  Logatron.Scapes.Region contains the Ecto schema for the Region.
+  Service.Scapes.Region contains the Ecto schema for the Region.
   """
 
   @primary_key false
@@ -15,7 +15,7 @@ defmodule Logatron.Scapes.Region do
     field(:latitude, :float)
     field(:longitude, :float)
     embeds_many(:sourced_by, Logatron.Stations.Station)
-    embeds_many(:farms, Logatron.Scapes.Farm)
+    embeds_many(:farms, Service.Scapes.Farm)
   end
 
 end

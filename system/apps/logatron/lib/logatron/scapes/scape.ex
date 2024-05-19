@@ -1,15 +1,15 @@
-defmodule Logatron.Scapes.Scape do
+defmodule Service.Scapes.Scape do
   use Ecto.Schema
 
   @moduledoc """
-  Logatron.Scapes.Scape contains the Ecto schema for the Scape.
+  Service.Scapes.Scape contains the Ecto schema for the Scape.
   """
   import Ecto.Changeset
 
   require Logger
 
-  
-  alias Logatron.Scapes.Scape
+
+  alias Service.Scapes.Scape
 
   @cast_fields [
     :id,
@@ -27,7 +27,7 @@ defmodule Logatron.Scapes.Scape do
     field(:id, :string)
     field(:name, :string)
     field(:status, :string)
-    embeds_many(:regions, Logatron.Scapes.Region)
+    embeds_many(:regions, Service.Scapes.Region)
     embeds_many(:sourced_by, :string)
   end
 

@@ -1,4 +1,4 @@
-defmodule Logatron.Born2Died.System do
+defmodule Born2Died.System do
   use GenServer
 
   @moduledoc """
@@ -7,22 +7,9 @@ defmodule Logatron.Born2Died.System do
   """
 
   require Logger
-  alias LogatronEdge.Channel
 
-  ######### API #####################
-  # def live(life_id),
-  #   do:
-  #     GenServer.cast(
-  #       via(life_id),
-  #       {:live, life_id}
-  #     )
-
-  # def die(life_id),
-  #   do:
-  #     GenServer.cast(
-  #       via(life_id),
-  #       {:die, life_id}
-  #     )
+  alias Born2Died.State, as: LifeState
+  alias MngFarm.Emitter, as: FarmChannel
 
   def do_birth(life_id, delta_x, delta_y),
     do:
@@ -39,19 +26,40 @@ defmodule Logatron.Born2Died.System do
     end
   end
 
+  def register_movement(life_id, movement),
+    do:
+      GenServer.cast(
+        via(life_id),
+        {:register_movement, movement}
+      )
+
+  def get_state(life_id),
+    do:
+      GenServer.call(
+        via(life_id),
+        {:get_state}
+      )
+
   ########################## CALLBACKS ####################################
   @impl GenServer
-  def init(state) do
+  def init(%LifeState{} = state) do
     # Process.flag(:trap_exit, true)
-    Logger.debug("process: #{Colors.born2died_theme(self())}")
-
-    Channel.emit_initializing_born2died(state)
+    Logger.debug("born2died.system: #{Colors.born2died_theme(self())}")
 
     children =
       [
-        # {Logatron.Born2Died.Aggregate, state, log: :false},
-        # {Logatron.Born2Died.Emitter, state},
-        {Logatron.Born2Died.Worker, state}
+        {Born2Died.HealthEmitter, state},
+        {Born2Died.HealthWorker, state},
+
+        {Born2Died.MotionEmitter, state},
+        {Born2Died.MotionWorker, state},
+
+
+        # {Born2Died.AiWorker, state},
+        # {Born2Died.VisionWorker, state},
+        # {Born2Died.MilkingWorker, state},
+        # {Born2Died.CombatWorker, state},
+        # {Born2Died.MatingWorker, state}
       ]
 
     Supervisor.start_link(
@@ -59,8 +67,6 @@ defmodule Logatron.Born2Died.System do
       name: via_sup(state.life.id),
       strategy: :one_for_one
     )
-
-    Channel.emit_born2died_initialized(state)
 
     {:ok, state}
   end
@@ -71,44 +77,41 @@ defmodule Logatron.Born2Died.System do
     :ok
   end
 
-  ######### handle_info
   @impl GenServer
-  def handle_info({:EXIT, _from_id, reason}, state) do
-    # Logatron.Born2Died.Worker.die(state.life.id)
-    {:stop, reason, state}
-  end
-
-  ######## handle_cast
-  # @impl GenServer
-  # def handle_cast({:live, life_id}, state) do
-  #   Logatron.Born2Died.Worker.live(life_id)
-  #   {:noreply, state}
-  # end
-
-  # def handle_cast({:die, life_id}, state) do
-  #   Logatron.Born2Died.Worker.die(life_id)
-  #   {:noreply, state}
-  # end
-
+  def handle_call({:get_state}, _from, state),
+    do: {:reply, state, state}
 
   @impl GenServer
-  def handle_cast({:do_birth, life_id, delta_x, delta_y}, state) do
-    Logatron.Born2Died.Worker.do_birth(life_id, delta_x, delta_y)
+  def handle_cast({:register_movement, movement}, state) do
+    state =
+      state
+      |> Map.put(:pos, movement.to)
+
     {:noreply, state}
   end
 
-  ########################## INTERNALS ########################################
+  ######### handle_info #################
+  @impl GenServer
+  def handle_info({:EXIT, _from_id, reason}, state) do
+    # Born2Died.HealthWorker.die(state.life.id)
+    {:stop, reason, state}
+  end
+
+  ######### INTERNALS ###################
   defp to_name(life_id),
-    do: "born_2_died.system.#{life_id}"
+    do: "born2died.system.#{life_id}"
 
   ############# PLUMBING ##################
   def via(life_id),
-    do: Logatron.Registry.via_tuple({:born2died_sys, to_name(life_id)})
+    do: Edge.Registry.via_tuple({:life_sys, to_name(life_id)})
 
   def via_sup(life_id),
-    do: Logatron.Registry.via_tuple({:born2died_sup, to_name(life_id)})
+    do: Edge.Registry.via_tuple({:life_sup, to_name(life_id)})
 
-  def child_spec(state) do
+  def via_pubsub(life_id),
+    do: Edge.Registry.via_tuple({:life_pubsub, to_name(life_id)})
+
+  def child_spec(%LifeState{} = state) do
     %{
       id: to_name(state.life.id),
       start: {__MODULE__, :start_link, [state]},
@@ -117,7 +120,7 @@ defmodule Logatron.Born2Died.System do
     }
   end
 
-  def start_link(state),
+  def start_link(%LifeState{} = state),
     do:
       GenServer.start_link(
         __MODULE__,

@@ -24,7 +24,7 @@ defmodule LogatronWeb.Router do
   end
 
   # Other scopes may use custom stacks.
-  # scope "/api", LogatronWeb do
+  # scope "/api", Web do
   #   pipe_through :api
   # end
 
@@ -94,6 +94,7 @@ defmodule LogatronWeb.Router do
       live "/view_regions", ViewRegionsLive.Index, :index
       live "/view_farms", ViewFarmsLive.Index, :index
       live "/view_lives", ViewBorn2DiedsLive.Index, :index
+      live "/view_fields", ViewFieldsLive.Index, :index
     end
   end
 

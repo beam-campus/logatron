@@ -1,6 +1,6 @@
-defmodule LogatronEdge.Scape.Regions do
+defmodule Scape.Regions do
   @moduledoc """
-  LogatronEdge.Scape.Regions is the top-level supervisor for the Logatron.MngScape subsystem.
+  Scape.Regions is the top-level supervisor for the Logatron.MngScape subsystem.
   """
   use GenServer
 
@@ -11,7 +11,7 @@ defmodule LogatronEdge.Scape.Regions do
     do:
       DynamicSupervisor.start_child(
         via_sup(region_init.scape_id),
-        {Logatron.Region.System, region_init}
+        {Region.System, region_init}
       )
 
   @doc """
@@ -46,10 +46,10 @@ defmodule LogatronEdge.Scape.Regions do
     do: "scape.regions.#{key}"
 
   def via_sup(key),
-    do: Logatron.Registry.via_tuple({:regions_sup, to_name(key)})
+    do: Edge.Registry.via_tuple({:regions_sup, to_name(key)})
 
   def via(key),
-    do: Logatron.Registry.via_tuple({:regions, to_name(key)})
+    do: Edge.Registry.via_tuple({:regions, to_name(key)})
 
   def child_spec(scape_init),
     do: %{

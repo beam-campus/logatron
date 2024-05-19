@@ -6,7 +6,7 @@ defmodule Logatron.Schema.Calving do
   Logatron.Schema.Birth contains the Ecto schema for births of calves.
   """
   alias Logatron.Schema.Calving
-  alias Logatron.Schema.Id
+  alias Schema.Id
 
   @all_fields [
     :id,

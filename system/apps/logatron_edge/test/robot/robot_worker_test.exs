@@ -2,7 +2,7 @@ defmodule Logatron.RobotWorkerTest do
   use ExUnit.Case
 
   alias Logatron.Robot.Worker
-  alias Logatron.Schema.Robot
+  alias Schema.Robot
 
   @tag :ignore_test
   test "that the module exists" do

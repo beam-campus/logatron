@@ -1,15 +1,15 @@
-defmodule LogatronEdge.ChannelTest do
+defmodule Edge.EmitterTest do
   use ExUnit.Case
 
   @moduledoc """
-  Tests for the LogatronEdge.Channel module.
+  Tests for the Edge.Emitter module.
   """
 
   @tag :ignore_test
-  doctest LogatronEdge.Channel
+  doctest Edge.Emitter
 
   @tag :ignore_test
-  test "that the LogatronEdge.Channel module exists" do
-    assert is_list(LogatronEdge.Channel.module_info())
+  test "that the Edge.Emitter module exists" do
+    assert is_list(Edge.Emitter.module_info())
   end
 end

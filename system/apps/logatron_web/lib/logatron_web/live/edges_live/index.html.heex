@@ -35,18 +35,10 @@
               <img class="px-2 w-[35px]" src="/images/root.svg" alt="logatron logo" />
             <% end %>
             <%!-- <div class="w-1/2"> <%= display_edge_id  %> </div> --%>
-            <div class="w-1/4"> <%= edge.ip_address %> </div>            
+            <div class="w-1/2"> <%= edge.reverse %> </div>            
             <div class="w-1/4"> <%= edge.city %>, <%= edge.country %>  </div>            
-            <div class="w-1/4 px-2"> <%= edge.continent %>  </div>
+            <%!-- <div class="w-1/4 px-2"> <%= edge.continent %>  </div> --%>
             <div class="w-1/4"> since <%= edge.connected_since %>  </div>
-
-
-
-            
-            
-
-            
-
         </div>
       <% end %>
 

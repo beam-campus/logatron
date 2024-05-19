@@ -16,7 +16,7 @@ defmodule Logatron.Born2Died.DiedFact do
 
   def new(state) do
     %__MODULE__{
-      id: Logatron.Schema.Id.new("died") |> Logatron.Schema.Id.as_string(),
+      id: Schema.Id.new("died") |> Schema.Id.as_string(),
       state: state
     }
   end

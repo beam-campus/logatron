@@ -11,12 +11,15 @@ defmodule Logatron.CachesSystem do
   ################## CALLBACKS ############
   @impl GenServer
   def init(opts) do
+    Logger.info("Starting caches system")
+
     children = [
-      Logatron.Edges.Server,
-      Logatron.Scapes.Server,
-      Logatron.Regions.Server,
-      Logatron.MngFarms.Server,
-      Logatron.Born2Dieds.Server
+      Edges.Service,
+      Scapes.Service,
+      Regions.Service,
+      Farms.Service,
+      Lives.Service,
+      Nature.Service
     ]
 
     Supervisor.start_link(

@@ -1,15 +1,13 @@
-defmodule Logatron.Schema.Robot do
+defmodule Schema.Robot do
   use Ecto.Schema
   import Ecto.Changeset
 
   @moduledoc """
-  Logatron.Schema.Robot contains the Ecto schema for a Robbot
+  Schema.Robot contains the Ecto schema for a Robbot
   """
-  alias Logatron.Schema.{
-    Life,
-    Robot,
-    Id
-  }
+  alias Schema.Life, as: Life
+  alias Schema.Robot, as: Robot
+  alias Schema.Id, as: Id
 
   @status [
     unknown: 0,

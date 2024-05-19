@@ -1,18 +1,35 @@
-defmodule Logatron.Born2Died.Hopes do
+defmodule Born2Died.Hopes do
   @moduledoc """
-  Logatron.Born2Died.Hopes is a data structure that represents Hopes (Commands) in the Logatron system.
+  Born2Died.Hopes is a data structure that represents Hopes (Commands) in the Logatron system.
   """
-  use Constants
 
-  define initialize_v1, "Logatron.born_2_died.initialize.v1"
-  define die_v1, "Logatron.born_2_died.die.v1"
-  define fight_v1, "Logatron.born_2_died.fight.v1"
-  define feed_v1, "Logatron.born_2_died.feed.v1"
-  define move_v1, "Logatron.born_2_died.move.v1"
-  define infect_v1, "Logatron.born_2_died.infect.v1"
-  define mate_v1, "Logatron.born_2_died.mate.v1"
-  define lactate_v1, "Logatron.born_2_died.lactate.v1"
-  define age_v1, "Logatron.born_2_died.age.v1"
-  define rest_v1, "Logatron.born_2_died.rest.v1"
+  def initialize_life_v1,
+    do: "initialize_life_v1"
 
+  def die_v1,
+    do: "born_2_died.die.v1"
+
+  def fight_v1,
+    do: "born_2_died.fight.v1"
+
+  def feed_v1,
+    do: "born_2_died.feed.v1"
+
+  def move_v1,
+    do: "born_2_died.move.v1"
+
+  def infect_v1,
+    do: "born_2_died.infect.v1"
+
+  def mate_v1,
+    do: "born_2_died.mate.v1"
+
+  def lactate_v1,
+    do: "born_2_died.lactate.v1"
+
+  def age_v1,
+    do: "born_2_died.age.v1"
+
+  def rest_v1,
+    do: "born_2_died.rest.v1"
 end

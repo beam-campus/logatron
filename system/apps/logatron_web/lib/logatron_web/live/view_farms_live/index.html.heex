@@ -20,8 +20,9 @@
     id={@current_user.id <> "_farms_breadcrumbs"} 
   />
   <.live_component
-    module={LogatronWeb.ViewFarmsLive.FarmsGrid}
+    module={LogatronWeb.ViewFarmsLive.FarmsListView}
     id={@current_user.id <> "_farms_grid"}
     farms={@farms}
+    current_user={@current_user}
   />
 </div>

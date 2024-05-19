@@ -2,9 +2,9 @@ defmodule LogatronEdge.Detached do
   use Ecto.Schema
 
   @moduledoc """
-  LogatronEdge.Attached is a collection of all facts related to the edge used in the system.
+  Edge.Attached is a collection of all facts related to the edge used in the system.
   """
-  alias Logatron.Schema.Meta
+  alias Schema.Meta
   alias LogatronEdge.Detached.PayloadV1
 
   @topic_v1 "edge:detached:v1"

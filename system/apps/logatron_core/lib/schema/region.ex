@@ -3,8 +3,8 @@ defmodule Logatron.Schema.Region do
 
   import Ecto.Changeset
 
-  alias Logatron.Schema.Farm
-  alias Logatron.Schema.Id
+  alias Schema.Farm
+  alias Schema.Id
 
   @moduledoc """
   Logatron.Schema.Region contains the schema for Regions that make up a Scape
@@ -16,7 +16,7 @@ defmodule Logatron.Schema.Region do
     field(:id, :string)
     field(:name, :string)
     field(:description, :string)
-    embeds_many(:farms, Logatron.Schema.Farm)
+    embeds_many(:farms, Schema.Farm)
   end
 
   defp id_prefix, do: "region"

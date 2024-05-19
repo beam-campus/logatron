@@ -1,17 +1,17 @@
-defmodule Logatron.Scapes.Server do
+defmodule Scapes.Service do
   use GenServer
 
   @moduledoc """
-  Logatron.Scapes.Server contains the GenServer for the Server.
+  Scapes.Service contains the GenServer for the Server.
   """
 
   require Cachex
   require Logger
   alias Phoenix.PubSub
-  alias LogatronCore.Facts
+  alias Scape.Facts, as: ScapeFacts
 
-  @initializing_scape_v1 Facts.initializing_scape_v1()
-  @scapes_cache_updated_v1 Facts.scapes_cache_updated_v1()
+  @initializing_scape_v1 ScapeFacts.initializing_scape_v1()
+  @scapes_cache_updated_v1 ScapeFacts.scapes_cache_updated_v1()
 
   #################### PUBLIC API ##################
   def get_all(),
@@ -67,9 +67,10 @@ defmodule Logatron.Scapes.Server do
       :scapes_cache
       |> Cachex.stream!()
       |> Stream.map(fn {:entry, _, _, _, scape} -> scape end)
-      |> Enum.reduce(%{}, fn scape, acc -> Map.update(acc, scape.id, 1, & &1 + 1) end)
+      |> Enum.reduce(%{}, fn scape, acc -> Map.update(acc, scape.id, 1, &(&1 + 1)) end)
       |> Map.to_list()
       |> Enum.sort()
+
     {:reply, result, state}
   end
 
@@ -78,8 +79,13 @@ defmodule Logatron.Scapes.Server do
   def handle_info({@initializing_scape_v1, scape_init}, state) do
     Logger.info("Initializing scape: #{@initializing_scape_v1} #{inspect(scape_init)}")
 
+    key = %{
+      edge_id: scape_init.edge_id,
+      id: scape_init.id
+    }
+
     :scapes_cache
-    |> Cachex.put({scape_init.edge_id, scape_init.id}, scape_init)
+    |> Cachex.put(key, scape_init)
 
     notify_cache_updated(@initializing_scape_v1, scape_init)
 
@@ -88,13 +94,9 @@ defmodule Logatron.Scapes.Server do
 
   @impl true
   def init(init_args) do
-    :scapes_cache
-    |> Cachex.start()
-
     Logger.info(
-      "Starting Logatron.Scapes.Server, subscribing to Logatron.PubSub topics ... #{@initializing_scape_v1}"
+      "Starting Scapes.Service, subscribing to Logatron.PubSub topics ... #{@initializing_scape_v1}"
     )
-
     PubSub.subscribe(Logatron.PubSub, @initializing_scape_v1)
 
     {:ok, init_args}

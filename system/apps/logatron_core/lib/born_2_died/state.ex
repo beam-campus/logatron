@@ -8,15 +8,12 @@ defmodule Born2Died.State do
 
   import Ecto.Changeset
 
-  alias Logatron.Schema.{
-    Id,
-    Vector,
-    Vitals,
-    Life
-  }
+  alias Schema.Id, as: Id
+  alias Schema.Vitals, as: Vitals
+  alias Schema.Life, as: Life
+  alias Schema.Vector, as: Vector
 
-  alias Logatron.MngFarm.InitParams, as: MngFarmInit
-  alias Logatron.Schema.Life, as: Life
+  alias MngFarm.Init, as: MngFarmInit
 
   require Logger
 
@@ -46,7 +43,7 @@ defmodule Born2Died.State do
     :mng_farm_id,
     :ticks,
     :status,
-    :limits,
+    :world_dimensions,
     :life,
     :pos,
     :vitals
@@ -76,7 +73,7 @@ defmodule Born2Died.State do
     field(:mng_farm_id, :string)
     field(:ticks, :integer)
     field(:status, :string)
-    embeds_one(:limits, Vector)
+    embeds_one(:world_dimensions, Vector)
     embeds_one(:life, Life)
     embeds_one(:pos, Vector)
     embeds_one(:vitals, Vitals)
@@ -108,7 +105,8 @@ defmodule Born2Died.State do
       farm_id: mng_farm_init.farm.id,
       mng_farm_id: mng_farm_init.id,
       life: life,
-      limits: Vector.new(mng_farm_init.max_col, mng_farm_init.max_row, mng_farm_init.max_depth),
+      world_dimensions:
+        Vector.new(mng_farm_init.max_col, mng_farm_init.max_row, mng_farm_init.max_depth),
       pos: Vector.random(mng_farm_init.max_col, mng_farm_init.max_row, mng_farm_init.max_depth),
       vitals: Vitals.random(),
       ticks: 0,
@@ -119,10 +117,10 @@ defmodule Born2Died.State do
   def changeset(state, args) when is_map(args) do
     state
     |> cast(args, @flat_fields)
-    |> cast_embed(:limits, required: true)
-    |> cast_embed(:life, required: true)
-    |> cast_embed(:pos, required: true)
-    |> cast_embed(:vitals, required: true)
+    |> cast_embed(:world_dimensions, with: &Vector.changeset/2, required: true)
+    |> cast_embed(:life, with: &Life.changeset/2, required: true)
+    |> cast_embed(:pos, with: &Vector.changeset/2, required: true)
+    |> cast_embed(:vitals, with: &Vitals.changeset/2, required: true)
     |> validate_required(@all_fields)
   end
 

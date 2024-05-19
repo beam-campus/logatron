@@ -1,6 +1,6 @@
-defmodule Logatron.Region.Farms do
+defmodule Region.Farms do
   @moduledoc """
-  Logatron.Region.Farms is the top-level supervisor for the Logatron.Region subsystem.
+  Region.Farms is the top-level supervisor for the Logatron.Region subsystem.
   """
   use GenServer
 
@@ -12,7 +12,7 @@ defmodule Logatron.Region.Farms do
     do:
       DynamicSupervisor.start_child(
         via_sup(region_id),
-        {Logatron.MngFarm.System, mng_farm_init}
+        {MngFarm.System, mng_farm_init}
       )
 
   ################# CALLBACKS #####################
@@ -32,10 +32,10 @@ defmodule Logatron.Region.Farms do
     do: "region.farms.#{region_id}"
 
   def via(key),
-    do: Logatron.Registry.via_tuple({:farms, to_name(key)})
+    do: Edge.Registry.via_tuple({:farms, to_name(key)})
 
   def via_sup(key),
-    do: Logatron.Registry.via_tuple({:farms_sup, to_name(key)})
+    do: Edge.Registry.via_tuple({:farms_sup, to_name(key)})
 
   def child_spec(region_init) do
     %{

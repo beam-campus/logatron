@@ -1,4 +1,4 @@
-# LogatronWeb
+# Web
 
 To start your Phoenix server:
 

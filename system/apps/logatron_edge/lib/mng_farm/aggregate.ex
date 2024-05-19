@@ -16,7 +16,7 @@ defmodule Logatron.MngFarm.Aggregate do
 
   ######### PLUMBING ###########
   def via(agg_id),
-    do: Logatron.Registry.via_tuple({:aggregate, to_name(agg_id)})
+    do: Edge.Registry.via_tuple({:aggregate, to_name(agg_id)})
 
   def to_name(agg_id),
     do: "mng_farm.aggregate.#{agg_id}"

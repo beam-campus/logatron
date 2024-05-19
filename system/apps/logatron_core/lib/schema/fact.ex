@@ -3,7 +3,7 @@ defmodule Logatron.Schema.Fact do
   Logatron.Schema.Fact is a data structure that represents Facts (Events) in the Logatron system.
   """
   use Ecto.Schema
-  alias Logatron.Schema.Meta
+  alias Schema.Meta
 
   defguard is_fact(fact) when is_struct(fact, __MODULE__)
 

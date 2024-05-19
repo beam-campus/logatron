@@ -19,7 +19,7 @@ defmodule Composer do
   ############### CALLBACKS ###############
 
   @impl GenServer
-  def init(init_arg \\ []) do
+  def init(_init_arg \\ []) do
     Supervisor.start_link(
       [
         NordVpnCache

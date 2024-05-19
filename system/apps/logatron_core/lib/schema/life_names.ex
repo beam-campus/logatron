@@ -1,4 +1,11 @@
-defmodule Logatron.Schema.LifeNames do
+defmodule Schema.LifeNames do
+
+
+  @moduledoc """
+  Schema.LifeNames is the module that contains fictional names for lives
+    """
+
+
   @female_names [
     "Anna",
     "Alicia",

@@ -1,24 +1,29 @@
-defmodule Logatron.Region.System do
+defmodule Region.System do
   use GenServer
 
   @moduledoc """
-  Logatron.Region.System is the topmost supervisor for a Region.
+  Region.System is the topmost supervisor for a Region.
   """
   require Logger
-  alias LogatronEdge.Channel
+
+  alias Scape.Emitter, as: ScapeEmitter
+  alias Region.Init, as: RegionInit
 
   ############## API ###################
 
+
+
   ############## CALLBACKS #############
   @impl GenServer
-  def init(%{id: region_id} = region_init) do
-    Logger.info("process: #{Colors.region_theme(self())}")
+  def init(%RegionInit{id: region_id} = region_init) do
+    Logger.info("region.system: #{Colors.region_theme(self())}")
 
-    Channel.initializing_region(region_init)
+    ScapeEmitter.emit_initializing_region(region_init)
 
     children = [
-      {Logatron.Region.Farms, region_init},
-      {Logatron.Region.Builder, region_init}
+      {Region.Emitter, region_init},
+      {Region.Farms, region_init},
+      {Region.Builder, region_init}
     ]
 
     Supervisor.start_link(
@@ -27,14 +32,7 @@ defmodule Logatron.Region.System do
       strategy: :one_for_one
     )
 
-    Channel.region_initialized(region_init)
-    {:ok, region_init}
-  end
-
-  @impl GenServer
-  def terminate(_reason, region_init) do
-    Logger.info("Terminating Region System #{to_name(region_init.id)}")
-    Channel.region_detached(region_init)
+    ScapeEmitter.emit_region_initialized(region_init)
     {:ok, region_init}
   end
 
@@ -45,10 +43,10 @@ defmodule Logatron.Region.System do
     do: "region.system.#{region_id}"
 
   def via(key),
-    do: Logatron.Registry.via_tuple({:region_sys, to_name(key)})
+    do: Edge.Registry.via_tuple({:region_sys, to_name(key)})
 
   def via_sup(key),
-    do: Logatron.Registry.via_tuple({:region_sup, to_name(key)})
+    do: Edge.Registry.via_tuple({:region_sup, to_name(key)})
 
   def child_spec(%{id: region_id} = region_init) do
     %{

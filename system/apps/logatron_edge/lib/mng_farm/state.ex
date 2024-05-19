@@ -7,7 +7,7 @@ defmodule Logatron.MngFarm.State do
 
   embedded_schema() do
     field(:aggregate_id, :string)
-    embeds_one(:farm, Logatron.Schema.Farm)
+    embeds_one(:farm, Schema.Farm)
   end
 
 

@@ -19,10 +19,10 @@ The Logatron.Born2Died subsystem is responsible for controlling and simulating t
 ```mermaid
 graph TD
 
-  System[Logatron.Born2Died.System]
-  Supervisor[Logatron.Born2Died.System.Supervisor]
-  Worker[Logatron.Born2Died.Worker]
-  Channel[Logatron.Born2Died.Channel]
+  System[Born2Died.System]
+  Supervisor[Born2Died.System.Supervisor]
+  Worker[Born2Died.HealthWorker]
+  Channel[Logatron.Born2Died.HealthEmitter]
 
   System --> |start_link| Supervisor  
   Supervisor --> |start_child| Worker
@@ -36,8 +36,8 @@ graph TD
 sequenceDiagram
   participant Born2Died.System
   participant Born2Died.Supervisor
-  participant Born2Died.Worker
-  participant Born2Died.Channel
+  participant Born2Died.HealthWorker
+  participant Born2Died.HealthEmitter
 
   Born2Died.System->>Born2Died.Supervisor : start_link(Born2Died_id)
 

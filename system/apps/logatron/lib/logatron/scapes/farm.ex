@@ -1,8 +1,8 @@
-defmodule Logatron.Scapes.Farm do
+defmodule Service.Scapes.Farm do
   use Ecto.Schema
 
   @moduledoc """
-  Logatron.Scapes.Farm contains the Ecto schema for the Farm.
+  Service.Scapes.Farm contains the Ecto schema for the Farm.
   """
 
   @primary_key false
@@ -13,7 +13,7 @@ defmodule Logatron.Scapes.Farm do
     field(:latitude, :float)
     field(:longitude, :float)
     embeds_many(:sourced_by, Logatron.Stations.Station)
-    embeds_many(:animals, Logatron.Scapes.Animal)
+    embeds_many(:animals, Service.Scapes.Animal)
   end
 
 

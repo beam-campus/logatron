@@ -1,8 +1,8 @@
-defmodule Logatron.Schema.Vitals do
+defmodule Schema.Vitals do
   use Ecto.Schema
 
   @moduledoc """
-  Logatron.Schema.Vitals contains the Ecto schema for the vitals.
+  Schema.Vitals contains the Ecto schema for the vitals.
   """
 
   import Logatron.Limits
@@ -29,7 +29,7 @@ defmodule Logatron.Schema.Vitals do
   end
 
   def random() do
-    %Logatron.Schema.Vitals{
+    %Schema.Vitals{
       age: random_age(),
       weight: random_weight(),
       energy: random_100(),
@@ -45,7 +45,7 @@ defmodule Logatron.Schema.Vitals do
     |> validate_required(@all_fields)
   end
 
-  defimpl String.Chars, for: Logatron.Schema.Vitals do
+  defimpl String.Chars, for: Schema.Vitals do
     def to_string(s) do
       "\n\t - vitals -" <>
         "\n\t\t age: #{s.age} \t\t weight: #{s.weight} \t\t energy: #{s.energy}" <>

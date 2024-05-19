@@ -1,11 +1,11 @@
-defmodule LogatronEdge.Attached do
+defmodule Edge.Attached do
   use Ecto.Schema
 
   @moduledoc """
-  LogatronEdge.Attached is a collection of all facts related to the edge used in the system.
+  Edge.Attached is a collection of all facts related to the edge used in the system.
   """
-  alias Logatron.Schema.Meta
-  alias LogatronEdge.Attached.PayloadV1
+  alias Schema.Meta
+  alias Edge.Attached.PayloadV1
 
   @topic_v1 "edge:attached:v1"
 

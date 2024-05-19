@@ -2,7 +2,7 @@
 
 ## Description
 
-**LogatronEdge.Scape.System** is and LogatronEdge.Application subsystem that is responsible for managing the regions in the scape.
+**Scape.System** is and Edge.Application subsystem that is responsible for managing the regions in the scape.
 
 ## Diagrams
 

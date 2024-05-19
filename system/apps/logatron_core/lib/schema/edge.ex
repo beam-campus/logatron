@@ -7,7 +7,8 @@ defmodule Logatron.Schema.Edge do
 
   import Ecto.Changeset
 
-  alias Logatron.Schema.{Edge, Id}
+  alias Logatron.Schema.Edge, as: Edge
+  alias Schema.Id, as: Id
 
   @all_fields [
     :id,

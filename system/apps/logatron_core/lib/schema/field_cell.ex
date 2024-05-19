@@ -5,8 +5,8 @@ defmodule LogatronCore.Schema.FieldCell do
   LogatronCore.Schema.FieldCell is the module that contains the field cell schema
   """
 
-  alias Logatron.Schema.Id
-  alias LogatronCore.Schema.Vector
+  alias Schema.Id
+  # alias Schema.Vector
 
   import Ecto.Changeset
 
@@ -38,7 +38,7 @@ defmodule LogatronCore.Schema.FieldCell do
     new(Id.new("cell"), "a cell", [])
   end
 
-  
+
 
 
   def changeset(field_cell, attr) do

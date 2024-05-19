@@ -1,4 +1,4 @@
-defmodule Logatron.Regions.Server do
+defmodule Regions.Service do
   use GenServer
 
   @moduledoc """
@@ -6,13 +6,13 @@ defmodule Logatron.Regions.Server do
   """
 
   alias Phoenix.PubSub
-  alias LogatronCore.Facts
+  alias Region.Facts, as: RegionFacts
 
   require Logger
   require Cachex
 
-  @initializing_region_v1 Facts.initializing_region_v1()
-  @regions_cache_updated_v1 Facts.regions_cache_updated_v1()
+  @initializing_region_v1 RegionFacts.initializing_region_v1()
+  @regions_cache_updated_v1 RegionFacts.regions_cache_updated_v1()
 
   ########### PUBLIC API ##########
 
@@ -42,8 +42,8 @@ defmodule Logatron.Regions.Server do
   def init(opts) do
     Logger.info("Starting regions cache")
 
-    :regions_cache
-    |> Cachex.start()
+    # :regions_cache
+    # |> Cachex.start()
 
     PubSub.subscribe(Logatron.PubSub, @initializing_region_v1)
 

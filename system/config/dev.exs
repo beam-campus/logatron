@@ -68,6 +68,8 @@ config :logatron_web, dev_routes: true
 
 # Do not include metadata nor timestamps in development logs
 
+# Disable logging for phoenix
+config :phoenix, :log_level, :fatal
 
 # Initialize plugs at runtime for faster development compilation
 config :phoenix, :plug_init_mode, :runtime

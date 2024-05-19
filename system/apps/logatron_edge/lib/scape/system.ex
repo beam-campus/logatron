@@ -1,21 +1,22 @@
-defmodule LogatronEdge.Scape.System do
+defmodule Scape.System do
   @moduledoc """
-  LogatronEdge.Scape.System is the top-level supervisor for the Logatron.MngScape subsystem.
+  Scape.System is the top-level supervisor for the Logatron.MngScape subsystem.
   """
   use GenServer
 
-  import Logger
+  require Logger
 
-  alias LogatronEdge.Channel
-  alias Logatron.Region.InitParams, as: RegionInit
+  alias Edge.Emitter, as: EdgeEmitter
+  alias Scape.Init, as: ScapeInit
 
-  def start_region_system(scape_id, region_init) do
-    Logger.debug("for [#{scape_id}] with region_init #{inspect(region_init)}")
-    GenServer.cast(
-      via(scape_id),
-      {:start_region_system, region_init}
-    )
-  end
+
+  # def start_region_system(scape_id, region_init) do
+  #   Logger.debug("for [#{scape_id}] with region_init #{inspect(region_init)}")
+  #   GenServer.cast(
+  #     via(scape_id),
+  #     {:start_region_system, region_init}
+  #   )
+  # end
 
   @doc """
   Returns the list of children supervised by this module
@@ -47,17 +48,17 @@ defmodule LogatronEdge.Scape.System do
     {:noreply, state}
   end
 
-  @impl GenServer
-  def handle_cast({:start_region_system, region_init}, %{id: scape_id} = scape_init) do
-    debug("in:region_init=#{inspect(region_init)}")
+  # @impl GenServer
+  # def handle_cast({:start_region_system, region_init}, %{id: scape_id} = scape_init) do
+  #   debug("in:region_init=#{inspect(region_init)}")
 
-    Supervisor.start_child(
-      via_sup(scape_id),
-      {Logatron.Region.System, region_init}
-    )
+  #   Supervisor.start_child(
+  #     via_sup(scape_id),
+  #     {Region.System, region_init}
+  #   )
 
-    {:noreply, scape_init}
-  end
+  #   {:noreply, scape_init}
+  # end
 
   @impl GenServer
   def terminate(reason, scape_init) do
@@ -65,31 +66,29 @@ defmodule LogatronEdge.Scape.System do
       "#{Colors.red_on_black()}Terminating Scape.System with reason: #{inspect(reason)}#{Colors.reset()}"
     )
 
-    Channel.scape_detached(scape_init)
     {:ok, scape_init}
   end
 
   @impl GenServer
-  def init(%{id: scape_id} = scape_init) do
+  def init(%ScapeInit{} = scape_init) do
     # Process.flag(:trap_exit, true)
-    Logger.debug("process: #{Colors.scape_theme(self())}")
+    Logger.debug("scape.system: #{Colors.scape_theme(self())}")
 
-    Channel.initializing_scape(scape_init)
+    EdgeEmitter.emit_initializing_scape(scape_init)
 
     children = [
-      {LogatronEdge.Scape.Regions, scape_init},
-      {LogatronEdge.Scape.Builder, scape_init}
+      {Scape.Emitter, scape_init},
+      {Scape.Regions, scape_init},
+      {Scape.Builder, scape_init}
     ]
 
     Supervisor.start_link(
       children,
       strategy: :one_for_one,
-      name: via_sup(scape_id)
+      name: via_sup(scape_init.id)
     )
 
-    LogatronEdge.Scape.Builder.init_scape(scape_init)
-
-    Channel.scape_initialized(scape_init)
+    EdgeEmitter.emit_scape_initialized(scape_init)
 
     {:ok, scape_init}
   end
@@ -98,10 +97,10 @@ defmodule LogatronEdge.Scape.System do
 
   ################# PLUMBIMG #####################
   def via(key),
-    do: Logatron.Registry.via_tuple({:scape_system, to_name(key)})
+    do: Edge.Registry.via_tuple({:scape_system, to_name(key)})
 
   def via_sup(key),
-    do: Logatron.Registry.via_tuple({:scape_sup, to_name(key)})
+    do: Edge.Registry.via_tuple({:scape_sup, to_name(key)})
 
   def to_name(key) when is_bitstring(key),
     do: "scape.system.#{key}"
@@ -115,11 +114,11 @@ defmodule LogatronEdge.Scape.System do
       shutdown: 500
     }
 
-  def start_link(%{id: scape_id} = scape_init),
+  def start_link(%ScapeInit{} = scape_init),
     do:
       GenServer.start_link(
         __MODULE__,
         scape_init,
-        name: via(scape_id)
+        name: via(scape_init.id)
       )
 end

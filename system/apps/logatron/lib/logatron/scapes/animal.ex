@@ -1,8 +1,8 @@
-defmodule Logatron.Scapes.Animal do
+defmodule Service.Scapes.Animal do
   use Ecto.Schema
 
   @moduledoc """
-  Logatron.Scapes.Animal contains the Ecto schema for the Animal.
+  Service.Scapes.Animal contains the Ecto schema for the Animal.
   """
 
   @primary_key false
@@ -16,7 +16,7 @@ defmodule Logatron.Scapes.Animal do
     field(:is_pregnant, :boolean)
     field(:heath, :integer)
     field(:health, :integer)
-    embeds_one(:position, Logatron.Schema.Vector)
+    embeds_one(:position, Schema.Vector)
   end
 
 end

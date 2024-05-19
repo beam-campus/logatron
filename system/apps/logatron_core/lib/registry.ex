@@ -1,4 +1,4 @@
-defmodule Logatron.Registry do
+defmodule Edge.Registry do
   @moduledoc """
   Registry is a simple key-value store that allows processes to be registered
   """

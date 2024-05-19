@@ -1,7 +1,7 @@
 defmodule LogatronWeb.EdgesLive.EdgesGrid do
   use LogatronWeb, :live_component
 
-  alias Logatron.Edges.Server
+  alias Edges.Service
 
   @impl true
   def update(assigns, socket) do

@@ -1,4 +1,4 @@
-defmodule LogatronEdge.Scape.Builder do
+defmodule Scape.Builder do
   use GenServer
 
   @moduledoc """
@@ -8,10 +8,19 @@ defmodule LogatronEdge.Scape.Builder do
   require Countries.Cache
 
   alias Countries.Cache
+  alias Scape.Init, as: ScapeInit
 
-  ########## API #######################
-  def init_scape(scape_init) do
 
+  ######### API #############
+  def get_state(scape_id),
+    do:
+      GenServer.call(
+        via(scape_id),
+        {:get_state}
+      )
+
+  ############## INTERNALS ############
+  defp start_regions(%ScapeInit{} = scape_init) do
     selection =
       String.split(scape_init.select_from, ",")
       |> Enum.map(&String.trim/1)
@@ -25,7 +34,7 @@ defmodule LogatronEdge.Scape.Builder do
         |> String.downcase()
 
       region_init =
-        Logatron.Region.InitParams.random(
+        Region.Init.random(
           scape_init.edge_id,
           scape_init.id,
           region_id,
@@ -34,23 +43,16 @@ defmodule LogatronEdge.Scape.Builder do
           country.subregion
         )
 
-      LogatronEdge.Scape.Regions.start_region(region_init)
+      Scape.Regions.start_region(region_init)
     end)
 
+    scape_init
   end
-
-  def get_state(scape_id),
-    do:
-      GenServer.call(
-        via(scape_id),
-        {:get_state}
-      )
 
   ########## CALLBACKS ################
   @impl GenServer
-  def init(scape_init) do
-    {:ok, scape_init}
-  end
+  def init(scape_init),
+    do: {:ok, start_regions(scape_init)}
 
   @impl GenServer
   def handle_call({:get_state}, _from, state) do
@@ -62,7 +64,7 @@ defmodule LogatronEdge.Scape.Builder do
     do: "scape.builder.#{key}"
 
   def via(key),
-    do: Logatron.Registry.via_tuple({:builder, to_name(key)})
+    do: Edge.Registry.via_tuple({:builder, to_name(key)})
 
   def child_spec(%{id: scape_id} = scape_init),
     do: %{

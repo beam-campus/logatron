@@ -1,24 +1,24 @@
-defmodule Logatron.Region.SystemTest do
+defmodule Region.SystemTest do
   use ExUnit.Case
 
 
   @test_scape
 
   @tag :ignore_test
-  doctest Logatron.Region.System
+  doctest Region.System
 
-  alias Logatron.Region.System
+  alias Region.System
 
   @tag :ignore_test
-  test "that the Logatron.Region.System module exists" do
-    assert is_list(Logatron.Region.System.module_info())
+  test "that the Region.System module exists" do
+    assert is_list(Region.System.module_info())
   end
 
 
   @tag :ignore_test
-  test "that we can start a Logatron.Region.System" do
+  test "that we can start a Region.System" do
     scape = @test_scape
-    res =  Logatron.Region.System.start_link(nil,nil)
+    res =  Region.System.start_link(nil,nil)
     case res do
       {:ok, pid} ->
         assert pid != nil

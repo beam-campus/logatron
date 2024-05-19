@@ -6,6 +6,6 @@ defmodule LogatronWeb.AboutLive do
     {:ok, socket}
   end
 
-  
+
 
 end

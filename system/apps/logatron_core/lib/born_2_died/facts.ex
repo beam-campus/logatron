@@ -1,20 +1,55 @@
-defmodule Logatron.Born2Died.Facts do
+defmodule Born2Died.Facts do
   @moduledoc """
-  Logatron.Born2Died.Facts is a data structure that represents Facts (Events) in the Logatron system.
+  Born2Died.Facts is a data structure that represents Facts (Events) in the Logatron system.
   """
-  use Constants
+  def born_v1,
+    do: "born_v1"
 
-  define born_v1, "Logatron.born_2_died.born.v1"
-  define died_v1, "Logatron.born_2_died.died.v1"
-  define calved_v1, "Logatron.born_2_died.calved.v1"
-  define wounded_v1, "Logatron.born_2_died.wounded.v1"
-  define healed_v1, "Logatron.born_2_died.healed.v1"
-  define fed_v1, "Logatron.born_2_died.fed.v1"
-  define moved_v1, "Logatron.born_2_died.moved.v1"
-  define infected_v1, "Logatron.born_2_died.infected.v1"
-  define mated_v1, "Logatron.born_2_died.mated.v1"
-  define lactated_v1, "Logatron.born_2_died.lactated.v1"
-  define aged_v1, "Logatron.born_2_died.aged.v1"
-  define rested_v1, "Logatron.born_2_died.rested.v1"
+  def life_died_v1,
+    do: "life_died_v1"
 
+  def calved_v1,
+    do: "calved_v1"
+
+  def wounded_v1,
+    do: "wounded_v1"
+
+  def healed_v1,
+    do: "healed_v1"
+
+  def fed_v1,
+    do: "fed_v1"
+
+  def life_moved_v1,
+    do: "life_moved_v1"
+
+  def infected_v1,
+    do: "infected_v1"
+
+  def mated_v1,
+    do: "mated_v1"
+
+  def lactated_v1,
+    do: "lactated_v1"
+
+  def aged_v1,
+    do: "aged_v1"
+
+  def rested_v1,
+    do: "rested_v1"
+
+  def initializing_life_v1,
+    do: "initializing_life_v1"
+
+  def life_initialized_v1,
+    do: "life_initialized_v1"
+
+  def life_detached_v1,
+    do: "life_detached_v1"
+
+  def life_state_changed_v1,
+    do: "life_state_changed_v1"
+
+  def born2dieds_cache_updated_v1,
+    do: "born2dieds_cache_updated_v1"
 end
