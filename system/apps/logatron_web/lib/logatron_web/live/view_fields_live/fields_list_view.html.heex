@@ -1,18 +1,8 @@
 <div class="px-4 py-1 mx-5 text-white">
   <div>
-    <% fields =  get_fields(@mng_farm_id) %>
-
-    <%!-- <.table    
-    id="scapes-table"
-    rows={scapes_list}
-    row_click={fn {id, scape} -> JS.navigate(~p"/scapes/#{id}") end}
-  >
-    <:col :let={{_id, scape}} label="Name" class="text-white"><%= scape.name %></:col>
-    <:col :let={{_id, scape}} label="Provisioned by"><%= scape.count %> station(s)</:col>
-  </.table> --%>
 
     <div class="flex flex-col">
-      <%= for field <- fields do %>      
+      <%= for field <- @fields do %>      
         <p class="text-2xl text-white"><%= " Field No: #{field.depth}  ( #{field.cols}, #{field.rows}  )" %></p>
         <.live_component
           module={LogatronWeb.ViewFieldsLive.FieldCard}
@@ -20,6 +10,7 @@
           field={field}
           current_user={@current_user}
           mng_farm_id={@mng_farm_id}
+          cell_states={@cell_states}
           />
       <% end %>
     </div>

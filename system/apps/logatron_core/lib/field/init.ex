@@ -109,8 +109,8 @@ defmodule Field.Init do
         cols: farm.fields_def.x,
         rows: farm.fields_def.y,
         depth: depth,
-        pct_good: 0,
-        pct_bad: 0
+        pct_good: mng_farm_init.farm.max_pct_good,
+        pct_bad: mng_farm_init.farm.max_pct_bad
       }
     res
   end

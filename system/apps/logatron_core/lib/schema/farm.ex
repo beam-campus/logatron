@@ -101,7 +101,9 @@ defmodule Schema.Farm do
     :id,
     :name,
     :nbr_of_robots,
-    :nbr_of_lives
+    :nbr_of_lives,
+    :max_pct_good,
+    :max_pct_bad,
   ]
 
   @required_fields [
@@ -187,8 +189,8 @@ defmodule Schema.Farm do
               :rand.uniform(Logatron.Limits.max_robots() - Logatron.Limits.min_robots())
           )
         ),
-      max_pct_good: :random.uniform(@max_pct_good),
-      max_pct_bad: :random.uniform(@max_pct_bad),
+      max_pct_good: :rand.uniform(@max_pct_good),
+      max_pct_bad: :rand.uniform(@max_pct_bad),
       fields_def: Vector.new(@cols, @rows, @depth)
     }
   end

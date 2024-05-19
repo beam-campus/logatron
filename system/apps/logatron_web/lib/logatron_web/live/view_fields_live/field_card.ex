@@ -5,7 +5,6 @@ defmodule LogatronWeb.ViewFieldsLive.FieldCard do
   The live component for the field card.
   """
 
-
   alias Lives.Service, as: Lives
 
   def get_lives(mng_farm_id),
@@ -18,8 +17,4 @@ defmodule LogatronWeb.ViewFieldsLive.FieldCard do
      socket
      |> assign(assigns)}
   end
-
-
-
-
 end

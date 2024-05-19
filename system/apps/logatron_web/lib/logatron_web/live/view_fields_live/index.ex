@@ -5,17 +5,14 @@ defmodule LogatronWeb.ViewFieldsLive.Index do
 
   alias Edge.Facts, as: EdgeFacts
   alias Born2Died.Facts, as: LifeFacts
-  alias Field.Facts, as: FieldFacts
   alias MngFarm.Init, as: MngFarmInit
 
   alias Lives.Service, as: Lives
   alias Edges.Service, as: Edges
   alias Farms.Service, as: Farms
-  alias Fields.Service, as: Fields
+  alias Cells.Service, as: Cells
 
   require Logger
-
-  @fields_cache_updated_v1 FieldFacts.fields_cache_updated_v1()
 
   def mount(params, _session, socket) do
     Logger.info("params: #{inspect(params)}")
@@ -26,7 +23,10 @@ defmodule LogatronWeb.ViewFieldsLive.Index do
       true ->
         PubSub.subscribe(Logatron.PubSub, LifeFacts.born2dieds_cache_updated_v1())
         PubSub.subscribe(Logatron.PubSub, EdgeFacts.edges_cache_updated_v1())
-        PubSub.subscribe(Logatron.PubSub, FieldFacts.fields_cache_updated_v1())
+
+        farm = Farms.get(mng_farm_id)
+        fields = Farms.build_fields(farm)
+        cell_states = Cells.get_cell_states(mng_farm_id)
 
         {:ok,
          socket
@@ -34,8 +34,9 @@ defmodule LogatronWeb.ViewFieldsLive.Index do
            lives: Lives.get_all(),
            edges: Edges.get_all(),
            mng_farm_id: mng_farm_id,
-           farm: Farms.get_by_mng_farm_id(mng_farm_id),
-           fields: Fields.get_all_for_mng_farm_id(mng_farm_id)
+           farm: farm,
+           fields: fields,
+           cell_states: cell_states
          )}
 
       false ->
@@ -45,18 +46,10 @@ defmodule LogatronWeb.ViewFieldsLive.Index do
            edges: [],
            lives: [],
            mng_farm_id: mng_farm_id,
+           farm: %MngFarmInit{},
            fields: [],
-           farm: %MngFarmInit{}
+           cell_states: []
          )}
     end
-  end
-
-  def handle_info({@fields_cache_updated_v1, reason}, socket) do
-    Logger.info("FieldLive.Index.handle_info: #{inspect(reason)}")
-    mng_farm_id = socket.assigns.mng_farm_id
-
-    {:noreply,
-     socket
-     |> assign(fields: Fields.get_all_for_mng_farm_id(mng_farm_id))}
   end
 end

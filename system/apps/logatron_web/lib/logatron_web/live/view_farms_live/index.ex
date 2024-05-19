@@ -1,5 +1,4 @@
 defmodule LogatronWeb.ViewFarmsLive.Index do
-
   use LogatronWeb, :live_view
   alias Phoenix.PubSub
   alias Edge.Facts, as: EdgeFacts
@@ -55,16 +54,25 @@ defmodule LogatronWeb.ViewFarmsLive.Index do
       |> assign(:farms, Farms.Service.get_all())
     }
 
-
+  @impl true
+  def handle_info(_msg, socket),
+    do: {
+      :noreply,
+      socket
+      |> assign(
+        farms: Farms.Service.get_all(),
+        edges: Edges.Service.get_all()
+      )
+    }
 
   @impl true
   def handle_event("show_field", %{"id" => id} = _value, socket) do
     Logger.info("show field for farm: #{inspect(id)}")
+
     {
       :noreply,
       socket
-      |> push_redirect(to:  ~p"/view_fields?mng_farm_id=#{id}")}
+      |> push_redirect(to: ~p"/view_fields?mng_farm_id=#{id}")
+    }
   end
-
-
 end

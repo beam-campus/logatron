@@ -10,6 +10,8 @@ defmodule Farms.Service do
 
   alias Phoenix.PubSub
   alias MngFarm.Facts, as: MngFarmFacts
+  alias MngFarm.Init, as: MngFarmInit
+  alias Field.Init, as: FieldInit
 
   @initializing_farm_v1 MngFarmFacts.initializing_farm_v1()
   @farm_detached_v1 MngFarmFacts.farm_detached_v1()
@@ -17,11 +19,11 @@ defmodule Farms.Service do
 
   ########### PUBLIC API ##########
 
-  def get_by_mng_farm_id(mng_farm_id),
+  def get(mng_farm_id),
     do:
       GenServer.call(
         __MODULE__,
-        {:get_by_mng_farm_id, mng_farm_id}
+        {:get, mng_farm_id}
       )
 
   def get_all(),
@@ -37,6 +39,11 @@ defmodule Farms.Service do
         __MODULE__,
         {:get_stream}
       )
+
+  def build_fields(%MngFarmInit{} = mng_farm_init),
+    do:
+      1..mng_farm_init.max_depth
+      |> Enum.map(fn j -> FieldInit.from_mng_farm(j, mng_farm_init) end)
 
   ############ CALLBACKS ############
 
@@ -63,33 +70,24 @@ defmodule Farms.Service do
   end
 
   @impl GenServer
-  def handle_call({:get_by_mng_farm_id, mng_farm_id}, _from, state) do
+  def handle_call({:get, mng_farm_id}, _from, state) do
     result =
       :farms_cache
-      |> Cachex.stream!()
-      |> Enum.find(fn {:entry, _key, _nil, _internal_id, mng_farm_init} ->
-        mng_farm_init.id == mng_farm_id
-      end)
+      |> Cachex.get(mng_farm_id)
 
     case result do
-      nil ->
+      {:ok, nil} ->
         {:reply, nil, state}
 
-      {:entry, _key, _nil, _internal_id, mng_farm_init} ->
-        {:reply, mng_farm_init, state}
+      {:ok, value} ->
+        {:reply, value, state}
     end
   end
 
   ############# handle_info ##############
   @impl GenServer
-  def handle_info({@initializing_farm_v1, mng_farm_init}, state) do
-    key =
-      {
-        mng_farm_init.edge_id,
-        mng_farm_init.scape_id,
-        mng_farm_init.region_id,
-        mng_farm_init.id
-      }
+  def handle_info({@initializing_farm_v1, %MngFarmInit{} = mng_farm_init}, state) do
+    key = mng_farm_init.id
 
     :farms_cache
     |> Cachex.put!(key, mng_farm_init)
@@ -100,29 +98,19 @@ defmodule Farms.Service do
   end
 
   @impl GenServer
-  def handle_info({@farm_detached_v1, mng_farm_init}, state) do
-    key =
-      {
-        mng_farm_init.edge_id,
-        mng_farm_init.scape_id,
-        mng_farm_init.region_id,
-        mng_farm_init.id
-      }
+  def handle_info({@farm_detached_v1, %MngFarmInit{} = mng_farm_init}, state) do
+    key = mng_farm_init.id
 
     :farms_cache
     |> Cachex.del!(key)
 
     notify_farms_updated({@farm_detached_v1, mng_farm_init})
-
     {:noreply, state}
   end
 
   @impl GenServer
   def init(opts) do
     Logger.info("Starting farms cache")
-
-    # :farms_cache
-    # |> Cachex.start()
 
     PubSub.subscribe(Logatron.PubSub, @initializing_farm_v1)
 

@@ -4,21 +4,31 @@ defmodule Cell.State do
   """
   use Ecto.Schema
 
-  alias Cell.State, as: CellState
   alias Born2Died.State, as: LifeState
   alias Field.Effect, as: Effect
-  alias Cell.Init, as: CellInit
+
 
   import Ecto.Changeset
 
   require Logger
 
   @all_fields [
-    :id,
-    :meta,
+    :col,
+    :row,
+    :depth,
+    :content,
+    :class,
+    :edge_id,
+    :scape_id,
+    :region_id,
+    :mng_farm_id,
     :occupants,
     :effects
   ]
+
+
+
+
 
   @flat_fields [
     :id
@@ -28,19 +38,17 @@ defmodule Cell.State do
   @primary_key false
   @derive {Jason.Encoder, only: @all_fields}
   embedded_schema do
-    field(:id, :string)
-    embeds_one(:meta, CellInit)
+    field(:col, :integer)
+    field(:row, :integer)
+    field(:depth, :integer)
+    field(:content, :string)
+    field(:class, :string)
+    field(:edge_id, :string)
+    field(:scape_id, :string)
+    field(:region_id, :string)
+    field(:mng_farm_id, :string)
     embeds_many(:occupants, LifeState)
     embeds_many(:effects, Effect)
-  end
-
-  def from_cell_init(%CellInit{} = cell_init) do
-    %CellState{
-      id: cell_init.id,
-      meta: cell_init,
-      occupants: [],
-      effects: []
-    }
   end
 
 
