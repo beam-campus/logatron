@@ -10,6 +10,7 @@ defmodule Born2Died.System do
 
   alias Born2Died.State, as: LifeState
   alias MngFarm.Emitter, as: FarmChannel
+  alias Born2Died.MotionEmitter, as: MotionChannel
 
   def do_birth(life_id, delta_x, delta_y),
     do:
@@ -50,10 +51,8 @@ defmodule Born2Died.System do
       [
         {Born2Died.HealthEmitter, state},
         {Born2Died.HealthWorker, state},
-
         {Born2Died.MotionEmitter, state},
-        {Born2Died.MotionWorker, state},
-
+        {Born2Died.MotionWorker, state}
 
         # {Born2Died.AiWorker, state},
         # {Born2Died.VisionWorker, state},
@@ -83,9 +82,17 @@ defmodule Born2Died.System do
 
   @impl GenServer
   def handle_cast({:register_movement, movement}, state) do
+
+    Logger.alert("Movement: #{state.pos} -> #{movement.to} ")
     state =
       state
       |> Map.put(:pos, movement.to)
+
+    movement =
+      movement
+      |> Map.put(:life, state)
+
+    MotionChannel.emit_life_moved(movement)
 
     {:noreply, state}
   end
@@ -99,7 +106,7 @@ defmodule Born2Died.System do
 
   ######### INTERNALS ###################
   defp to_name(life_id),
-    do: "born2died.system.#{life_id}"
+    do: "life.system.#{life_id}"
 
   ############# PLUMBING ##################
   def via(life_id),

@@ -9,7 +9,10 @@ defmodule Countries.Cache do
   require Req
   require Logger
 
+  @countries_timeout 240_000
   @all_countries_url "https://restcountries.com/v3.1/all"
+
+  # @all_countries_url "https://gist.githubusercontent.com/rgfaber/ddcde59939f0b9c7a82b94430d3dfe69/raw/8454618d95c1d160e1f62570055d166d4ef56a52/countries.json"
 
   ####### API ###############
   def refresh,
@@ -43,19 +46,25 @@ defmodule Countries.Cache do
         {:countries_of_regions, list_of_regions, min_area, min_population}
       )
 
+  ##### INTERNALS ##########
+  defp request_countries(),
+    do: Req.get!(@all_countries_url, receive_timeout: @countries_timeout, connect_options: [timeout: @countries_timeout]).body()
+
 
 
   ######## CALLBACKS ##########
   @impl true
   def init(_url) do
-    state = Req.get!(@all_countries_url).body()
+    # state = Req.get!(@all_countries_url, connect_options: [timeout: @countries_timeout]).body()
+    state = request_countries()
+    # state = []
     {:ok, state}
   end
 
   @impl true
   def handle_cast({:refresh}, _state) do
     Logger.info("Refreshing countries cache")
-    state = Req.get!(@all_countries_url).body()
+    state = request_countries()
     {:noreply, state}
   end
 
@@ -161,7 +170,12 @@ defmodule Countries.Cache do
 
   ######### PLUMBING ##########
   def start_link(state),
-    do: GenServer.start_link(__MODULE__, state, name: __MODULE__)
+    do:
+      GenServer.start_link(
+        __MODULE__,
+        state,
+        name: __MODULE__
+      )
 
   def stop(),
     do: GenServer.stop(__MODULE__)

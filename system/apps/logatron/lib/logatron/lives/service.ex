@@ -70,11 +70,9 @@ defmodule Lives.Service do
   def init(opts) do
     Logger.info("Starting born2dieds cache")
 
-    # :lives_cache
-    # |> Cachex.start()
-
     PubSub.subscribe(Logatron.PubSub, @initializing_life_v1)
     PubSub.subscribe(Logatron.PubSub, @life_detached_v1)
+    PubSub.subscribe(Logatron.PubSub, @life_state_changed_v1)
 
     {:ok, opts}
   end
@@ -85,13 +83,15 @@ defmodule Lives.Service do
   def handle_cast({:save, life_init}, state) do
     Logger.debug("Saving life_init: #{inspect(life_init)}")
 
-    key = %{
-      edge_id: life_init.edge_id,
-      scape_id: life_init.scape_id,
-      region_id: life_init.region_id,
-      mng_farm_id: life_init.mng_farm_id,
-      id: life_init.id
-    }
+    # key = %{
+    #   edge_id: life_init.edge_id,
+    #   scape_id: life_init.scape_id,
+    #   region_id: life_init.region_id,
+    #   mng_farm_id: life_init.mng_farm_id,
+    #   id: life_init.id
+    # }
+
+    key =  life_init.id
 
     :lives_cache
     |> Cachex.put!(key, life_init)
@@ -117,7 +117,7 @@ defmodule Lives.Service do
       :reply,
       :lives_cache
       |> Cachex.stream!()
-      |> Stream.filter(fn {:entry, key, _nil, _internal_id, _life_init} -> key.mng_farm_id == mng_farm_id end)
+      |> Stream.filter(fn {:entry, _key, _nil, _internal_id, life_init} -> life_init.mng_farm_id == mng_farm_id end)
       |> Enum.map(fn {:entry, _key, _nil, _internal_id, life_init} -> life_init end),
       state
     }
@@ -184,7 +184,7 @@ defmodule Lives.Service do
   end
 
   @impl GenServer
-  def handle_info({:life_state_changed, life_init}, state) do
+  def handle_info({@life_state_changed_v1, life_init}, state) do
     :lives_cache
     |> Cachex.put!(life_init.id, life_init)
 

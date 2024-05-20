@@ -31,7 +31,7 @@ defmodule Edge.Application do
 
     children = [
       {Edge.Registry, name: Edge.Registry},
-      {Edge.Client, edge_init}, # 
+      {Edge.Client, edge_init}, #
       {Phoenix.PubSub, name: EdgePubSub},
       {Finch, name: Logatron.Finch},
       {Countries.Cache, name: Logatron.Countries},

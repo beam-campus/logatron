@@ -9,6 +9,8 @@ defmodule LogatronWeb.ViewFieldsLive.FieldCell do
 
   require Logger
 
+
+  # The functional component that renders the cell
   def cell_content(assigns),
     do: ~H"""
     <div class="px-1 text-xl text-red-500 bg-blue-500 justify" >
@@ -28,8 +30,8 @@ defmodule LogatronWeb.ViewFieldsLive.FieldCell do
           %CellState{
             col: col,
             row: row,
-            content: "",
-            class: "dead"
+            content: " ",
+            class: "w-4 h-4 border rounded {get_cell_color(pos, @lives)}"
           }
         _ ->
           cell_state
@@ -47,6 +49,7 @@ defmodule LogatronWeb.ViewFieldsLive.FieldCell do
       |> assign(assigns)
       |> assign(:cell_state, cell_state)
       |> assign(:content, content)
+      |> assign(:class, cell_state.class)
     }
   end
 end

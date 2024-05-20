@@ -14,6 +14,8 @@ defmodule LogatronWeb.ViewFieldsLive.Index do
 
   require Logger
 
+  @born2dieds_cache_updated_v1 LifeFacts.born2dieds_cache_updated_v1()
+
   def mount(params, _session, socket) do
     Logger.info("params: #{inspect(params)}")
 
@@ -25,7 +27,9 @@ defmodule LogatronWeb.ViewFieldsLive.Index do
         PubSub.subscribe(Logatron.PubSub, EdgeFacts.edges_cache_updated_v1())
 
         farm = Farms.get(mng_farm_id)
+
         fields = Farms.build_fields(farm)
+
         cell_states = Cells.get_cell_states(mng_farm_id)
 
         {:ok,
@@ -51,5 +55,25 @@ defmodule LogatronWeb.ViewFieldsLive.Index do
            cell_states: []
          )}
     end
+  end
+
+  def handle_info({@born2dieds_cache_updated_v1, _payload}, socket),
+    do: {
+      :noreply,
+      socket
+      |> assign(refresh_view(socket))
+    }
+
+  def handle_info(_msg, socket), do: {:noreply, socket}
+
+  def refresh_view(socket) do
+    # cell_states =
+    socket
+    |> assign(
+      # lives: Lives.get_all(),
+      # farm: socket.assigns.farm,
+      # fields: socket.assigns.fields,
+      cell_states: Cells.get_cell_states(socket.assigns.mng_farm_id)
+    )
   end
 end

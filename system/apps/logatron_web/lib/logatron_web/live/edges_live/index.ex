@@ -57,9 +57,5 @@ defmodule LogatronWeb.EdgesLive.Index do
   # end
 
   @impl true
-  def handle_info(msg, socket) do
-    Logger.error("Unhandled message: #{inspect(msg)}")
-    {:noreply, socket}
-  end
-
+  def handle_info(_msg, socket), do: {:noreply, socket}
 end

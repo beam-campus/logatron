@@ -7,11 +7,12 @@ defmodule Born2Died.MotionWorker do
 
   require Logger
 
+  alias Born2Died.MotionEmitter
   alias Born2Died.Movement
   alias Born2Died.State, as: LifeState
   alias Born2Died.Movement, as: Movement
-  alias Born2Died.MotionEmitter, as: Emitter
-  alias Born2Died.System, as: System
+  alias Born2Died.System, as: LifeSystem
+  alias Born2Died.MotionEmitter, as: MotionChannel
 
   ################ INTERFACE ############
 
@@ -48,8 +49,17 @@ defmodule Born2Died.MotionWorker do
     state =
       state
       |> Map.put(:pos, movement.to)
-    System.register_movement(state.id, movement)
-    # Emitter.emit_life_moved(movement)
+
+    movement =
+      movement
+      |> Map.put(:life, state)
+
+      MotionChannel.emit_life_moved(movement)
+
+    LifeSystem.register_movement(state.id, movement)
+
+
+
     {:noreply, state}
   end
 
@@ -59,7 +69,7 @@ defmodule Born2Died.MotionWorker do
     do: Edge.Registry.via_tuple({:motion_worker, to_name(life_init_id)})
 
   def to_name(life_init_id),
-    do: "born2died.motion_worker.#{life_init_id}"
+    do: "life.motion_worker.#{life_init_id}"
 
   def child_spec(%LifeState{} = life_init),
     do: %{

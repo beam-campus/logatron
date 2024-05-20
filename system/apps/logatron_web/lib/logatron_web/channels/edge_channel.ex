@@ -7,20 +7,15 @@ defmodule LogatronWeb.EdgeChannel do
   require Logger
   require Phoenix.PubSub
 
-
-  alias LogatronWeb.Dispatch.{
-    EdgePresence,
-    EdgeHandler,
-    ScapeHandler,
-    RegionHandler,
-    FarmHandler
-  }
-
-
-
-  alias LogatronWeb.Dispatch.Born2DiedHandler, as: Born2DiedHandler
-
+  alias LogatronWeb.Dispatch.EdgePresence
+  alias LogatronWeb.Dispatch.EdgeHandler
+  alias LogatronWeb.Dispatch.ScapeHandler
+  alias LogatronWeb.Dispatch.RegionHandler
+  alias LogatronWeb.Dispatch.FarmHandler
+  alias LogatronWeb.Dispatch.Born2DiedHandler, as: LifeHandler
   alias LogatronWeb.Dispatch.ChannelWatcher
+
+
   alias Edge.Facts, as: EdgeFacts
   alias Scape.Facts, as: ScapeFacts
   alias Region.Facts, as: RegionFacts
@@ -64,8 +59,7 @@ defmodule LogatronWeb.EdgeChannel do
 
   ################ CALLBACKS ################
   @impl true
-  def join("edge:lobby", edge_init, socket)    do
-
+  def join("edge:lobby", edge_init, socket) do
     send(self(), :after_join)
 
     ChannelWatcher.monitor(
@@ -75,9 +69,7 @@ defmodule LogatronWeb.EdgeChannel do
     )
 
     {:ok, socket}
-
   end
-
 
   @impl true
   def handle_info(:after_join, socket) do
@@ -198,42 +190,36 @@ defmodule LogatronWeb.EdgeChannel do
     FarmHandler.pub_farm_detached_v1(payload, socket)
   end
 
-
   @impl true
   def handle_in(@initializing_life_v1, payload, socket) do
     # Logger.debug("EdgeChannel.handle_in: #{@initializing_life_v1} #{inspect(payload)}")
-    Born2DiedHandler.pub_initializing_animal_v1(payload, socket)
+    LifeHandler.pub_initializing_animal_v1(payload, socket)
   end
 
   @impl true
   def handle_in(@life_initialized_v1, payload, socket) do
     # Logger.debug("EdgeChannel.handle_in: #{@life_initialized_v1} #{inspect(payload)}")
-    Born2DiedHandler.pub_animal_initialized_v1(payload, socket)
+    LifeHandler.pub_animal_initialized_v1(payload, socket)
   end
 
   def handle_in(@life_died_v1, payload, socket) do
     # Logger.debug("EdgeChannel.handle_in: #{@life_died_v1} #{inspect(payload)}")
-    Born2DiedHandler.pub_life_died_v1(payload, socket)
+    LifeHandler.pub_life_died_v1(payload, socket)
   end
-
 
   @impl true
   def handle_in(@life_state_changed_v1, payload, socket) do
     # Logger.debug("EdgeChannel.handle_in: #{@life_state_changed_v1} #{inspect(payload)}")
-    Born2DiedHandler.pub_life_state_changed_v1(payload, socket)
+    LifeHandler.pub_life_state_changed_v1(payload, socket)
   end
 
   @impl true
   def handle_in(@life_moved_v1, payload, socket) do
     # Logger.debug("EdgeChannel.handle_in: #{@life_moved_v1} #{inspect(payload)}")
-    Born2DiedHandler.pub_life_moved_v1(payload, socket)
+    LifeHandler.pub_life_moved_v1(payload, socket)
   end
 
-
-
-
-
   ################ INTERNALS ################
-    defp to_topic(edge_id),
+  defp to_topic(edge_id),
     do: "edge:lobby:#{edge_id}"
 end

@@ -81,7 +81,7 @@ defmodule LogatronWeb.Dispatch.Born2DiedHandler do
     Phoenix.PubSub.broadcast(
       Logatron.PubSub,
       @life_moved_v1,
-      {@life_moved_v1, movement}
+      {@life_state_changed_v1, movement.life}
     )
 
 

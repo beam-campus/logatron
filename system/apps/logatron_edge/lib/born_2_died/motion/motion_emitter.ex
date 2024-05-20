@@ -32,7 +32,6 @@ defmodule Born2Died.MotionEmitter do
       @life_moved_v1,
       %{movement: movement}
     )
-
     {:noreply, state}
   end
 
@@ -46,7 +45,7 @@ defmodule Born2Died.MotionEmitter do
   def init(%LifeState{} = life_init) do
     Logger.info("motion.emitter: #{Colors.born2died_theme(self())}")
     {:ok, life_init}
-  end   
+  end
 
   ########### PLUMBING ###########
   defp to_name(life_id),
