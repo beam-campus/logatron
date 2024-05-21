@@ -5,9 +5,9 @@ defmodule Scape.Builder do
   LogatronEdge.Scape.Worker is a GenServer that manages the state of a Scape.
   """
   require Logger
-  require Countries.Cache
 
-  alias Countries.Cache
+
+  alias Apis.Countries, as: Countries
   alias Scape.Init, as: ScapeInit
 
 
@@ -25,7 +25,7 @@ defmodule Scape.Builder do
       String.split(scape_init.select_from, ",")
       |> Enum.map(&String.trim/1)
 
-    Cache.countries_of_regions(selection, scape_init.min_area, scape_init.min_people)
+    Countries.countries_of_regions(selection, scape_init.min_area, scape_init.min_people)
     |> Enum.take_random(scape_init.nbr_of_countries)
     |> Enum.each(fn country ->
       region_id =

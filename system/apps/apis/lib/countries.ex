@@ -1,6 +1,6 @@
-defmodule Countries.Cache do
+defmodule Apis.Countries do
   @moduledoc """
-  Logatron.Countries.Cache is a GenServer that manages a cache of countries,
+  Apis.Countries is a GenServer that manages a cache of countries,
   obtained from a REST API at https://restcountries.com/v3.1/all,
   and provides a set of functions to query this cache.
   """
@@ -11,6 +11,8 @@ defmodule Countries.Cache do
 
   @countries_timeout 240_000
   @all_countries_url "https://restcountries.com/v3.1/all"
+
+
 
   # @all_countries_url "https://gist.githubusercontent.com/rgfaber/ddcde59939f0b9c7a82b94430d3dfe69/raw/8454618d95c1d160e1f62570055d166d4ef56a52/countries.json"
 
@@ -193,7 +195,7 @@ defmodule Countries.Cache do
   def child_spec(),
     do: %{
       id: __MODULE__,
-      start: {__MODULE__, :start_link, []},
+      start: {__MODULE__, :start},
       type: :worker,
       restart: :transient
     }

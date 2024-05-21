@@ -77,7 +77,7 @@ defmodule Schema.LifeNames do
   @male_names [
     "Andy",
     "Andre",
-    "Anatol",
+    "Anatole",
     "Anton",
     "Boris",
     "Bart",
@@ -104,7 +104,7 @@ defmodule Schema.LifeNames do
     "Hubert",
     "Irwin",
     "Ian",
-    "Iwan",
+    "Ivan",
     "John",
     "Jack",
     "Jonas",
@@ -142,8 +142,6 @@ defmodule Schema.LifeNames do
     do:
       Enum.random(@characters) <>
         " " <>
-        Enum.random(@skin_colors) <>
-        " " <>
         Enum.random(@skin_patterns) <>
         " " <>
         Enum.random(@male_names)
@@ -151,8 +149,6 @@ defmodule Schema.LifeNames do
   def random_name("female"),
     do:
       Enum.random(@characters) <>
-        " " <>
-        Enum.random(@skin_colors) <>
         " " <>
         Enum.random(@skin_patterns) <>
         " " <>

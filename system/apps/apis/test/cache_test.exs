@@ -1,13 +1,17 @@
-defmodule Countries.CacheTest do
+defmodule Apis.CountriesTest do
   use ExUnit.Case
 
-  alias Countries.Cache
+  @moduledoc """
+  Tests for the Apis.Countries module.
+  """
+
+  alias Apis.Countries, as: Cache
 
   @tag :ignore_test
   doctest Cache
 
   @tag :ignore_test
-  test "that the Agrex.RestCountries.Client module exists" do
+  test "that the Apis.RestCountries.Client module exists" do
     assert is_list(Cache.module_info())
   end
 
@@ -19,7 +23,7 @@ defmodule Countries.CacheTest do
 
   @tag :ignore_test
   test "that we can start the Countries Cache" do
-    res = Agrex.Countries.Cache.start_link([])
+    res = Cache.start_link([])
     assert res != nil
   end
 

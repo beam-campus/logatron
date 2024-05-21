@@ -1,5 +1,6 @@
 defmodule Edge.Client do
   use Slipstream
+
   @moduledoc """
   Edge.Client is the client-side of the LogatronEdge.Socket server.
   It is part of the main application supervision tree.
@@ -14,32 +15,35 @@ defmodule Edge.Client do
   # @joined_edge_lobby "edge:lobby:joined"
 
   ############# API ################
-  def publish(edge_id, event, payload) do
-    GenServer.cast(
-      via(edge_id),
-      {:publish, @edge_lobby, event, payload}
-    )
-  end
-
+  def publish(edge_id, event, payload),
+    do:
+      GenServer.cast(
+        via(edge_id),
+        {:publish, @edge_lobby, event, payload}
+      )
 
   ############# CALLBACKS ################
   @impl Slipstream
   def handle_cast({:publish, topic, event, payload}, socket) do
-    Logger.debug(":publish :\n event => #{inspect(event)}\n payload => #{inspect(payload)}")
-    res = socket
-    |> push(topic, event, payload)
-    Logger.debug("pushed: #{inspect(res)}")
+    # Logger.debug(":publish :\n event => #{inspect(event)}\n payload => #{inspect(payload)}")
+
+    res =
+      socket
+      |> push(topic, event, payload)
+
+    Logger.debug("#{inspect(event)} => #{inspect(res)}")
     {:noreply, socket}
   end
-
 
   @impl Slipstream
   def init(args) do
     Logger.alert("Edge.Client init: #{inspect(args)}")
+
     socket =
       new_socket()
       |> assign(:edge_init, args.edge_init)
       |> connect!(args.config)
+
     {:ok, socket, {:continue, :start_ping}}
   end
 
@@ -54,6 +58,7 @@ defmodule Edge.Client do
   def handle_join(@edge_lobby, join_response, socket) do
     Logger.alert("Edge.Client handle_join: #{@edge_lobby} #{inspect(join_response)}")
     push(socket, @edge_lobby, @edge_attached_v1, %{edge_init: socket.assigns.edge_init})
+    Process.send_after(self(), {:after_join, join_response}, 1000)
     # {:noreply, socket}
     {:ok, socket}
   end
@@ -68,10 +73,10 @@ defmodule Edge.Client do
     {:noreply, socket}
   end
 
-
   @impl Slipstream
   def handle_info({:after_join, something}, socket) do
     Logger.debug("Edge.Client received: :after_join #{inspect(something)}")
+    Edge.Application.start_scape(socket.assigns.edge_init.id)
     {:noreply, socket}
   end
 
@@ -86,8 +91,6 @@ defmodule Edge.Client do
     Logger.alert("Edge.Client received: #{inspect(msg)}")
     {:noreply, socket}
   end
-
-
 
   ############ PLUMBING ################
   def to_name(edge_id),

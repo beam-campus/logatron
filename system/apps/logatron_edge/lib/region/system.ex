@@ -21,7 +21,7 @@ defmodule Region.System do
     ScapeEmitter.emit_initializing_region(region_init)
 
     children = [
-      {Region.Emitter, region_init},
+      # {Region.Emitter, region_init},
       {Region.Farms, region_init},
       {Region.Builder, region_init}
     ]

@@ -17,11 +17,11 @@ defmodule MngFarm.System do
 
     Logger.debug("mng_farm.system: #{Colors.farm_theme(self())}")
 
-    RegionEmitter.emit_initializing_farm_v1(mng_farm_init)
+    RegionEmitter.emit_initializing_farm(mng_farm_init)
 
     children =
       [
-        {MngFarm.Emitter, mng_farm_init},
+        # {MngFarm.Emitter, mng_farm_init},
         {MngFarm.Server, mng_farm_init},
         {MngFarm.Builder, mng_farm_init}
       ]
@@ -32,7 +32,7 @@ defmodule MngFarm.System do
       strategy: :one_for_one
     )
 
-    RegionEmitter.emit_farm_initialized_v1(mng_farm_init)
+    RegionEmitter.emit_farm_initialized(mng_farm_init)
 
     {:ok, mng_farm_init}
   end

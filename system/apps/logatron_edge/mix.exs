@@ -35,9 +35,8 @@ defmodule LogatronEdge.MixProject do
   defp deps do
     [
       {:slipstream, "~>1.1.0"},
-      {:commanded, "~> 1.4"},
       {:logatron_core, in_umbrella: true},
-      {:apis, in_umbrella: true},
+      {:apis, in_umbrella: true}
     ]
   end
 end

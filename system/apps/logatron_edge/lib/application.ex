@@ -11,9 +11,7 @@ defmodule Edge.Application do
   alias Edge.Init, as: EdgeInit
   alias Scape.Init, as: ScapeInit
 
-
   @default_edge_id Logatron.Core.constants()[:edge_id]
-
 
   def edge_id,
     do: @default_edge_id
@@ -21,22 +19,27 @@ defmodule Edge.Application do
   @impl Application
   def start(_type, _args) do
 
-    # {:ok, info} = Apis.IpInfoCache.refresh()
-
     edge_init = EdgeInit.enriched()
 
-    Logger.info("\n\n\n Starting Logatron Edge with edge_init: #{inspect(edge_init)} \n\n\n")
+    IO.puts("\n\n\n
+    +---------------------------------+
+    |           LOGATRON EDGE         |
+    |           DAIRY FARM            |
+    +---------------------------------+
 
-    scape_init = ScapeInit.from_environment(edge_init.id)
+    edge_id:\t#{edge_init.id}
+    scape_id:\t#{edge_init.scape_id}
+    api_key:\t#{edge_init.api_key}
+    country:\t#{edge_init.country}
+
+    \n\n\n")
+
+    Process.sleep(5_000)
 
     children = [
       {Edge.Registry, name: Edge.Registry},
-      {Edge.Client, edge_init}, #
       {Phoenix.PubSub, name: EdgePubSub},
-      {Finch, name: Logatron.Finch},
-      {Countries.Cache, name: Logatron.Countries},
-      {Edge.Emitter, scape_init},
-      {Scape.System, scape_init}
+      {Edge.Client, edge_init}
     ]
 
     Supervisor.start_link(
@@ -44,7 +47,6 @@ defmodule Edge.Application do
       name: __MODULE__,
       strategy: :one_for_one
     )
-    # stop(scape_init)
   end
 
   @impl Application
@@ -52,4 +54,14 @@ defmodule Edge.Application do
     Scape.System.terminate(:normal, scape_init)
     Supervisor.stop(__MODULE__)
   end
+
+  def start_scape(edge_id) do
+    scape_init = ScapeInit.from_environment(edge_id)
+
+    Supervisor.start_child(
+      __MODULE__,
+      {Scape.System, scape_init}
+    )
+  end
+
 end

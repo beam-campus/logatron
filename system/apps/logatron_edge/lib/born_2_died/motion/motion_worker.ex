@@ -7,60 +7,55 @@ defmodule Born2Died.MotionWorker do
 
   require Logger
 
-  alias Born2Died.MotionEmitter
   alias Born2Died.Movement
-  alias Born2Died.State, as: LifeState
+  alias Born2Died.MotionState, as: MotionState
   alias Born2Died.Movement, as: Movement
   alias Born2Died.System, as: LifeSystem
-  alias Born2Died.MotionEmitter, as: MotionChannel
 
   ################ INTERFACE ############
 
-  def move(life_init_id, %Movement{} = movement),
+  def move(life_init_id),
     do:
       GenServer.cast(
         via(life_init_id),
-        {:move, movement}
+        {:move}
       )
 
   ############### INTERNALS #############
 
-  defp try_move(%{state: life_init, movement: movement}),
-    do: move(life_init.id, movement)
+  # defp try_move(%{state: life_init, movement: movement}),
+  #   do: move(life_init.id, movement)
 
   ############### CALLBACKS #############
 
   @impl GenServer
-  def init(%LifeState{} = state) do
+  def init(%MotionState{} = state) do
     Logger.info("motion.worker: #{Colors.born2died_theme(self())}")
 
     Cronlike.start_link(%{
       interval: :rand.uniform(10),
       unit: :second,
-      callback_function: &try_move/1,
-      caller_state: %{state: state, movement: Movement.random(state)}
+      callback_function: &move/1,
+      caller_state: state.born2died_id
+      # caller_state: %{state: state, movement: Movement.random(state)}
     })
 
     {:ok, state}
   end
 
   @impl GenServer
-  def handle_cast({:move, %Movement{} = movement}, state) do
-    state =
-      state
-      |> Map.put(:pos, movement.to)
-
+  def handle_cast({:move}, %MotionState{} = state) do
     movement =
-      movement
-      |> Map.put(:life, state)
+      state
+      |> Movement.random()
 
-      MotionChannel.emit_life_moved(movement)
+    new_state =
+    state
+    |> Map.put(:pos, movement.to)
 
-    LifeSystem.register_movement(state.id, movement)
+    LifeSystem.register_movement(state.born2died_id, movement)
 
-
-
-    {:noreply, state}
+    {:noreply, new_state}
   end
 
   ########### PLUMBING ###########
@@ -71,19 +66,19 @@ defmodule Born2Died.MotionWorker do
   def to_name(life_init_id),
     do: "life.motion_worker.#{life_init_id}"
 
-  def child_spec(%LifeState{} = life_init),
+  def child_spec(%MotionState{} = init),
     do: %{
-      id: to_name(life_init.id),
-      start: {__MODULE__, :start_link, [life_init]},
+      id: to_name(init.born2died_id),
+      start: {__MODULE__, :start_link, [init]},
       type: :worker,
       restart: :transient
     }
 
-  def start_link(%LifeState{} = state),
+  def start_link(%MotionState{} = state),
     do:
       GenServer.start_link(
         __MODULE__,
         state,
-        name: via(state.id)
+        name: via(state.born2died_id)
       )
 end

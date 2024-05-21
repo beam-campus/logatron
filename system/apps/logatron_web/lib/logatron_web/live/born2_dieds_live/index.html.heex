@@ -21,11 +21,12 @@
     id={@current_user.id <> "_born2dieds_breadcrumbs"} 
   />
   </div>
+
   <div class="flex-grow overflow-auto">
   <.live_component 
     module={LogatronWeb.Born2DiedsLive.Born2DiedsGrid} 
     id={@current_user.id <> "_born2dieds_grid"}
-    born2dieds={@born2dieds}
+    lives={@lives}
     current_user={@current_user}
   />
   </div>

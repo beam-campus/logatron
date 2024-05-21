@@ -8,9 +8,11 @@ defmodule Born2Died.System do
 
   require Logger
 
+  alias Born2Died.Movement, as: Movement
+  alias Born2Died.MotionState
   alias Born2Died.State, as: LifeState
-  alias MngFarm.Emitter, as: FarmChannel
   alias Born2Died.MotionEmitter, as: MotionChannel
+
 
   def do_birth(life_id, delta_x, delta_y),
     do:
@@ -47,13 +49,12 @@ defmodule Born2Died.System do
     # Process.flag(:trap_exit, true)
     Logger.debug("born2died.system: #{Colors.born2died_theme(self())}")
 
+    motion_state = MotionState.from_life_state(state)
+
     children =
       [
-        {Born2Died.HealthEmitter, state},
         {Born2Died.HealthWorker, state},
-        {Born2Died.MotionEmitter, state},
-        {Born2Died.MotionWorker, state}
-
+        {Born2Died.MotionWorker, motion_state}
         # {Born2Died.AiWorker, state},
         # {Born2Died.VisionWorker, state},
         # {Born2Died.MilkingWorker, state},
@@ -63,7 +64,7 @@ defmodule Born2Died.System do
 
     Supervisor.start_link(
       children,
-      name: via_sup(state.life.id),
+      name: via_sup(state.id),
       strategy: :one_for_one
     )
 
@@ -81,16 +82,16 @@ defmodule Born2Died.System do
     do: {:reply, state, state}
 
   @impl GenServer
-  def handle_cast({:register_movement, movement}, state) do
+  def handle_cast({:register_movement, %Movement{} = movement}, state) do
 
-    Logger.alert("Movement: #{state.pos} -> #{movement.to} ")
     state =
       state
       |> Map.put(:pos, movement.to)
+      |> Map.put(:status, "moving")
 
-    movement =
-      movement
-      |> Map.put(:life, state)
+    # movement =
+    #   movement
+    #   |> Map.put(:life, state)
 
     MotionChannel.emit_life_moved(movement)
 
@@ -120,7 +121,7 @@ defmodule Born2Died.System do
 
   def child_spec(%LifeState{} = state) do
     %{
-      id: to_name(state.life.id),
+      id: to_name(state.id),
       start: {__MODULE__, :start_link, [state]},
       type: :supervisor,
       restart: :transient
@@ -132,6 +133,6 @@ defmodule Born2Died.System do
       GenServer.start_link(
         __MODULE__,
         state,
-        name: via(state.life.id)
+        name: via(state.id)
       )
 end

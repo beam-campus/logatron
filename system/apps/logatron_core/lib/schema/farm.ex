@@ -9,25 +9,25 @@ defmodule Schema.Farm do
   alias Schema.Id
   alias Schema.Vector, as: Vector
 
-  @cols 50
-  @rows 50
+  @cols 20
+  @rows 20
   @depth 1
   @max_pct_good 10
   @max_pct_bad 10
 
   @farm_names [
-    "Aaron",
-    "Abira",
-    "Accunti",
-    "Adrino",
+    "Verstrepen",
+    "Degeyter",
+    "Koeman",
+    "Laitier",
     "Aldono",
     "Balear",
     "Bandana",
-    "Binodo",
+    "Buelens",
     "Castella",
-    "Charles",
-    "Contina",
-    "Cupodo",
+    "Charlston",
+    "Cantina",
+    "Vanzande",
     "Dinga",
     "Donga",
     "Datil",
@@ -70,21 +70,17 @@ defmodule Schema.Farm do
     "Zompi"
   ]
 
-  @farm_colors [
-    "White",
-    "Black",
-    "Green",
-    "Red",
-    "Orange",
-    "Yellow",
-    "Blue",
-    "Indigo",
-    "Pink",
-    "Brown",
-    "Grey",
-    "Purple",
-    "Cyan",
-    "Turquoise"
+  @farm_entity [
+    "NV",
+    "SA",
+    "Ltd",
+    "Spzoo",
+    "VoF",
+    "BV",
+    "EVBA",
+    "SPRL",
+    "SARL",
+    "SAS"
   ]
 
   @all_fields [
@@ -103,7 +99,7 @@ defmodule Schema.Farm do
     :nbr_of_robots,
     :nbr_of_lives,
     :max_pct_good,
-    :max_pct_bad,
+    :max_pct_bad
   ]
 
   @required_fields [
@@ -158,9 +154,9 @@ defmodule Schema.Farm do
   end
 
   def random_name() do
-    Enum.random(@farm_colors) <>
+    Enum.random(@farm_names) <>
       " " <>
-      Enum.random(@farm_names) <>
+      Enum.random(@farm_entity) <>
       " " <>
       to_string(:rand.uniform(Logatron.Limits.max_farms()))
   end

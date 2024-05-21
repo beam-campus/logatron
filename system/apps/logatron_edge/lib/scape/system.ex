@@ -77,7 +77,7 @@ defmodule Scape.System do
     EdgeEmitter.emit_initializing_scape(scape_init)
 
     children = [
-      {Scape.Emitter, scape_init},
+      # {Scape.Emitter, scape_init},
       {Scape.Regions, scape_init},
       {Scape.Builder, scape_init}
     ]

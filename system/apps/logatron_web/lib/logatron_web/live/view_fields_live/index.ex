@@ -67,13 +67,14 @@ defmodule LogatronWeb.ViewFieldsLive.Index do
   def handle_info(_msg, socket), do: {:noreply, socket}
 
   def refresh_view(socket) do
-    # cell_states =
-    socket
+    cell_states = Cells.get_cell_states(socket.assigns.mng_farm_id)
+    Logger.info("refresh_view: #{inspect(cell_states)}")
+    socket.assigns
     |> assign(
       # lives: Lives.get_all(),
       # farm: socket.assigns.farm,
       # fields: socket.assigns.fields,
-      cell_states: Cells.get_cell_states(socket.assigns.mng_farm_id)
+      cell_states: cell_states
     )
   end
 end

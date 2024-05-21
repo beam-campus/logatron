@@ -8,6 +8,7 @@ defmodule Lives.Service do
   require Cachex
   require Logger
 
+  alias Born2Died.Movement
   alias Phoenix.PubSub
   alias Born2Died.Facts
 
@@ -15,6 +16,7 @@ defmodule Lives.Service do
   @life_initialized_v1 Facts.life_initialized_v1()
   @life_detached_v1 Facts.life_detached_v1()
   @life_state_changed_v1 Facts.life_state_changed_v1()
+  @life_moved_v1 Facts.life_moved_v1()
 
   @born2dieds_cache_updated_v1 Facts.born2dieds_cache_updated_v1()
 
@@ -62,8 +64,6 @@ defmodule Lives.Service do
         {:get_by_mng_farm_id, mng_farm_id}
       )
 
-
-
   ################### CALLBACKS ###################
 
   @impl GenServer
@@ -73,6 +73,8 @@ defmodule Lives.Service do
     PubSub.subscribe(Logatron.PubSub, @initializing_life_v1)
     PubSub.subscribe(Logatron.PubSub, @life_detached_v1)
     PubSub.subscribe(Logatron.PubSub, @life_state_changed_v1)
+    PubSub.subscribe(Logatron.PubSub, @life_initialized_v1)
+    PubSub.subscribe(Logatron.PubSub, @life_moved_v1)
 
     {:ok, opts}
   end
@@ -91,7 +93,7 @@ defmodule Lives.Service do
     #   id: life_init.id
     # }
 
-    key =  life_init.id
+    key = life_init.id
 
     :lives_cache
     |> Cachex.put!(key, life_init)
@@ -117,7 +119,9 @@ defmodule Lives.Service do
       :reply,
       :lives_cache
       |> Cachex.stream!()
-      |> Stream.filter(fn {:entry, _key, _nil, _internal_id, life_init} -> life_init.mng_farm_id == mng_farm_id end)
+      |> Stream.filter(fn {:entry, _key, _nil, _internal_id, life_init} ->
+        life_init.mng_farm_id == mng_farm_id
+      end)
       |> Enum.map(fn {:entry, _key, _nil, _internal_id, life_init} -> life_init end),
       state
     }
@@ -190,6 +194,27 @@ defmodule Lives.Service do
 
     notify_cache_updated({@life_state_changed_v1, life_init})
     {:noreply, state}
+  end
+
+  @impl GenServer
+  def handle_info({@life_moved_v1, %Movement{} = movement}, state) do
+    case :lives_cache
+         |> Cachex.get_and_update(
+           movement.born2died_id,
+           fn life_init ->
+             life_init
+             |> Map.put(:pos, movement.to)
+             |> Map.put(:status, "moving")
+           end
+         ) do
+      {:commit, life_init} ->
+        notify_cache_updated({@life_moved_v1, life_init})
+        {:noreply, state}
+
+      _ ->
+        Logger.error("Failed to update life position")
+        {:noreply, state}
+    end
   end
 
   ################### INTERNALS ###################
