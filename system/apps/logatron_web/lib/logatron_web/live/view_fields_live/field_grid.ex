@@ -22,7 +22,6 @@ defmodule LogatronWeb.ViewFieldsLive.FieldGrid do
     "alive"
   end
 
-
   ################################### CALLBACKS ###################################
   @impl true
   def update(assigns, socket) do
@@ -34,5 +33,29 @@ defmodule LogatronWeb.ViewFieldsLive.FieldGrid do
       |> assign(assigns)
       # |> assign(lives: lives)
     }
+  end
+
+  @impl true
+  def render(assigns) do
+    ~H"""
+    <div>
+      <%= for row <- 1..@field.rows do  %>
+      <div class="flex">
+      <%= for col <- 1..@field.cols do %>
+        <.live_component
+          module={LogatronWeb.ViewFieldsLive.FieldCell}
+          id={@current_user.id <> "field-cell" <> "#{@field.depth}" <> "_col_#{col}" <> "_row_#{row}"}
+          row={row}
+          col={col}
+          field={@field}
+          current_user={@current_user}
+          mng_farm_id={@mng_farm_id}
+          cell_states={@cell_states}
+        />
+      <% end %>
+      </div>
+      <% end %>
+    </div>
+    """
   end
 end

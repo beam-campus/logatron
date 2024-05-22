@@ -12,7 +12,6 @@ defmodule LogatronWeb.ViewFieldsLive.Index do
   alias Farms.Service, as: Farms
   alias Cells.Service, as: Cells
 
-
   require Logger
 
   @lives_cache_updated_v1 LifeFacts.born2dieds_cache_updated_v1()
@@ -60,15 +59,15 @@ defmodule LogatronWeb.ViewFieldsLive.Index do
     end
   end
 
-
-  def handle_info({@life_moved_v1, _payload}, socket)  do
+  def handle_info({@life_moved_v1, _payload}, socket) do
     Logger.info("born2dieds_cache_updated_v1")
     mng_farm_id = socket.assigns.mng_farm_id
+
     {
       :noreply,
-     socket
-     |> assign(:lives, Lives.get_by_mng_farm_id(mng_farm_id))
-     |> assign(:cell_states, Cells.get_cell_states(mng_farm_id))
+      socket
+      |> assign(:lives, Lives.get_by_mng_farm_id(mng_farm_id))
+      |> assign(:cell_states, Cells.get_cell_states(mng_farm_id))
     }
   end
 
@@ -83,4 +82,48 @@ defmodule LogatronWeb.ViewFieldsLive.Index do
   # #     :cell_states, & Cells.get_cell_states(&1.assigns.mng_farm_id)
   # #   )
   # end
+
+  @impl true
+  def render(assigns) do
+    ~H"""
+    <div class="flex flex-col h-screen py-1 overflow-hidden font-mono justify-left">
+    <div class="flex-shrink-0">
+    <div class="flex flex-col items-center justify-center lt-view-gradient">
+    <div>
+      <h1 class="text-2xl font-normal text-white font-brand">
+        Field View
+      </h1>
+    </div>
+    <div class="px-2 m-1 text-sm text-white font-brand font-regular">
+      <%= edges_count = Enum.count(@edges)
+        if edges_count > 0 do %>
+        <%= edges_count %> producer(s) connected
+      <% else %>
+        awaiting producers...
+      <% end %>
+    </div>
+    </div>
+
+    <.live_component
+    module={LogatronWeb.BreadCrumbsBar}
+    id={@current_user.id <> "_born2dieds_breadcrumbs"}
+    />
+    </div>
+
+    <div class="flex-grow overflow-auto">
+    <.live_component
+      module={LogatronWeb.ViewFieldsLive.FieldsListView}
+      id={@current_user.id <> "_fields_list"}
+      mng_farm_id={@mng_farm_id}
+      fields={@fields}
+      current_user={@current_user}
+      lives={@lives},
+      farm={@farm},
+      cell_states={@cell_states}
+    />
+    </div>
+
+    </div>
+    """
+  end
 end
