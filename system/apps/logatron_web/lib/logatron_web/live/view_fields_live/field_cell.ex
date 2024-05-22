@@ -19,8 +19,6 @@ defmodule LogatronWeb.ViewFieldsLive.FieldCell do
     """
 
   def get_cell_state(cell_states, col, row) do
-    Logger.info("get_cell_state: #{inspect(cell_states)}")
-
     cell_state =
       cell_states
       |> Enum.find(fn %CellState{} = cell_state -> cell_state.col == col and cell_state.row == row end)

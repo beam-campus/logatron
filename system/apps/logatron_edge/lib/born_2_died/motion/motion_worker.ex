@@ -33,7 +33,7 @@ defmodule Born2Died.MotionWorker do
     Logger.info("motion.worker: #{Colors.born2died_theme(self())}")
 
     Cronlike.start_link(%{
-      interval: :rand.uniform(10),
+      interval: :rand.uniform(3),
       unit: :second,
       callback_function: &move/1,
       caller_state: state.born2died_id

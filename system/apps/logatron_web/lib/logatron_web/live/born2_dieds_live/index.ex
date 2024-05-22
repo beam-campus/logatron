@@ -108,11 +108,10 @@ defmodule LogatronWeb.ViewBorn2DiedsLive.Index do
     do: {
       :noreply,
       socket
-      |> assign(
-        edges: Edges.get_all(),
-        lives: Lives.get_all(),
-        now: DateTime.utc_now()
-      )
+      |> assign(:now, DateTime.utc_now())
+      |> update(:edges, Edges.get_all())
+      |> update(:lives, Lives.get_all())
+
     }
 
   def handle_info(_msg, socket) do

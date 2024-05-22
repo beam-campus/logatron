@@ -45,6 +45,8 @@ defmodule Farms.Service do
       1..mng_farm_init.max_depth
       |> Enum.map(fn j -> FieldInit.from_mng_farm(j, mng_farm_init) end)
 
+  def build_fields(nil), do: []
+
   ############ CALLBACKS ############
 
   ################ handle_call ###########

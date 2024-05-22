@@ -8,6 +8,8 @@ defmodule Cells.Service do
   alias Cell.State, as: CellState
   alias Born2Died.State, as: LifeState
 
+  def get_cell_states(nil), do: []
+
   def get_cell_states(mng_farm_id) do
     Lives.get_by_mng_farm_id(mng_farm_id)
     |> Enum.map(fn  %LifeState{} = live ->
@@ -26,6 +28,7 @@ defmodule Cells.Service do
       }
     end)
   end
+
 
   def calculate_content(%LifeState{} = _live) do
     "x"

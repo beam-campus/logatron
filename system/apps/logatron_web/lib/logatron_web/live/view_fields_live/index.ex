@@ -12,9 +12,12 @@ defmodule LogatronWeb.ViewFieldsLive.Index do
   alias Farms.Service, as: Farms
   alias Cells.Service, as: Cells
 
+
   require Logger
 
-  @born2dieds_cache_updated_v1 LifeFacts.born2dieds_cache_updated_v1()
+  @lives_cache_updated_v1 LifeFacts.born2dieds_cache_updated_v1()
+  @edges_cache_updated_v1 EdgeFacts.edges_cache_updated_v1()
+  @life_moved_v1 LifeFacts.life_moved_v1()
 
   def mount(params, _session, socket) do
     Logger.info("params: #{inspect(params)}")
@@ -23,8 +26,8 @@ defmodule LogatronWeb.ViewFieldsLive.Index do
 
     case connected?(socket) do
       true ->
-        PubSub.subscribe(Logatron.PubSub, LifeFacts.born2dieds_cache_updated_v1())
-        PubSub.subscribe(Logatron.PubSub, EdgeFacts.edges_cache_updated_v1())
+        PubSub.subscribe(Logatron.PubSub, @lives_cache_updated_v1)
+        PubSub.subscribe(Logatron.PubSub, @edges_cache_updated_v1)
 
         farm = Farms.get(mng_farm_id)
 
@@ -35,7 +38,7 @@ defmodule LogatronWeb.ViewFieldsLive.Index do
         {:ok,
          socket
          |> assign(
-           lives: Lives.get_all(),
+           lives: Lives.get_by_mng_farm_id(mng_farm_id),
            edges: Edges.get_all(),
            mng_farm_id: mng_farm_id,
            farm: farm,
@@ -57,24 +60,27 @@ defmodule LogatronWeb.ViewFieldsLive.Index do
     end
   end
 
-  def handle_info({@born2dieds_cache_updated_v1, _payload}, socket),
-    do: {
+
+  def handle_info({@life_moved_v1, _payload}, socket)  do
+    Logger.info("born2dieds_cache_updated_v1")
+    mng_farm_id = socket.assigns.mng_farm_id
+    {
       :noreply,
-      socket
-      |> assign(refresh_view(socket))
+     socket
+     |> assign(:lives, Lives.get_by_mng_farm_id(mng_farm_id))
+     |> assign(:cell_states, Cells.get_cell_states(mng_farm_id))
     }
+  end
 
   def handle_info(_msg, socket), do: {:noreply, socket}
 
-  def refresh_view(socket) do
-    cell_states = Cells.get_cell_states(socket.assigns.mng_farm_id)
-    Logger.info("refresh_view: #{inspect(cell_states)}")
-    socket.assigns
-    |> assign(
-      # lives: Lives.get_all(),
-      # farm: socket.assigns.farm,
-      # fields: socket.assigns.fields,
-      cell_states: cell_states
-    )
-  end
+  # # def refresh_view(socket) do
+  # #   socket
+  # #   |> update(
+  # #     # lives: Lives.get_all(),
+  # #     # farm: socket.assigns.farm,
+  # #     # fields: socket.assigns.fields,
+  # #     :cell_states, & Cells.get_cell_states(&1.assigns.mng_farm_id)
+  # #   )
+  # end
 end

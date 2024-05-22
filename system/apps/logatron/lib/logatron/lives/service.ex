@@ -9,7 +9,7 @@ defmodule Lives.Service do
   require Logger
 
   alias Born2Died.Movement
-  alias Phoenix.PubSub
+  alias Phoenix.PubSub, as: PubSub
   alias Born2Died.Facts
 
   @initializing_life_v1 Facts.initializing_life_v1()
@@ -18,7 +18,7 @@ defmodule Lives.Service do
   @life_state_changed_v1 Facts.life_state_changed_v1()
   @life_moved_v1 Facts.life_moved_v1()
 
-  @born2dieds_cache_updated_v1 Facts.born2dieds_cache_updated_v1()
+  @lives_cache_updated_v1 Facts.born2dieds_cache_updated_v1()
 
   ################### PUBLIC API ##################
 
@@ -63,6 +63,8 @@ defmodule Lives.Service do
         __MODULE__,
         {:get_by_mng_farm_id, mng_farm_id}
       )
+
+  def get_by_mng_farm_id(nil), do: []
 
   ################### CALLBACKS ###################
 
@@ -196,7 +198,7 @@ defmodule Lives.Service do
     {:noreply, state}
   end
 
-  @impl GenServer
+
   def handle_info({@life_moved_v1, %Movement{} = movement}, state) do
     case :lives_cache
          |> Cachex.get_and_update(
@@ -208,6 +210,7 @@ defmodule Lives.Service do
            end
          ) do
       {:commit, life_init} ->
+        Logger.alert("Life position updated in cachex" )
         notify_cache_updated({@life_moved_v1, life_init})
         {:noreply, state}
 
@@ -222,7 +225,7 @@ defmodule Lives.Service do
     do:
       PubSub.broadcast!(
         Logatron.PubSub,
-        @born2dieds_cache_updated_v1,
+        @lives_cache_updated_v1,
         cause
       )
 

@@ -7,8 +7,8 @@ defmodule LogatronWeb.ViewFieldsLive.FieldGrid do
 
   alias Lives.Service, as: Lives
 
-  def get_lives(mng_farm_id),
-    do: Lives.get_by_mng_farm_id(mng_farm_id)
+  # def get_lives(mng_farm_id),
+  #   do: Lives.get_by_mng_farm_id(mng_farm_id)
 
   def get_cell_color(coords, lives) do
     "black"
@@ -26,13 +26,13 @@ defmodule LogatronWeb.ViewFieldsLive.FieldGrid do
   ################################### CALLBACKS ###################################
   @impl true
   def update(assigns, socket) do
-    mng_farm_id = assigns.mng_farm_id
-    lives = Lives.get_by_mng_farm_id(mng_farm_id)
+    # mng_farm_id = assigns.mng_farm_id
+    # lives = Lives.get_by_mng_farm_id(mng_farm_id)
     {
       :ok,
       socket
       |> assign(assigns)
-      |> assign(lives: lives)
+      # |> assign(lives: lives)
     }
   end
 end

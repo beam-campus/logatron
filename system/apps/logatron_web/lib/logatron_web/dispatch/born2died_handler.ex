@@ -5,6 +5,7 @@ defmodule LogatronWeb.Dispatch.Born2DiedHandler do
 
   require Logger
 
+  alias Phoenix.PubSub
   alias Born2Died.Movement
   alias Born2Died.Facts, as: LifeFacts
   alias Born2Died.State, as: LifeState
@@ -75,10 +76,9 @@ defmodule LogatronWeb.Dispatch.Born2DiedHandler do
   end
 
   def pub_life_moved_v1(payload, socket) do
-    Logger.info("pub_life_moved_v1 #{inspect(payload)}")
     {:ok, %Movement{} = movement} = Movement.from_map(payload["movement"])
 
-    Phoenix.PubSub.broadcast(
+    PubSub.broadcast(
       Logatron.PubSub,
       @life_moved_v1,
       {@life_moved_v1, movement}
