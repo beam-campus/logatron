@@ -193,11 +193,11 @@
 
 
 .menu-item {
-    @apply block px-4 py-2 text-sm text-white font-brand font-regular
+    @apply block px-4 py-2 text-sm text-white font-brand font-regular;
 }
 
 .menu-item:hover {
-    @apply hover:text-ltDark-light
+    @apply hover:text-ltDark-light;
 }
 
 .round-image-padding {
@@ -246,3 +246,16 @@
     background: green;
     color: white;
 }
+
+.sw-life {
+    background: transparent;
+    border: 2px solid #FAA523;
+    border-radius: 20px;
+    color: #70A521;
+    font-family: 'WorkSans', sans-serif;
+    font-size: 2rem;
+    font-weight: bold;
+    text-align: center;
+    padding: 3px;
+    margin: 1px;    
+}   

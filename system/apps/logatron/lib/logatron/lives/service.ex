@@ -57,14 +57,14 @@ defmodule Lives.Service do
         {:delete, state}
       )
 
+  def get_by_mng_farm_id(nil), do: []
+
   def get_by_mng_farm_id(mng_farm_id),
     do:
       GenServer.call(
         __MODULE__,
         {:get_by_mng_farm_id, mng_farm_id}
       )
-
-  def get_by_mng_farm_id(nil), do: []
 
   ################### CALLBACKS ###################
 
@@ -198,7 +198,6 @@ defmodule Lives.Service do
     {:noreply, state}
   end
 
-
   def handle_info({@life_moved_v1, %Movement{} = movement}, state) do
     case :lives_cache
          |> Cachex.get_and_update(
@@ -210,7 +209,7 @@ defmodule Lives.Service do
            end
          ) do
       {:commit, life_init} ->
-        Logger.alert("Life position updated in cachex" )
+        Logger.alert("Life position updated in cachex")
         notify_cache_updated({@life_moved_v1, life_init})
         {:noreply, state}
 

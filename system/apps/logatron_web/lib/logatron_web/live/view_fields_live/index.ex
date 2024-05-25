@@ -59,8 +59,8 @@ defmodule LogatronWeb.ViewFieldsLive.Index do
     end
   end
 
+  @impl true
   def handle_info({@life_moved_v1, _payload}, socket) do
-    Logger.info("born2dieds_cache_updated_v1")
     mng_farm_id = socket.assigns.mng_farm_id
 
     {
@@ -71,17 +71,8 @@ defmodule LogatronWeb.ViewFieldsLive.Index do
     }
   end
 
+  @impl true
   def handle_info(_msg, socket), do: {:noreply, socket}
-
-  # # def refresh_view(socket) do
-  # #   socket
-  # #   |> update(
-  # #     # lives: Lives.get_all(),
-  # #     # farm: socket.assigns.farm,
-  # #     # fields: socket.assigns.fields,
-  # #     :cell_states, & Cells.get_cell_states(&1.assigns.mng_farm_id)
-  # #   )
-  # end
 
   @impl true
   def render(assigns) do
@@ -93,6 +84,12 @@ defmodule LogatronWeb.ViewFieldsLive.Index do
       <h1 class="text-2xl font-normal text-white font-brand">
         Field View
       </h1>
+      <br  />
+      <%= if (@farm.farm) do %>
+      <p class="text-white">
+        <%= "#{@farm.farm.name}" %>
+      </p>
+      <% end %>
     </div>
     <div class="px-2 m-1 text-sm text-white font-brand font-regular">
       <%= edges_count = Enum.count(@edges)
