@@ -13,6 +13,9 @@
     </div>
     
     <!-- Right side of toolbar -->
+
+    <%!-- USER button --%>
+
     <div class="relative">
       <%= if @current_user do %>
         <button
@@ -41,6 +44,8 @@
           />
         </button>
       <% end %>
+
+      
       <div
         id="dropdown_menu"
         phx-click-away={LogatronWeb.Layouts.App.toggle_dropdown_menu()}
@@ -55,7 +60,7 @@
           method="get"
           id="user-menu-item-1"
         >
-          About us...
+          About
         </.link>
 
         <%= if @current_user do %>
@@ -70,17 +75,6 @@
             Singed in as <%= @current_user.email %>
           </.link>
           <.link
-            href="/edges_live"
-            class="menu-item"
-            role="menuitem"
-            tabindex="-1"
-            method="get"
-            id="user-menu-item-1"
-          >
-            View Producers
-          </.link>
-          
-          <.link
             href="/view_scapes"
             class="border-b border-white border-opacity-50 menu-item"
             role="menuitem"
@@ -88,40 +82,7 @@
             method="get"
             id="user-menu-item-2"
           >
-            Emulated Consumers
-          </.link>
-
-          <.link
-            href="/view_regions"
-            class="menu-item"
-            role="menuitem"
-            tabindex="-1"
-            method="get"
-            id="user-menu-item-2"
-          >
-            Emulated Countries
-          </.link>
-
-          <.link
-            href="/view_farms"
-            class="menu-item"            
-            role="menuitem"
-            tabindex="-1"
-            method="get"
-            id="user-menu-item-2"
-          >
-            Emulated Farms
-          </.link>
-
-          <.link
-            href="/view_lives"
-            class="border-b border-white border-opacity-50 menu-item"            
-            role="menuitem"
-            tabindex="-1"
-            method="get"
-            id="user-menu-item-2"
-          >
-            Emulated Lives
+            My Logatron
           </.link>
 
 
@@ -136,62 +97,7 @@
             Sign out
           </.link>
         <% else %>
-         <.link
-            href="/edges_live"
-            class="menu-item"
-            role="menuitem"
-            tabindex="-1"
-            method="get"
-            id="user-menu-item-1"
-          >
-            View Producers
-          </.link>
-          
-          <.link
-            href="/view_scapes"
-            class="border-b border-white border-opacity-50 menu-item"
-            role="menuitem"
-            tabindex="-1"
-            method="get"
-            id="user-menu-item-2"
-          >
-            Emulated Consumers
-          </.link>
-
-          <.link
-            href="/view_regions"
-            class="menu-item"
-            role="menuitem"
-            tabindex="-1"
-            method="get"
-            id="user-menu-item-2"
-          >
-            Emulated Countries
-          </.link>
-
-          <.link
-            href="/view_farms"
-            class="menu-item"
-            role="menuitem"
-            tabindex="-1"
-            method="get"
-            id="user-menu-item-2"
-          >
-            Emulated Farms
-          </.link>
-
-          <.link
-            href="/view_lives"
-            class="border-b border-white border-opacity-50 menu-item"            
-            role="menuitem"
-            tabindex="-1"
-            method="get"
-            id="user-menu-item-2"
-          >
-            Emulated Lives
-          </.link>
-
-
+    
 
           <.link
             href={~p"/users/log_in"}
