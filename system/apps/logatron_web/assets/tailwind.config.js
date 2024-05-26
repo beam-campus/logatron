@@ -40,11 +40,6 @@ module.exports = {
           DEFAULT: "#007575",          
           light: "#40E0D0"
         },
-        ltLavender: {
-          dark: "#8C55FF",
-          DEFAULT: "#9D74EE",
-          light: "#BC9AFF"
-        },
         ltOrange: {
           dark: "#FD4F00",
           DEFAULT: "#FF6F00",
@@ -59,7 +54,12 @@ module.exports = {
           dark: "#536B78",
           DEFAULT: "#7C98B3",
           light: "#ACCBE1"
-        }
+        },
+        ltLavender: {
+          dark: "#8C55FF",
+          DEFAULT: "#9D74EE",
+          light: "#BC9AFF"
+        },
       },
       fontFamily: {
         brand: ["WorkSans", "sans-serif"],

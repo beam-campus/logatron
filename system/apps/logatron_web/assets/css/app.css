@@ -76,7 +76,7 @@
     font-size: 1rem;
     font-weight: bold;
     color: #FAA523;
-    text-align: center;
+    text-align: justify;
     margin-top: 10px;
 }
 
@@ -85,7 +85,7 @@
     font-size: 1rem;
     font-weight: normal;
     color: white;
-    text-align: center;
+    text-align: justify;
     margin-top: 10px;
 }
 
@@ -93,9 +93,11 @@
     font-family: 'WorkSans', monospace;
     font-size: 1rem;
     color: white;
-    text-align: center;
-    margin-left: 50px;
-    margin-right: 50px;
+    text-align: justify;
+    padding: 10px;
+    margin-left: 2px;
+    margin-right: 10px;
+
 }
 
 .lt-hugging-footer {
