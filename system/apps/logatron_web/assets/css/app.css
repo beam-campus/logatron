@@ -77,7 +77,9 @@
     font-weight: bold;
     color: #FAA523;
     text-align: justify;
-    margin-top: 10px;
+    padding: 2px;
+    margin-top: 10px;    
+    margin-left: 10px;
 }
 
 .lt-section-subheader {
@@ -93,7 +95,7 @@
     font-family: 'WorkSans', monospace;
     font-size: 1rem;
     color: white;
-    text-align: justify;
+    text-align: center;
     padding: 10px;
     margin-left: 2px;
     margin-right: 10px;
