@@ -1,20 +1,21 @@
-# Logatron Edge Simulator
+# ReleaseRightPoc
 
-The Logatron Edge Simulator is an application 
+**TODO: Add description**
 
 ## Installation
 
 If [available in Hex](https://hex.pm/docs/publish), the package can be installed
-by adding `agrex_edge` to your list of dependencies in `mix.exs`:
+by adding `release_right_poc` to your list of dependencies in `mix.exs`:
 
 ```elixir
 def deps do
   [
-    {:agrex_edge, "~> 0.1.0"}
+    {:release_right_poc, "~> 0.1.0"}
   ]
 end
 ```
 
 Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
 and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
-be found at [https://hexdocs.pm/agrex_edge](https://hexdocs.pm/agrex_edge).
+be found at <https://hexdocs.pm/release_right_poc>.
+

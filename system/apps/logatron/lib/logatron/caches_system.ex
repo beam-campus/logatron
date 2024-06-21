@@ -2,7 +2,7 @@ defmodule Logatron.CachesSystem do
   use GenServer
 
   @moduledoc """
-  Logatron.MngFarms.System is a GenServer that manages the MngFarms cache system.
+  Logatron.Organizations.System is a GenServer that manages the Organizations cache system.
   """
 
   require Logger

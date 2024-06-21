@@ -4,8 +4,8 @@ defmodule LogatronWeb.Dispatch.FarmHandler do
   The FarmHandler is used publish Farm Events to PubSub
   """
 
-  alias MngFarm.Facts, as: FarmFacts
-  alias MngFarm.Init, as: FarmInit
+  alias Organization.Facts, as: FarmFacts
+  alias Organization.Init, as: FarmInit
 
 
 
@@ -18,7 +18,7 @@ defmodule LogatronWeb.Dispatch.FarmHandler do
   def pub_initializing_farm_v1(payload, socket) do
     Logger.info("Initializing Farm: #{inspect(payload)}")
     {:ok, farm_init} = FarmInit.from_map(payload["farm_init"])
-    
+
     Phoenix.PubSub.broadcast!(
       Logatron.PubSub,
       @initializing_farm_v1,

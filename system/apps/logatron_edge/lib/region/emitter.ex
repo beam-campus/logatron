@@ -5,8 +5,8 @@ defmodule Region.Emitter do
   Region.Emitter is a GenServer that manages a channel to a region,
   """
 
-  alias MngFarm.Facts, as: FarmFacts
-  alias MngFarm.Init, as: MngFarmInit
+  alias Organization.Facts, as: FarmFacts
+  alias Organization.Init, as: OrganizationInit
   alias Edge.Client, as: EdgeClient
 
   require Logger
@@ -14,7 +14,7 @@ defmodule Region.Emitter do
   @initializing_farm_v1 FarmFacts.initializing_farm_v1()
   @farm_initialized_v1 FarmFacts.farm_initialized_v1()
 
-  def emit_initializing_farm(%MngFarmInit{} = farm_init),
+  def emit_initializing_farm(%OrganizationInit{} = farm_init),
     do:
       EdgeClient.publish(
         farm_init.edge_id,
@@ -22,7 +22,7 @@ defmodule Region.Emitter do
         %{farm_init: farm_init}
       )
 
-  def emit_farm_initialized(%MngFarmInit{} = farm_init),
+  def emit_farm_initialized(%OrganizationInit{} = farm_init),
     do:
       EdgeClient.publish(
         farm_init.edge_id,
@@ -30,7 +30,7 @@ defmodule Region.Emitter do
         %{farm_init: farm_init}
       )
 
-  def emit_farm_detached(%MngFarmInit{} = farm_init),
+  def emit_farm_detached(%OrganizationInit{} = farm_init),
     do:
       EdgeClient.publish(
         farm_init.edge_id,
@@ -39,21 +39,21 @@ defmodule Region.Emitter do
       )
 
   # #################### API ####################
-  # def emit_initializing_farm_v1(%MngFarmInit{} = farm_init),
+  # def emit_initializing_farm_v1(%OrganizationInit{} = farm_init),
   #   do:
   #     GenServer.cast(
   #       via(farm_init.region_id),
   #       {:initializing_farm_v1, farm_init}
   #     )
 
-  # def emit_farm_initialized_v1(%MngFarmInit{} = farm_init),
+  # def emit_farm_initialized_v1(%OrganizationInit{} = farm_init),
   #   do:
   #     GenServer.cast(
   #       via(farm_init.region_id),
   #       {:farm_initialized_v1, farm_init}
   #     )
 
-  # def emit_farm_detached(%MngFarmInit{} = farm_init),
+  # def emit_farm_detached(%OrganizationInit{} = farm_init),
   #   do:
   #     GenServer.cast(
   #       via(farm_init.region_id),
@@ -63,7 +63,7 @@ defmodule Region.Emitter do
   # ############## CALLBACKS ##############
 
   # @impl GenServer
-  # def handle_cast({:initializing_farm_v1, %MngFarmInit{} = farm_init}, state) do
+  # def handle_cast({:initializing_farm_v1, %OrganizationInit{} = farm_init}, state) do
   #   EdgeClient.publish(
   #     farm_init.edge_id,
   #     @initializing_farm_v1,
@@ -74,7 +74,7 @@ defmodule Region.Emitter do
   # end
 
   # @impl GenServer
-  # def handle_cast({:farm_initialized_v1, %MngFarmInit{} = farm_init}, state) do
+  # def handle_cast({:farm_initialized_v1, %OrganizationInit{} = farm_init}, state) do
   #   EdgeClient.publish(
   #     farm_init.edge_id,
   #     @farm_initialized_v1,
@@ -85,7 +85,7 @@ defmodule Region.Emitter do
   # end
 
   # @impl GenServer
-  # def handle_cast({:farm_detached_v1, %MngFarmInit{} = farm_init}, state) do
+  # def handle_cast({:farm_detached_v1, %OrganizationInit{} = farm_init}, state) do
   #   EdgeClient.publish(
   #     farm_init.edge_id,
   #     FarmFacts.farm_detached_v1(),

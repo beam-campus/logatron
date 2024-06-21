@@ -12,7 +12,7 @@ defmodule Region.Farms do
     do:
       DynamicSupervisor.start_child(
         via_sup(region_id),
-        {MngFarm.System, mng_farm_init}
+        {Organization.System, mng_farm_init}
       )
 
   ################# CALLBACKS #####################

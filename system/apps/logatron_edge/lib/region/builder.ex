@@ -3,10 +3,10 @@ defmodule Region.Builder do
 
   @moduledoc """
   Region.Builder is a GenServer that constructs an Logatron.Region
-  by spawning Logatron.MngFarm Processes.
+  by spawning Logatron.Organization Processes.
   """
 
-  alias MngFarm.Init, as: FarmInit
+  alias Organization.Init, as: FarmInit
   alias Region.Init, as: RegionInit
 
   require Logger

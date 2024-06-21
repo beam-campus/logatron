@@ -19,7 +19,7 @@ defmodule LogatronWeb.EdgeChannel do
   alias Edge.Facts, as: EdgeFacts
   alias Scape.Facts, as: ScapeFacts
   alias Region.Facts, as: RegionFacts
-  alias MngFarm.Facts, as: FarmFacts
+  alias Organization.Facts, as: FarmFacts
   alias Born2Died.Facts, as: LifeFacts
 
   @fact_born "fact:born"

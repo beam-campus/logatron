@@ -14,8 +14,8 @@ A Agrex.Region is identified by an *InitParams.id* and consists of a number of f
 graph TD;
     A(Agrex.Region.System) -->|supervise| B(Agrex.Region.Builder)
     A -->|supervise| C(Agrex.Region.Farms)
-    C -->|start| D(Agrex.MngFarm.System 0)
-    C -->|start| E(Agrex.MngFarm.System N-1)
+    C -->|start| D(Agrex.Organization.System 0)
+    C -->|start| E(Agrex.Organization.System N-1)
     style A fill: #34f, stroke: #333, stroke-width: 4px 
     style B fill: #34f, stroke: #333, stroke-width: 4px, stroke-dasharray: 5,5
     style C fill: #34f, stroke: #333, stroke-width: 4px, stroke-dasharray: 5,5
