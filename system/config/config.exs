@@ -30,6 +30,24 @@ config :logatron,
 # at the `config/runtime.exs`.
 config :logatron, Logatron.Mailer, adapter: Swoosh.Adapters.Local
 
+
+config :release_right_poc, ReleaseRightPoC.Application,
+  event_store: [
+    adapter: Commanded.EventStore.Adapters.Extreme,
+    serializer: Commanded.Serialization.JsonSerializer,
+    stream_prefix: "release_right_poc",
+    extreme: [
+      db_type: :node,
+      host: "localhost",
+      port: 1113,
+      username: "admin",
+      password: "changeit",
+      reconnect_delay: 2_000,
+      max_attempts: :infinity
+    ]
+  ]
+
+
 config :logatron_web,
   ecto_repos: [Logatron.Repo],
   generators: [context_app: :logatron, binary_id: true]

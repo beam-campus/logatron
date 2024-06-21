@@ -3,18 +3,22 @@ defmodule ReleaseRightPoc.Application do
   # for more information on OTP Applications
   @moduledoc false
 
-  use Application
+  use Commanded.Application, otp_app: :release_right_poc
 
-  @impl true
-  def start(_type, _args) do
-    children = [
-      # Starts a worker by calling: ReleaseRightPoc.Worker.start_link(arg)
-      # {ReleaseRightPoc.Worker, arg}
-    ]
 
-    # See https://hexdocs.pm/elixir/Supervisor.html
-    # for other strategies and supported options
-    opts = [strategy: :one_for_one, name: ReleaseRightPoc.Supervisor]
-    Supervisor.start_link(children, opts)
+  def init(config) do
+    {:ok, config}
   end
+
+  # def start(_type, _args) do
+  #   children = [
+  #     # Starts a worker by calling: ReleaseRightPoc.Worker.start_link(arg)
+  #     # {ReleaseRightPoc.Worker, arg}
+  #   ]
+
+  #   # See https://hexdocs.pm/elixir/Supervisor.html
+  #   # for other strategies and supported options
+  #   opts = [strategy: :one_for_one, name: ReleaseRightPoc.Supervisor]
+  #   Supervisor.start_link(children, opts)
+  # end
 end

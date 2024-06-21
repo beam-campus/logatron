@@ -18,14 +18,23 @@ defmodule ReleaseRightPoc.MixProject do
   # Run "mix help compile.app" to learn about applications.
   def application do
     [
-      extra_applications: [:logger],
-      mod: {ReleaseRightPoc.Application, []}
+      mod: {ReleaseRightPoc.Application, []},
+      extra_applications: [
+        :logger,
+        :runtime_tools,
+        :observer,
+        :os_mon
+      ]
     ]
   end
 
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
+
+      {:commanded_extreme_adapter, "~> 1.1"},
+      {:commanded, "~> 1.4"},
+      {:logatron_core, in_umbrella: true}
       # {:dep_from_hexpm, "~> 0.3.0"},
       # {:dep_from_git, git: "https://github.com/elixir-lang/my_dep.git", tag: "0.1.0"},
       # {:sibling_app_in_umbrella, in_umbrella: true}
