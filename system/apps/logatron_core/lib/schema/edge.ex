@@ -1,13 +1,13 @@
-defmodule Logatron.Schema.Edge do
+defmodule Schema.Edge do
   use Ecto.Schema
 
   @moduledoc """
-  Logatron.Schema.Edge contains the Ecto schema for the edge.
+  Schema.Edge contains the Ecto schema for the edge.
   """
 
   import Ecto.Changeset
 
-  alias Logatron.Schema.Edge, as: Edge
+  alias Schema.Edge, as: Edge
   alias Schema.Id, as: Id
 
   @all_fields [

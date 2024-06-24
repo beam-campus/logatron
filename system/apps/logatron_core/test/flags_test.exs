@@ -12,6 +12,8 @@ defmodule FlagsTest do
     def killed, do: 16
   end
 
+  
+
   @tag :ignore_test
   test "that we can set a flag using set/2" do
     # GIVEN

@@ -12,8 +12,6 @@ defmodule Apis.Countries do
   @countries_timeout 240_000
   @all_countries_url "https://restcountries.com/v3.1/all"
 
-
-
   # @all_countries_url "https://gist.githubusercontent.com/rgfaber/ddcde59939f0b9c7a82b94430d3dfe69/raw/8454618d95c1d160e1f62570055d166d4ef56a52/countries.json"
 
   ####### API ###############
@@ -50,8 +48,11 @@ defmodule Apis.Countries do
 
   ##### INTERNALS ##########
   defp request_countries(),
-    do: Req.get!(@all_countries_url, receive_timeout: @countries_timeout, connect_options: [timeout: @countries_timeout]).body()
-
+    do:
+      Req.get!(@all_countries_url,
+        receive_timeout: @countries_timeout,
+        connect_options: [timeout: @countries_timeout]
+      ).body
 
 
   ######## CALLBACKS ##########

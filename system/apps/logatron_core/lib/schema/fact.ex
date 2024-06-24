@@ -1,6 +1,6 @@
-defmodule Logatron.Schema.Fact do
+defmodule Schema.Fact do
   @moduledoc """
-  Logatron.Schema.Fact is a data structure that represents Facts (Events) in the Logatron system.
+  Schema.Fact is a data structure that represents Facts (Events) in the Logatron system.
   """
   use Ecto.Schema
   alias Schema.Meta

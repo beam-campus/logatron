@@ -1,4 +1,4 @@
-defmodule Logatron.Schema.Region do
+defmodule Schema.Region do
   use Ecto.Schema
 
   import Ecto.Changeset
@@ -7,7 +7,7 @@ defmodule Logatron.Schema.Region do
   alias Schema.Id
 
   @moduledoc """
-  Logatron.Schema.Region contains the schema for Regions that make up a Scape
+  Schema.Region contains the schema for Regions that make up a Scape
   A Region is a grouping of Farms
   """
 

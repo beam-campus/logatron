@@ -31,11 +31,11 @@ config :logatron,
 config :logatron, Logatron.Mailer, adapter: Swoosh.Adapters.Local
 
 
-config :release_right_poc, ReleaseRightPoC.Application,
+config :release_right_poc, ReleaseRightPoc.CommandedApp,
   event_store: [
     adapter: Commanded.EventStore.Adapters.Extreme,
     serializer: Commanded.Serialization.JsonSerializer,
-    stream_prefix: "release_right_poc",
+    stream_prefix: "rr_poc",
     extreme: [
       db_type: :node,
       host: "localhost",
@@ -45,7 +45,10 @@ config :release_right_poc, ReleaseRightPoC.Application,
       reconnect_delay: 2_000,
       max_attempts: :infinity
     ]
-  ]
+  ],
+  pubsub: :local,
+  registry: :local
+
 
 
 config :logatron_web,

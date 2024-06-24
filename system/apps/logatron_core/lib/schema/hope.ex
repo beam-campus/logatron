@@ -1,6 +1,6 @@
-defmodule Logatron.Schema.Hope do
+defmodule Schema.Hope do
   @moduledoc """
-  Logatron.Schema.Hope is a data structure that represents Hopes (Commands) in the Logatron system.
+  Schema.Hope is a data structure that represents Hopes (Commands) in the Logatron system.
   """
   use Ecto.Schema
   alias Schema.Meta

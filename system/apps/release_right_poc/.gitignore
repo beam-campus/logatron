@@ -24,3 +24,8 @@ release_right_poc-*.tar
 
 # Temporary files, for example, from tests.
 /tmp/
+
+.elixir_ls/
+.history/
+.vscode/
+

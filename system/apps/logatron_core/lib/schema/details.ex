@@ -6,7 +6,6 @@ defmodule Schema.Details do
   Schema.Details is the struct that identifies the details of a Fact.
   """
 
-  alias Schema.Meta, as: Meta
 
   @primary_key false
   embedded_schema do

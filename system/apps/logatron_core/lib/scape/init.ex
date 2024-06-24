@@ -121,7 +121,7 @@ defmodule Scape.Init do
 
   def from_random(edge_id) do
     %ScapeInit{
-      id: Logatron.Schema.Scape.random_id(),
+      id: Schema.Scape.random_id(),
       name: MnemonicSlugs.generate_slug(2),
       edge_id: edge_id,
       nbr_of_countries: Logatron.Limits.max_countries(),

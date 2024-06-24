@@ -1,13 +1,16 @@
-defmodule Logatron.Schema.Scape do
+defmodule Schema.Scape do
   use Ecto.Schema
 
   @moduledoc """
-  Logatron.Schema.Scape contains the Ecto schema for the Scape.
+  Schema.Scape contains the Ecto schema for the Scape.
   """
 
   import Ecto.Changeset
 
-  alias Logatron.Schema.{Edge, Scape, Id, Region}
+  alias Schema.Edge, as: Edge
+  alias Schema.Scape, as: Scape
+  alias Schema.Id, as: Id
+  alias Schema.Region, as: Region
 
   def id_prefix(), do: "scape"
 

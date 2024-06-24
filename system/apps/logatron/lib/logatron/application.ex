@@ -6,7 +6,7 @@ defmodule Logatron.Application do
   The main application module for Logatron.
   """
 
-  use Application
+  use Application, otp_app: :logatron
 
   require Logger
 

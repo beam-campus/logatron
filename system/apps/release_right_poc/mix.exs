@@ -1,4 +1,8 @@
 defmodule ReleaseRightPoc.MixProject do
+  @moduledoc """
+  Provides common configuration for the release right POC project.
+  """
+
   use Mix.Project
 
   def project do
@@ -31,13 +35,10 @@ defmodule ReleaseRightPoc.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-
-      {:commanded_extreme_adapter, "~> 1.1"},
+      {:ecto, "~> 3.11.2"},
       {:commanded, "~> 1.4"},
-      {:logatron_core, in_umbrella: true}
-      # {:dep_from_hexpm, "~> 0.3.0"},
-      # {:dep_from_git, git: "https://github.com/elixir-lang/my_dep.git", tag: "0.1.0"},
-      # {:sibling_app_in_umbrella, in_umbrella: true}
+      {:commanded_extreme_adapter, "~> 1.1"},
+      {:logatron_core, in_umbrella: true},
     ]
   end
 end
