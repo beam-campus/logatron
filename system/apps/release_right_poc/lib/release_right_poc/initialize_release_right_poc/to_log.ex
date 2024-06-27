@@ -1,10 +1,10 @@
-defmodule ReleaseRightPoc.InitializeReleaseRightPoc.ToLog do
+defmodule ReleaseRightPoc.InitializeRRPoc.ToLog do
   use Commanded.Event.Handler,
     application: ReleaseRightPoc.CommandedApp,
     name: "RRPocInitialized.ToLog.v1",
     start_from: :origin
 
-    alias ReleaseRightPoc.InitializeReleaseRightPoc.Evt,
+    alias ReleaseRightPoc.InitializeRRPoc.Evt,
       as: ReleaseRightPocInitialized
 
       require Logger

@@ -1,11 +1,11 @@
-defmodule ReleaseRightPoc.InitializeRrDoc.InitDocAfterPocPolicy do
+defmodule ReleaseRightPoc.InitializeRrDoc.ToLog do
 
   use Commanded.Event.Handler,
     application: ReleaseRightPoc.CommandedApp,
     name: "RRPocInitialized.InitDocAfterPocPolicy.v1",
     start_from: :origin
 
-    alias ReleaseRightPoc.InitializeReleaseRightPoc.Evt,
+    alias ReleaseRightPoc.InitializeRRPoc.Evt,
       as: ReleaseRightPocInitialized
 
       alias ReleaseRightPoc.InitializeRRDoc.Cmd,
@@ -21,7 +21,7 @@ defmodule ReleaseRightPoc.InitializeRrDoc.InitDocAfterPocPolicy do
     def handle(%ReleaseRightPocInitialized{} = event, _metadata) do
 
       Logger.alert("Initializing RR Doc after POC Policy for #{inspect(event)}")
-      
+
       initializeDoc = %InitializeRRDoc{
         root_id: event.root_id,
         terminal_id: event.terminal_id,

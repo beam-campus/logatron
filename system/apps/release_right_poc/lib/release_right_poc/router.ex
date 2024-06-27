@@ -1,10 +1,10 @@
 defmodule ReleaseRightPoc.Router do
   use Commanded.Commands.Router
 
-  alias ReleaseRightPoc.InitializeReleaseRightPoc.Cmd,
+  alias ReleaseRightPoc.InitializeRRPoc.Cmd,
     as: InitializePoc
 
-  alias ReleaseRightPoc.InitializeReleaseRightPoc.Handler,
+  alias ReleaseRightPoc.InitializeRRPoc.Handler,
     as: InitializePocHandler
 
   alias ReleaseRightPoc.Aggregate,

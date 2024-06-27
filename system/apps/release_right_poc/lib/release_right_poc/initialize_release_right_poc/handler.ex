@@ -1,11 +1,11 @@
-defmodule ReleaseRightPoc.InitializeReleaseRightPoc.Handler do
+defmodule ReleaseRightPoc.InitializeRRPoc.Handler do
   @moduledoc """
   This module defines the handler for initializing the release right POC.
   """
   @behaviour Commanded.Commands.Handler
 
   alias ReleaseRightPoc.Aggregate,  as: Aggregate
-  alias ReleaseRightPoc.InitializeReleaseRightPoc.Cmd,    as: InitializePoc
+  alias ReleaseRightPoc.InitializeRRPoc.Cmd,    as: InitializePoc
 
   def handle(
         %Aggregate{} = aggregate,

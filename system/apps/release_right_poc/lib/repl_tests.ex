@@ -8,15 +8,15 @@ defmodule ReplTests do
   alias ReleaseRightPoc.CommandedApp,
     as: App
 
-  alias ReleaseRightPoc.InitializeReleaseRightPoc.Cmd,
-    as: InitializeReleaseRightPoc
+  alias ReleaseRightPoc.InitializeRRPoc.Cmd,
+    as: InitializeRRPoc
 
   alias Commanded.UUID,
     as: UUID
 
     require Logger
 
-  # alias ReleaseRightPoc.InitializeReleaseRightPoc.Evt,
+  # alias ReleaseRightPoc.InitializeRRPoc.Evt,
   #   as: ReleaseRightPocInitialized
 
   @impl true
@@ -37,7 +37,7 @@ defmodule ReplTests do
   def send_initialize_by(usr \\ "raf") do
     Process.sleep(100)
 
-    command = %InitializeReleaseRightPoc{
+    command = %InitializeRRPoc{
       root_id: "rr_poc_#{usr}_#{UUID.uuid4()}",
       terminal_id: "terminal_#{usr}_#{UUID.uuid4()}",
       container_id: "container_#{usr}_#{UUID.uuid4()}"

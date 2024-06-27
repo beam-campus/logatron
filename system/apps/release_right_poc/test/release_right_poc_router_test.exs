@@ -3,13 +3,13 @@ defmodule ReleaseRightPoc.RouterTest do
 
   alias ReleaseRightPoc.Router
 
-  alias ReleaseRightPoc.InitializeReleaseRightPoc.Cmd, as: InitializeReleaseRightPoc
+  alias ReleaseRightPoc.InitializeRRPoc.Cmd, as: InitializeRRPoc
 
-  test "dispatches InitializeReleaseRightPoc command" do
+  test "dispatches InitializeRRPoc command" do
 
     ReleaseRightPoc.Application.start(:normal, [])
-    
-    command = %InitializeReleaseRightPoc{
+
+    command = %InitializeRRPoc{
       root_id: "root_id",
       terminal_id: "terminal_id",
       container_id: "container_id"

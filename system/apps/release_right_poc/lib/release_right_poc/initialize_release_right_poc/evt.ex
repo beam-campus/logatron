@@ -1,9 +1,9 @@
-defmodule ReleaseRightPoc.InitializeReleaseRightPoc.Evt do
+defmodule ReleaseRightPoc.InitializeRRPoc.Evt do
   @moduledoc """
   This module defines the event for initializing the release right POC.
   """
 
-  alias ReleaseRightPoc.InitializeReleaseRightPoc.Evt, as: ReleaseRightPocInitialized
+  alias ReleaseRightPoc.InitializeRRPoc.Evt, as: ReleaseRightPocInitialized
 
   @all_fields [
     :root_id,

@@ -21,8 +21,8 @@ defmodule ReleaseRightPoc.Projections do
 
   def start_link(_args) do
     children = [
-      ReleaseRightPoc.InitializeReleaseRightPoc.ToLog,
-      ReleaseRightPoc.InitializeRrDoc.InitDocAfterPocPolicy,
+      ReleaseRightPoc.InitializeRRPoc.ToLog,
+      # ReleaseRightPoc.InitializeRRDoc.ToLog,
       # Starts a worker by calling: ReleaseRightPoc.Worker.start_link(arg)
       # {ReleaseRightPoc.Worker, arg}
     ]

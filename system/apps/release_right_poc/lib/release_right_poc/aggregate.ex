@@ -17,11 +17,11 @@ defmodule ReleaseRightPoc.Aggregate do
   alias Flags,
     as: Flags
 
-  alias ReleaseRightPoc.InitializeReleaseRightPoc.Cmd,
-    as: InitializeReleaseRightPoc
+  alias ReleaseRightPoc.InitializeRRPoc.Cmd,
+    as: InitializeRRPoc
 
-  alias ReleaseRightPoc.InitializeReleaseRightPoc.Evt,
-    as: ReleaseRightPocInitialized
+  alias ReleaseRightPoc.InitializeRRPoc.Evt,
+    as: RRPocInitialized
 
   alias ReleaseRightPoc.InitializeRRDoc.Cmd,
     as: InitializeRRDoc
@@ -29,48 +29,55 @@ defmodule ReleaseRightPoc.Aggregate do
   alias ReleaseRightPoc.InitializeRRDoc.Evt,
     as: RRDocInitialized
 
+  alias Commanded.Aggregate.Multi,
+    as: Multi
+
   @poc_initialized States.initialized()
   @doc_initialized States.doc_initialized()
 
-  def execute(
-        %Aggregate{state: %Root{} = state} = _aggregate,
-        %InitializeRRDoc{} = cmd
-      ) do
-    case Flags.has?(state.status, @poc_initialized) do
-      true ->
-        {:ok,
-         %RRDocInitialized{
-           root_id: cmd.root_id,
-           terminal_id: cmd.terminal_id,
-           container_id: cmd.container_id
-         }}
-    end
+  ##### INTERNALS #####
+
+  defp raise_initialize_events(aggregate, cmd) do
+    aggregate
+    |> Multi.new()
+    |> Multi.execute(&initialize_poc(&1, cmd))
+    |> Multi.execute(&initialize_doc(&1, cmd))
   end
 
-  def execute(
-        %Aggregate{state: nil} = _aggregate,
-        %InitializeReleaseRightPoc{} = cmd
-      ) do
+  defp initialize_poc(_agg, %InitializeRRPoc{} = cmd) do
     {:ok,
-     %ReleaseRightPocInitialized{
+     %RRPocInitialized{
        root_id: cmd.root_id,
        terminal_id: cmd.terminal_id,
        container_id: cmd.container_id
      }}
   end
 
+  defp initialize_doc(_agg, %InitializeRRPoc{} = cmd) do
+    {:ok,
+     %RRDocInitialized{
+       root_id: cmd.root_id,
+       terminal_id: cmd.terminal_id,
+       container_id: cmd.container_id
+     }}
+  end
+
+  ############### API ###############
+
   def execute(
-        %Aggregate{state: %Root{} = state} = _aggregate,
-        %InitializeReleaseRightPoc{} = cmd
+        %Aggregate{state: nil} = aggregate,
+        %InitializeRRPoc{} = cmd
+      ) do
+    raise_initialize_events(aggregate, cmd)
+  end
+
+  def execute(
+        %Aggregate{state: %Root{} = state} = aggregate,
+        %InitializeRRPoc{} = cmd
       ) do
     cond do
       Flags.has?(state.status, States.unknown()) ->
-        {:ok,
-         %ReleaseRightPocInitialized{
-           root_id: cmd.root_id,
-           terminal_id: cmd.terminal_id,
-           container_id: cmd.container_id
-         }}
+        raise_initialize_events(aggregate, cmd)
 
       Flags.has?(state.status, States.initialized()) ->
         {:error, :already_initialized}
@@ -82,7 +89,7 @@ defmodule ReleaseRightPoc.Aggregate do
 
   def apply(
         %Aggregate{state: nil} = _aggregate,
-        %ReleaseRightPocInitialized{} = evt
+        %RRPocInitialized{} = evt
       ),
       do: %Aggregate{
         root_id: evt.root_id,
@@ -94,7 +101,7 @@ defmodule ReleaseRightPoc.Aggregate do
 
   def apply(
         %Aggregate{} = aggregate,
-        %ReleaseRightPocInitialized{} = evt
+        %RRPocInitialized{} = evt
       ),
       do: %Aggregate{
         aggregate
@@ -105,16 +112,16 @@ defmodule ReleaseRightPoc.Aggregate do
           }
       }
 
-      def apply(
+  def apply(
         %Aggregate{state: %Root{} = state} = aggregate,
         %RRDocInitialized{} = _evt
       ) do
-        %Aggregate{
-          aggregate
-          | state: %Root{
-            state
-            | status: Flags.set(state.status, @doc_initialized)
-          }
+    %Aggregate{
+      aggregate
+      | state: %Root{
+          state
+          | status: Flags.set(state.status, @doc_initialized)
         }
-      end
+    }
+  end
 end
