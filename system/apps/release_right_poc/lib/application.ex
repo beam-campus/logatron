@@ -12,15 +12,15 @@ defmodule ReleaseRightPoc.Application do
 
     children = [
       {ReleaseRightPoc.CommandedApp, name: ReleaseRightPoc.CommandedApp},
-      {ReleaseRightPoc.Projections, name: ReleaseRightPoc.Projections},
+      # {ReleaseRightPoc.Projections, name: ReleaseRightPoc.Projections},
 
-      {MngShippingAgents.CommandedApp, name: MngShippingAgents.CommandedApp},
-      {MngShippingAgents.Projections, name: MngShippingAgents.Projections},
+      # {MngShippingAgents.CommandedApp, name: MngShippingAgents.CommandedApp},
+      # {MngShippingAgents.Projections, name: MngShippingAgents.Projections},
 
-      {MngReleaseParties.CommandedApp, name: MngReleaseParties.CommandedApp},
-      {MngReleaseParties.Projections, name: MngReleaseParties.Projections},
+      # {MngReleaseParties.CommandedApp, name: MngReleaseParties.CommandedApp},
+      # {MngReleaseParties.Projections, name: MngReleaseParties.Projections},
 
-      
+
 
     ]
 

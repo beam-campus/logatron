@@ -24,9 +24,13 @@ defmodule ReplTests do
     {:ok, nbr}
   end
 
-  def send_initialize(usr \\ "raf", count \\ 1000) do
+
+
+
+
+  def send_initialize_poc(usr \\ "raf", count \\ 1000) do
     for _c <- 1..count  do
-      GenServer.cast(__MODULE__, {:initialize, usr})
+      GenServer.cast(__MODULE__, {:initialize_poc, usr})
     end
   end
 
@@ -53,8 +57,10 @@ defmodule ReplTests do
     end
   end
 
+
+
   @impl true
-  def handle_cast({:initialize, usr}, nbr) do
+  def handle_cast({:initialize_poc, usr}, nbr) do
     Logger.alert("Initializing Release Right POC for #{usr}")
     send_initialize_by(usr)
     {:noreply, nbr}

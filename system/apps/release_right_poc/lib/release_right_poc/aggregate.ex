@@ -3,7 +3,6 @@ defmodule ReleaseRightPoc.Aggregate do
   This module defines the aggregate for the release right POC.
   """
 
-
   defstruct [:root_id, :state]
 
   alias ReleaseRightPoc.Schema.Root,
@@ -24,7 +23,29 @@ defmodule ReleaseRightPoc.Aggregate do
   alias ReleaseRightPoc.InitializeReleaseRightPoc.Evt,
     as: ReleaseRightPocInitialized
 
+  alias ReleaseRightPoc.InitializeRRDoc.Cmd,
+    as: InitializeRRDoc
 
+  alias ReleaseRightPoc.InitializeRRDoc.Evt,
+    as: RRDocInitialized
+
+  @poc_initialized States.initialized()
+  @doc_initialized States.doc_initialized()
+
+  def execute(
+        %Aggregate{state: %Root{} = state} = _aggregate,
+        %InitializeRRDoc{} = cmd
+      ) do
+    case Flags.has?(state.status, @poc_initialized) do
+      true ->
+        {:ok,
+         %RRDocInitialized{
+           root_id: cmd.root_id,
+           terminal_id: cmd.terminal_id,
+           container_id: cmd.container_id
+         }}
+    end
+  end
 
   def execute(
         %Aggregate{state: nil} = _aggregate,
@@ -83,4 +104,17 @@ defmodule ReleaseRightPoc.Aggregate do
             status: States.initialized()
           }
       }
+
+      def apply(
+        %Aggregate{state: %Root{} = state} = aggregate,
+        %RRDocInitialized{} = _evt
+      ) do
+        %Aggregate{
+          aggregate
+          | state: %Root{
+            state
+            | status: Flags.set(state.status, @doc_initialized)
+          }
+        }
+      end
 end

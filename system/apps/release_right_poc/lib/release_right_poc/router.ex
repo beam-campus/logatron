@@ -10,6 +10,13 @@ defmodule ReleaseRightPoc.Router do
   alias ReleaseRightPoc.Aggregate,
     as: Aggregate
 
+
+    alias ReleaseRightPoc.InitializeRRDoc.Cmd,
+    as: InitializeRRDoc
+
+    alias ReleaseRightPoc.InitializeRRDoc.Handler,
+    as: InitializeRRDocHandler
+
   # identity(Aggregate,
   #   by: :root_id,
   #   prefix: "release_right_poc"
@@ -21,7 +28,13 @@ defmodule ReleaseRightPoc.Router do
     identity: :root_id
   )
 
+  dispatch(InitializeRRDoc,
+    to: InitializeRRDocHandler,
+    aggregate: Aggregate,
+    identity: :root_id
+  )
 
 
-  
+
+
 end
